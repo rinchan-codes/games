@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ラック防衛線</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1d2126;
+  --panel: #262b31;
+  --panel2: #2e343b;
+  --line: #3d444d;
+  --text: #e4e1d9;
+  --muted: #9ba2aa;
+  --accent: #e0a43a;
+  --blue: #79aee0;
+  --red: #e06a5f;
+  --green: #7cc488;
+  --pink: #e889b5;
+  --steel: #59616b;
+  --sans: 'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+  --mono: 'M PLUS 1 Code', 'BIZ UDGothic', ui-monospace, 'Consolas', monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+button {
+  font: inherit; color: inherit; cursor: pointer;
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 4px;
+  padding: 6px 12px;
+}
+button:hover:not(:disabled) { border-color: var(--muted); }
+button:disabled { opacity: .45; cursor: default; }
+button.primary { background: var(--accent); color: #1d1a14; border-color: var(--accent); font-weight: 700; }
+button.primary:hover:not(:disabled) { background: #ebb558; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+header {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+  padding: 8px 16px; border-bottom: 1px solid var(--line); background: var(--panel);
+}
+header .ttl { font-weight: 700; letter-spacing: .04em; }
+header .stg { color: var(--muted); }
+header .sp { flex: 1; }
+header .ctrl { display: flex; gap: 6px; }
+
+.layout {
+  display: grid; grid-template-columns: minmax(300px, 560px) minmax(280px, 1fr);
+  gap: 16px; padding: 16px; max-width: 1180px; margin: 0 auto;
+}
+@media (max-width: 760px) {
+  .layout { grid-template-columns: 1fr; padding: 12px 16px; }
+}
+.rackwrap { position: relative; min-width: 0; }
+#rack { display: block; width: 100%; touch-action: manipulation; }
+.monitor { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.pn { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
+.pn h2 { font-size: 12px; font-weight: 700; color: var(--muted); margin: 0 0 8px; letter-spacing: .08em; }
+
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.kpi .k { font-size: 11px; color: var(--muted); }
+.kpi .v { font-family: var(--mono); font-size: 20px; }
+.bar { height: 6px; background: var(--panel2); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.bar > i { display: block; height: 100%; background: var(--green); width: 100%; transition: width .2s; }
+#graph { display: block; width: 100%; height: 90px; margin-top: 10px; }
+.legend { display: flex; gap: 12px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+.legend span::before { content: ''; display: inline-block; width: 10px; height: 2px; vertical-align: middle; margin-right: 4px; background: currentColor; }
+
+.next .note { color: var(--accent); margin-bottom: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-size: 12px; }
+.chip.fresh { border-color: var(--accent); }
+.chip .new { color: var(--accent); font-size: 10px; }
+
+.shop { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.shop button { text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; }
+.shop button.on { border-color: var(--accent); background: #3a3426; }
+.shop .row1 { display: flex; justify-content: space-between; gap: 6px; }
+.shop .nm { font-weight: 700; }
+.shop .rl { font-size: 11px; color: var(--muted); }
+
+.detail p { margin: 0 0 8px; }
+.detail .meta { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+.detail .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.detail .msg { color: var(--red); font-size: 12px; margin-top: 6px; min-height: 1em; }
+
+.log { max-height: 180px; overflow-y: auto; font-size: 12px; }
+.log div { padding: 3px 0; border-bottom: 1px solid #30363d; }
+.log .t { font-family: var(--mono); color: var(--muted); margin-right: 6px; }
+.log .hint { color: var(--accent); }
+.log .bad { color: var(--red); }
+.log .type b { font-weight: 700; }
+
+
+.ov {
+  position: fixed; inset: 0; background: rgba(18, 20, 24, .82);
+  display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10;
+}
+.ov[hidden] { display: none; }
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 20px; width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto;
+}
+.card h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: .05em; }
+.card h3 { font-size: 15px; margin: 16px 0 6px; }
+.card p { margin: 0 0 8px; }
+.card .sub { color: var(--muted); }
+.stages { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.stages button { text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; }
+.stages .st { color: var(--accent); font-family: var(--mono); letter-spacing: 2px; }
+.howto { padding-left: 1.2em; margin: 0; color: var(--text); }
+.howto li { margin-bottom: 4px; }
+.res { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 12px 0; }
+.res dt { color: var(--muted); }
+.res dd { margin: 0; font-family: var(--mono); }
+.stars { font-size: 26px; color: var(--accent); letter-spacing: 6px; margin: 6px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <span class="ttl">ラック防衛線</span>
+  <span class="stg" id="hStage"></span>
+  <span class="num" id="hWave"></span>
+  <span class="sp"></span>
+  <span class="ctrl">
+    <button id="bStart" class="primary">開始</button>
+    <button id="bSpeed">1倍速</button>
+    <button id="bMenu">ステージ選択</button>
+  </span>
+</header>
+
+<main class="layout">
+  <section class="rackwrap"><canvas id="rack" aria-label="ラック"></canvas></section>
+  <aside class="monitor">
+    <div class="pn">
+      <h2>監視</h2>
+      <div class="kpis">
+        <div class="kpi"><div class="k">信頼度</div><div class="v" id="kTrust">100</div><div class="bar"><i id="kTrustBar"></i></div></div>
+        <div class="kpi"><div class="k">予算</div><div class="v" id="kMoney">0</div></div>
+        <div class="kpi"><div class="k">処理成功率</div><div class="v" id="kRate">-</div></div>
+      </div>
+      <canvas id="graph"></canvas>
+      <div class="legend"><span style="color:var(--blue)">処理/秒</span><span style="color:var(--red)">失敗/秒</span><span style="color:var(--accent)">遮断/秒</span></div>
+    </div>
+    <div class="pn next">
+      <h2 id="nTitle">次のウェーブ</h2>
+      <div class="note" id="nNote"></div>
+      <div class="chips" id="nChips"></div>
+    </div>
+    <div class="pn">
+      <h2>機器を置く</h2>
+      <div class="shop" id="shop"></div>
+    </div>
+    <div class="pn detail" id="detail"></div>
+    <div class="pn">
+      <h2>ログ</h2>
+      <div class="log" id="log"></div>
+    </div>
+  </aside>
+</main>
+
+<div class="ov" id="ovTitle">
+  <div class="card">
+    <h1>ラック防衛線</h1>
+    <p class="sub">サーバー構成を組んで、押し寄せるアクセスと攻撃をさばく。1ステージ3〜4分。</p>
+    <h3>遊び方</h3>
+    <ol class="howto">
+      <li>右の「機器を置く」で機器を選び、ラックの空きスロットを押して設置。</li>
+      <li>通信は上のインターネットから下へ流れ、置いた機器を順に通ってWebサーバーへ行く。</li>
+      <li>本物の利用者（青丸・白四角）はサーバーまで届ける。攻撃（赤三角・桃ひし形・橙の点）は途中で止める。</li>
+      <li>利用者が取りこぼされたり、攻撃がサーバーに届くと信頼度が減る。0で終了。</li>
+      <li>組み終わったら「開始」。途中でも置ける。スペースキーで一時停止。</li>
+    </ol>
+    <div class="stages" id="stageList"></div>
+  </div>
+</div>
+
+<div class="ov" id="ovResult" hidden>
+  <div class="card">
+    <h1 id="rTitle"></h1>
+    <div class="stars" id="rStars"></div>
+    <dl class="res" id="rStats"></dl>
+    <p id="rMsg"></p>
+    <div class="btns" id="rBtns"></div>
+  </div>
+</div>
+
+<div class="ov" id="ovConfirm" hidden>
+  <div class="card">
+    <p id="cMsg"></p>
+    <div class="btns">
+      <button id="cYes" class="primary">はい</button>
+      <button id="cNo">やめる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== ゲーム計算（DOMに触らない） =====
+var CORE = (function () {
+  'use strict';
+
+  var DT = 1 / 30;          // 固定ステップ
+  var SEG = 0.32;           // ノード間の移動時間（秒）
+  var INLINE_SLOTS = 5;
+  var SERVER_SLOTS = 6;
+  var SERVER_TIMEOUT = 3;   // 利用者が待てる秒数
+  var SERVER_QMAX = 16;
+  var FAIL_COST = 0.5;
+  var GAP = 4;              // ウェーブ間の小休止
+  var REWARD = 0.5;
+  var WAVE_BONUS = 40;
+
+  var DEVICES = {
+    fw:    { name: 'ファイアウォール', short: 'FW', zone: 'inline', cap: [40, 70], cost: 100, up: 80,
+             desc: 'IPアドレスとポート番号を見て、通信を通すか止めるかを決める。Webで公開している443番などは通し、それ以外のポートへの通信を止める。HTTPの中身は見ないので、Web宛ての攻撃は素通りする。' },
+    waf:   { name: 'WAF', short: 'WAF', zone: 'inline', cap: [14, 26], cost: 180, up: 140,
+             desc: 'Webアプリケーションファイアウォール。HTTPリクエストの中身（HTTPSは暗号を解いてから）を検査し、SQLインジェクションなどの攻撃パターンを止める。中身を読むぶん処理が重く、さばける量が少ない。' },
+    rl:    { name: 'レート制限', short: 'RL', zone: 'inline', cap: [35, 60], cost: 120, up: 90,
+             desc: '送信元ごとにリクエスト数を数え、短時間に来すぎた分を落とす。機械的な連打に効く。普通の利用者はまず上限に届かない。分散した送信元からだと全部は落とせない。' },
+    cache: { name: 'キャッシュサーバー', short: 'CACHE', zone: 'inline', cap: [25, 45], cost: 140, up: 100,
+             desc: '画像やCSSのように誰に返しても同じ中身のファイルを手元に保存し、Webサーバーの代わりに返す。ログイン後の画面など毎回作るページは保存できないので奥へ流す。' },
+    lb:    { name: 'ロードバランサー', short: 'LB', zone: 'inline', cap: [40, 70], cost: 150, up: 100,
+             desc: '来たリクエストを複数のWebサーバーに振り分ける（ここでは空いている順）。ヘルスチェックで止まったサーバーを外す。これがないと、リクエストは最初の1台にしか届かない。' },
+    web:   { name: 'Webサーバー', short: 'WEB', zone: 'server', cap: [5, 9], cost: 100, up: 90,
+             desc: 'リクエストを処理してページを返す。1台が1秒にさばける量には限りがある。あふれると待ち行列が伸び、3秒待たされた利用者は離脱する。' }
+  };
+  var DEVICE_ORDER = ['fw', 'waf', 'rl', 'cache', 'lb', 'web'];
+
+  var TYPES = {
+    dyn:    { name: 'ページ閲覧', legit: true,
+              desc: 'ログイン後の画面やカートなど、毎回Webサーバーが作るページ。サーバーまで届けて処理する。' },
+    stat:   { name: '静的ファイル', legit: true,
+              desc: '画像やCSSなど中身が変わらないファイル。キャッシュサーバーがあればそこで返せる。' },
+    port:   { name: 'ポート攻撃', legit: false,
+              desc: 'Webで使わないポート（SSHの22番など）を叩いて侵入口を探す通信。ファイアウォールで止まる。サーバーに届くと侵入される。' },
+    sqli:   { name: 'SQLインジェクション', legit: false,
+              desc: '入力欄にSQL文を混ぜてデータベースを操作しようとする攻撃。Webと同じ443番宛てなのでファイアウォールは通してしまう。WAFで止める。届くとサーバーが乗っ取られ、復旧まで止まる。' },
+    bot:    { name: 'ボットの連打', legit: false, load: true,
+              desc: '少数の送信元から機械的に送られる大量のリクエスト。見た目は普通のアクセスなのでFWもWAFも通す。レート制限で落とす。放っておくとサーバーが埋まり、本物の利用者が待たされる。' }
+  };
+  var TYPE_ORDER = ['dyn', 'stat', 'port', 'sqli', 'bot'];
+
+  function W(dur, dyn, stat, port, sqli, bot, note) {
+    return { dur: dur, rates: { dyn: dyn, stat: stat, port: port, sqli: sqli, bot: bot }, note: note || '' };
+  }
+
+  var STAGES = [
+    { name: '小さなWebサイト', money: 250, start: { servers: ['web'] },
+      brief: '個人の小さなサイト。まずはアクセスをさばきつつ、怪しい通信を止める。',
+      waves: [
+        W(25, 1.5, 1.0, 0,   0, 0),
+        W(25, 2.0, 1.5, 0.4, 0, 0, '別のポートを探る通信が来る'),
+        W(25, 3.0, 2.0, 0.5, 0, 0),
+        W(25, 4.0, 3.0, 0.6, 0, 0, '紹介されてアクセスが増える'),
+        W(25, 5.0, 4.0, 0.8, 0, 0),
+        W(25, 6.0, 5.0, 1.0, 0, 0, 'アクセスの山'),
+        W(25, 7.0, 6.0, 1.2, 0, 0)
+      ] },
+    { name: '通販のセール', money: 450, start: { inline: ['fw', 'lb'], servers: ['web', 'web'] },
+      brief: 'セール当日。注文画面にアクセスが集まり、入力欄を狙う攻撃も来る。',
+      waves: [
+        W(25, 4,  3, 0.5, 0,   0),
+        W(25, 5,  4, 0.6, 0.3, 0, '入力欄を狙う攻撃が混ざる'),
+        W(25, 6,  4, 0.6, 0.4, 0),
+        W(25, 8,  6, 0.8, 0.5, 0, 'セール開始。アクセス集中'),
+        W(25, 10, 7, 0.8, 0.6, 0),
+        W(25, 8,  6, 1.0, 1.0, 0, '攻撃が強まる'),
+        W(25, 11, 8, 1.0, 0.7, 0),
+        W(25, 12, 9, 1.2, 0.9, 0, '最後の追い込み')
+      ] },
+    { name: '狙われたサービス', money: 550, start: { inline: ['fw'], servers: ['web', 'web'] },
+      brief: '話題になったサービス。普通のアクセスに混ざって、あらゆる攻撃が来る。',
+      waves: [
+        W(28, 5,  4, 0.6, 0.3, 0),
+        W(28, 6,  5, 0.6, 0.3, 6,  '機械的な連打が来る'),
+        W(28, 7,  5, 0.8, 0.4, 10),
+        W(28, 8,  6, 1.0, 0.5, 14),
+        W(28, 9,  7, 0.8, 1.0, 8,  '攻撃が強まる'),
+        W(28, 10, 7, 1.0, 0.6, 18, '連打が激しくなる'),
+        W(28, 11, 8, 1.2, 0.8, 20),
+        W(28, 12, 9, 1.4, 0.9, 24, '最後の山')
+      ] }
+  ];
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  function makeDevice(key) {
+    return { key: key, lv: 0, queue: [], tokens: 0, down: 0, flash: 0, load: 0, spent: DEVICES[key].cost };
+  }
+  function cap(d) { return DEVICES[d.key].cap[d.lv]; }
+
+  function createGame(stageIdx, seed) {
+    var st = STAGES[stageIdx];
+    var g = {
+      stageIdx: stageIdx, stage: st, rand: mulberry32(seed || 1),
+      inline: [], servers: [], packets: [], nextId: 1,
+      started: false, over: false, won: false,
+      waveIdx: 0, waveT: 0, inGap: false, gapT: 0, ending: false, endT: 0, t: 0,
+      trust: 100, money: st.money,
+      stats: { served: 0, failed: 0, blocked: 0, breaches: 0, legit: 0, attacks: 0, cacheHits: 0 },
+      sec: { served: 0, failed: 0, blocked: 0 }, secT: 0, hist: [],
+      acc: {}, seen: {}, events: [], hintCd: {}
+    };
+    var i;
+    for (i = 0; i < INLINE_SLOTS; i++) g.inline.push(null);
+    for (i = 0; i < SERVER_SLOTS; i++) g.servers.push(null);
+    (st.start.inline || []).forEach(function (k, j) { g.inline[j] = makeDevice(k); g.inline[j].spent = 0; });
+    (st.start.servers || []).forEach(function (k, j) { g.servers[j] = makeDevice(k); g.servers[j].spent = 0; });
+    TYPE_ORDER.forEach(function (k) { g.acc[k] = g.rand(); });
+    return g;
+  }
+
+  function emit(g, e) { g.events.push(e); }
+  function hint(g, key, text, cd) {
+    if ((g.hintCd[key] || 0) > g.t) return;
+    g.hintCd[key] = g.t + (cd || 9999);
+    emit(g, { kind: 'hint', text: text });
+  }
+
+  // ---- 配置操作 ----
+  function slotArr(g, zone) { return zone === 'server' ? g.servers : g.inline; }
+  function place(g, zone, idx, key) {
+    var def = DEVICES[key];
+    if (!def || def.zone !== zone) return 'この場所には置けません';
+    var arr = slotArr(g, zone);
+    if (arr[idx]) return 'すでに機器があります';
+    if (g.money < def.cost) return '予算が足りません';
+    g.money -= def.cost;
+    arr[idx] = makeDevice(key);
+    return null;
+  }
+  function upgrade(g, zone, idx) {
+    var d = slotArr(g, zone)[idx];
+    if (!d) return '機器がありません';
+    if (d.lv >= 1) return 'これ以上強化できません';
+    var c = DEVICES[d.key].up;
+    if (g.money < c) return '予算が足りません';
+    g.money -= c; d.lv = 1; d.spent += c;
+    return null;
+  }
+  function refund(d) { return Math.floor(d.spent / 2); }
+  function remove(g, zone, idx) {
+    var arr = slotArr(g, zone), d = arr[idx];
+    if (!d) return '機器がありません';
+    g.money += refund(d);
+    d.queue.forEach(function (p) { if (TYPES[p.type].legit) fail(g, p, 'removed'); });
+    arr[idx] = null;
+    return null;
+  }
+  function move(g, idx, dir) {
+    var j = idx + dir;
+    if (j < 0 || j >= INLINE_SLOTS) return '動かせません';
+    var t = g.inline[idx]; g.inline[idx] = g.inline[j]; g.inline[j] = t;
+    return null;
+  }
+
+  // ---- 進行 ----
+  function spawn(g, type) {
+    var p = { id: g.nextId++, type: type, node: 0, p: 0, lb: false, srv: -1, wait: 0,
+              lane: g.rand() * 2 - 1, src: -1 };
+    g.packets.push(p);
+    if (TYPES[type].legit) g.stats.legit++; else g.stats.attacks++;
+    if (!g.seen[type]) { g.seen[type] = true; emit(g, { kind: 'newtype', type: type }); }
+  }
+
+  function fail(g, p, reason, where) {
+    g.stats.failed++; g.sec.failed++;
+    g.trust -= FAIL_COST;
+    p.dead = true;
+    emit(g, { kind: 'fail', reason: reason, node: p.node, srv: p.srv, lane: p.lane, where: where });
+  }
+  function block(g, p, node) {
+    g.stats.blocked++; g.sec.blocked++;
+    p.dead = true;
+    emit(g, { kind: 'block', type: p.type, node: node, lane: p.lane });
+  }
+  function serve(g, p, where) {
+    g.stats.served++; g.sec.served++;
+    g.money += REWARD;
+    p.dead = true;
+    emit(g, { kind: 'serve', where: where, node: p.node, srv: p.srv, lane: p.lane });
+  }
+
+  function pickServer(g, p) {
+    var i, best = -1, bestLoad = 1e9;
+    if (p.lb) {
+      for (i = 0; i < SERVER_SLOTS; i++) {
+        var s = g.servers[i];
+        if (!s || s.down > 0) continue;
+        var l = (s.queue.length + 1) / cap(s);
+        if (l < bestLoad) { bestLoad = l; best = i; }
+      }
+      return best;
+    }
+    for (i = 0; i < SERVER_SLOTS; i++) if (g.servers[i]) return i;
+    return -1;
+  }
+
+  function arriveInline(g, p) {
+    var d = g.inline[p.node];
+    if (!d) { advance(g, p); return; }
+    var qmax = Math.max(4, Math.ceil(cap(d) * 1.0));
+    if (d.queue.length >= qmax) {
+      if (TYPES[p.type].legit) {
+        fail(g, p, 'overflow', p.node);
+        hint(g, 'of' + d.key, DEVICES[d.key].name + 'が処理しきれず取りこぼしています。強化するか、前に軽い機器を置いて負荷を減らす。', 15);
+      } else p.dead = true; // あふれた分は中身に関係なく捨てられる
+      return;
+    }
+    p.inQ = true; d.queue.push(p);
+  }
+
+  function processInline(g, d, idx) {
+    var p = d.queue.shift();
+    p.inQ = false;
+    d.flash = 0.15;
+    var r;
+    switch (d.key) {
+      case 'fw': if (p.type === 'port') { block(g, p, idx); return; } break;
+      case 'waf': if (p.type === 'sqli') { block(g, p, idx); return; } break;
+      case 'rl': if (p.type === 'bot' && g.rand() < 0.9) { block(g, p, idx); return; } break;
+      case 'cache':
+        if (p.type === 'stat' && g.rand() < 0.85) { g.stats.cacheHits++; serve(g, p, 'cache'); return; }
+        break;
+      case 'lb': p.lb = true; break;
+    }
+    advance(g, p);
+  }
+
+  function advance(g, p) {
+    p.node++; p.p = 0;
+    if (p.node === INLINE_SLOTS) p.srv = pickServer(g, p);
+  }
+
+  function arriveServer(g, p) {
+    var s = p.srv >= 0 ? g.servers[p.srv] : null;
+    if (!s) {
+      if (TYPES[p.type].legit) fail(g, p, 'noserver');
+      else p.dead = true;
+      return;
+    }
+    if (s.down > 0) {
+      if (TYPES[p.type].legit) fail(g, p, 'down');
+      else p.dead = true;
+      return;
+    }
+    if (p.type === 'port') {
+      breach(g, p, s, 4);
+      return;
+    }
+    if (p.type === 'sqli') {
+      breach(g, p, s, 8);
+      s.down = 6;
+      s.queue.forEach(function (q) { if (TYPES[q.type].legit) fail(g, q, 'down'); else q.dead = true; });
+      s.queue = [];
+      if (!p.lb) hint(g, 'downNoLb', 'サーバーが止まりました。ロードバランサーがあれば、止まったサーバーを外して他へ回せます。', 9999);
+      return;
+    }
+    if (s.queue.length >= SERVER_QMAX) {
+      if (TYPES[p.type].legit) fail(g, p, 'overflow');
+      else p.dead = true;
+      return;
+    }
+    p.inQ = true; p.wait = 0; s.queue.push(p);
+  }
+
+  function breach(g, p, s, dmg) {
+    g.stats.breaches++;
+    g.trust -= dmg;
+    p.dead = true;
+    emit(g, { kind: 'breach', type: p.type, srv: p.srv, dmg: dmg });
+  }
+
+  function processServer(g, s) {
+    var p = s.queue.shift();
+    p.inQ = false;
+    s.flash = 0.12;
+    if (TYPES[p.type].legit) serve(g, p, 'server');
+    else p.dead = true; // ボット：処理枠を食っただけ
+  }
+
+  function waveRates(g) {
+    if (!g.started || g.inGap || g.ending) return null;
+    return g.stage.waves[g.waveIdx].rates;
+  }
+
+  function step(g) {
+    if (g.over) return;
+    var dt = DT, i, j;
+    if (!g.started) return;
+    g.t += dt;
+
+    // 出現
+    var rates = waveRates(g);
+    if (rates) {
+      TYPE_ORDER.forEach(function (k) {
+        var r = rates[k] || 0;
+        if (!r) return;
+        g.acc[k] += r * dt;
+        while (g.acc[k] >= 1) { g.acc[k] -= 0.6 + g.rand() * 0.8; spawn(g, k); }
+      });
+    }
+
+    // 移動
+    for (i = 0; i < g.packets.length; i++) {
+      var p = g.packets[i];
+      if (p.dead || p.inQ) continue;
+      p.p += dt / SEG;
+      if (p.p >= 1) {
+        p.p = 1;
+        if (p.node < INLINE_SLOTS) arriveInline(g, p);
+        else arriveServer(g, p);
+      }
+    }
+
+    // 前段の処理
+    for (i = 0; i < INLINE_SLOTS; i++) {
+      var d = g.inline[i];
+      if (!d) continue;
+      var c = cap(d);
+      d.tokens = Math.min(d.tokens + c * dt, 1 + c * dt);
+      while (d.tokens >= 1 && d.queue.length) { d.tokens -= 1; processInline(g, d, i); }
+      d.load += ((d.queue.length / Math.max(4, c)) - d.load) * 0.1;
+      if (d.flash > 0) d.flash -= dt;
+    }
+
+    // サーバー
+    var anyLb = g.inline.some(function (x) { return x && x.key === 'lb'; });
+    var nServers = 0;
+    for (i = 0; i < SERVER_SLOTS; i++) {
+      var s = g.servers[i];
+      if (!s) continue;
+      nServers++;
+      if (s.down > 0) { s.down -= dt; if (s.down <= 0) { s.down = 0; emit(g, { kind: 'recover', srv: i }); } continue; }
+      var cs = cap(s);
+      s.tokens = Math.min(s.tokens + cs * dt, 1 + cs * dt);
+      while (s.tokens >= 1 && s.queue.length) { s.tokens -= 1; processServer(g, s); }
+      for (j = s.queue.length - 1; j >= 0; j--) {
+        var q = s.queue[j];
+        q.wait += dt;
+        if (q.wait > SERVER_TIMEOUT) {
+          s.queue.splice(j, 1);
+          q.inQ = false;
+          if (TYPES[q.type].legit) fail(g, q, 'timeout'); else q.dead = true;
+        }
+      }
+      s.load += ((s.queue.length / SERVER_QMAX) - s.load) * 0.1;
+      if (s.load > 0.5) hint(g, 'busy', 'サーバーの待ち行列が伸びています。待たされた利用者は3秒で離脱します。', 20);
+      if (s.flash > 0) s.flash -= dt;
+    }
+    if (nServers >= 2 && !anyLb) hint(g, 'nolb', 'ロードバランサーがないので、2台目以降のサーバーには何も届いていません。', 9999);
+
+    g.packets = g.packets.filter(function (p) { return !p.dead; });
+
+    // 1秒ごとの集計
+    g.secT += dt;
+    if (g.secT >= 1) {
+      g.secT -= 1;
+      g.hist.push(g.sec);
+      if (g.hist.length > 60) g.hist.shift();
+      g.sec = { served: 0, failed: 0, blocked: 0 };
+    }
+
+    // ウェーブ進行
+    if (g.ending) {
+      g.endT += dt;
+      if (g.packets.length === 0 || g.endT > 5) finish(g, true);
+    } else if (g.inGap) {
+      g.gapT += dt;
+      if (g.gapT >= GAP) {
+        g.inGap = false; g.waveT = 0; g.waveIdx++;
+        emit(g, { kind: 'wave', idx: g.waveIdx });
+      }
+    } else {
+      g.waveT += dt;
+      if (g.waveT >= g.stage.waves[g.waveIdx].dur) {
+        g.money += WAVE_BONUS;
+        emit(g, { kind: 'waveEnd', idx: g.waveIdx, bonus: WAVE_BONUS });
+        if (g.waveIdx >= g.stage.waves.length - 1) { g.ending = true; g.endT = 0; }
+        else { g.inGap = true; g.gapT = 0; }
+      }
+    }
+
+    if (g.trust <= 0) { g.trust = 0; finish(g, false); }
+  }
+
+  function finish(g, won) {
+    if (g.over) return;
+    g.over = true; g.won = won;
+    var s = g.stats;
+    g.result = {
+      won: won,
+      stars: won ? (g.trust >= 80 ? 3 : g.trust >= 50 ? 2 : 1) : 0,
+      trust: g.trust,
+      rate: s.served + s.failed > 0 ? s.served / (s.served + s.failed) : 1
+    };
+    emit(g, { kind: 'end', won: won });
+  }
+
+  function start(g) {
+    if (g.started) return;
+    g.started = true;
+    emit(g, { kind: 'wave', idx: 0 });
+  }
+
+  // 次（または今）のウェーブで初登場する種類
+  function upcoming(g) {
+    var idx = g.started ? (g.inGap ? g.waveIdx + 1 : g.waveIdx) : 0;
+    var w = g.stage.waves[idx];
+    if (!w) return null;
+    var seen = {};
+    for (var i = 0; i < idx; i++) TYPE_ORDER.forEach(function (k) { if (g.stage.waves[i].rates[k]) seen[k] = true; });
+    var types = TYPE_ORDER.filter(function (k) { return w.rates[k] > 0; });
+    return { idx: idx, wave: w, types: types, fresh: types.filter(function (k) { return !seen[k]; }) };
+  }
+
+  return {
+    DT: DT, SEG: SEG, INLINE_SLOTS: INLINE_SLOTS, SERVER_SLOTS: SERVER_SLOTS, SERVER_TIMEOUT: SERVER_TIMEOUT,
+    DEVICES: DEVICES, DEVICE_ORDER: DEVICE_ORDER, TYPES: TYPES, TYPE_ORDER: TYPE_ORDER, STAGES: STAGES,
+    createGame: createGame, step: step, start: start, place: place, upgrade: upgrade, remove: remove,
+    move: move, refund: refund, cap: cap, upcoming: upcoming
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  var C = CORE;
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---- セーブ ----
+  var SAVE_KEY = 'rack-defense-v1';
+  var save = { stars: [0, 0, 0] };
+  try {
+    var raw = localStorage.getItem(SAVE_KEY);
+    if (raw) { var o = JSON.parse(raw); if (o && Array.isArray(o.stars)) save.stars = o.stars.concat([0, 0, 0]).slice(0, 3); }
+  } catch (e) { /* 保存できない環境 */ }
+  function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { } }
+
+  // ---- 見た目の定数 ----
+  var TYPE_COLOR = { dyn: '#79aee0', stat: '#dcdcd4', port: '#e06a5f', sqli: '#e889b5', bot: '#e0a43a' };
+  var ROLE = {
+    fw: '止める：ポート攻撃', waf: '止める：SQLインジェクション', rl: '止める：ボットの連打',
+    cache: '返す：静的ファイル', lb: '振り分ける：複数サーバーへ', web: '処理する：リクエスト'
+  };
+  var REASON = {
+    overflow: '処理しきれず取りこぼし', timeout: '待たされて離脱', down: '停止中のサーバーに届いた',
+    noserver: 'サーバーがない', removed: '撤去で処理中のものが消えた'
+  };
+
+  function shapeSvg(type) {
+    var c = TYPE_COLOR[type];
+    var s = { dyn: '<circle cx="6" cy="6" r="4.5" fill="' + c + '"/>',
+              stat: '<rect x="2" y="2" width="8" height="8" fill="' + c + '"/>',
+              port: '<path d="M6 1.5 L10.5 10 L1.5 10 Z" fill="' + c + '"/>',
+              sqli: '<path d="M6 1 L11 6 L6 11 L1 6 Z" fill="' + c + '"/>',
+              bot: '<circle cx="6" cy="6" r="2.6" fill="' + c + '"/>' }[type];
+    return '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">' + s + '</svg>';
+  }
+
+  // ---- 状態 ----
+  var g = null, stageIdx = 0, paused = true, speed = 1, placing = null, sel = null, fx = [], acc = 0;
+  var lastFrame = 0, logT0 = 0;
+
+  // ---- ラック描画レイアウト ----
+  var cv = $('rack'), ctx = cv.getContext('2d'), L = {};
+  function layout() {
+    var w = cv.clientWidth || 360;
+    var rail = Math.max(14, Math.min(22, w * 0.04));
+    var unitH = 48, gap = 8, top = 58;
+    L.w = w; L.rail = rail;
+    L.x0 = rail + 6; L.x1 = w - rail - 6; L.cx = (L.x0 + L.x1) / 2; L.uw = L.x1 - L.x0;
+    L.net = { x: L.x0, y: 8, w: L.uw, h: 40 };
+    L.inl = [];
+    for (var i = 0; i < C.INLINE_SLOTS; i++) L.inl.push({ x: L.x0, y: top + i * (unitH + gap), w: L.uw, h: unitH });
+    var sy = top + C.INLINE_SLOTS * (unitH + gap) + 26;
+    L.srvLabelY = sy - 9;
+    var cols = 3, sg = 6, sw = (L.uw - sg * (cols - 1)) / cols, sh = 62;
+    L.srv = [];
+    for (i = 0; i < C.SERVER_SLOTS; i++) {
+      var r = Math.floor(i / cols), c = i % cols;
+      L.srv.push({ x: L.x0 + c * (sw + sg), y: sy + r * (sh + sg), w: sw, h: sh });
+    }
+    L.h = sy + 2 * (sh + sg) + 8;
+    var dpr = window.devicePixelRatio || 1;
+    cv.style.height = L.h + 'px';
+    cv.width = Math.round(w * dpr); cv.height = Math.round(L.h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function nodeY(n) {
+    if (n < 0) return L.net.y + L.net.h;
+    return L.inl[n].y + L.inl[n].h / 2;
+  }
+  function laneX(lane) { return L.cx + lane * L.uw * 0.18; }
+  function packetPos(p) {
+    var x0 = laneX(p.lane), y0 = nodeY(p.node - 1), x1 = x0, y1;
+    if (p.node < C.INLINE_SLOTS) y1 = nodeY(p.node);
+    else {
+      var s = L.srv[p.srv >= 0 ? p.srv : 0];
+      x1 = s.x + s.w / 2 + p.lane * s.w * 0.2; y1 = s.y + s.h / 2;
+      if (p.srv < 0) { x1 = x0; y1 = L.srv[0].y - 6; }
+    }
+    var t = p.p;
+    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t };
+  }
+
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function led(x, y, col, on) {
+    ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = on ? col : '#2b3036'; ctx.fill();
+  }
+  function drawShape(type, x, y, s) {
+    ctx.fillStyle = TYPE_COLOR[type];
+    ctx.beginPath();
+    if (type === 'dyn') ctx.arc(x, y, 3.6 * s, 0, Math.PI * 2);
+    else if (type === 'stat') ctx.rect(x - 3.2 * s, y - 3.2 * s, 6.4 * s, 6.4 * s);
+    else if (type === 'port') { ctx.moveTo(x, y - 4.2 * s); ctx.lineTo(x + 4 * s, y + 3.2 * s); ctx.lineTo(x - 4 * s, y + 3.2 * s); ctx.closePath(); }
+    else if (type === 'sqli') { ctx.moveTo(x, y - 4.4 * s); ctx.lineTo(x + 4.4 * s, y); ctx.lineTo(x, y + 4.4 * s); ctx.lineTo(x - 4.4 * s, y); ctx.closePath(); }
+    else ctx.arc(x, y, 2.2 * s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function draw() {
+    var w = L.w, i;
+    ctx.clearRect(0, 0, w, L.h);
+    // ラック枠
+    ctx.fillStyle = '#22262b'; ctx.fillRect(0, 0, w, L.h);
+    ctx.fillStyle = '#2a2f35'; ctx.fillRect(L.rail, 0, w - L.rail * 2, L.h);
+    ctx.fillStyle = '#4b525b';
+    ctx.fillRect(0, 0, L.rail, L.h); ctx.fillRect(w - L.rail, 0, L.rail, L.h);
+    ctx.fillStyle = '#2a2f35';
+    for (var hy = 10; hy < L.h; hy += 16) {
+      ctx.fillRect(L.rail / 2 - 2, hy, 4, 6); ctx.fillRect(w - L.rail / 2 - 2, hy, 4, 6);
+    }
+    if (!g) return;
+
+    // 外部回線
+    var n = L.net;
+    rr(n.x, n.y, n.w, n.h, 3); ctx.fillStyle = '#353b42'; ctx.fill();
+    ctx.fillStyle = '#9ba2aa'; ctx.font = '12px ' + getFont();
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    ctx.fillText('インターネット（外部回線）', n.x + 10, n.y + n.h / 2);
+    for (i = 0; i < 6; i++) { ctx.fillStyle = '#23272c'; ctx.fillRect(n.x + n.w - 14 - i * 14, n.y + 14, 9, 12); }
+    led(n.x + n.w - 104, n.y + n.h / 2, '#7cc488', g.started && !g.over);
+
+    // 配線（中央の流れ）
+    ctx.strokeStyle = '#3b4249'; ctx.lineWidth = Math.max(10, L.uw * 0.4);
+    ctx.beginPath(); ctx.moveTo(L.cx, n.y + n.h); ctx.lineTo(L.cx, L.srv[0].y - 4); ctx.stroke();
+    ctx.lineWidth = 1;
+
+    // 前段スロット
+    for (i = 0; i < C.INLINE_SLOTS; i++) drawUnit(i);
+    // サーバー区画
+    ctx.fillStyle = '#9ba2aa'; ctx.font = '11px ' + getFont(); ctx.textAlign = 'left';
+    var lb = g.inline.some(function (d) { return d && d.key === 'lb'; });
+    ctx.fillText('サーバー区画' + (lb ? '（振り分けあり）' : '（振り分けなし：1台目だけに届く）'), L.x0, L.srvLabelY);
+    for (i = 0; i < C.SERVER_SLOTS; i++) drawServer(i);
+
+    // パケット
+    for (i = 0; i < g.packets.length; i++) {
+      var p = g.packets[i];
+      if (p.inQ) continue;
+      var pos = packetPos(p);
+      drawShape(p.type, pos.x, pos.y, 1);
+    }
+    // エフェクト
+    for (i = 0; i < fx.length; i++) {
+      var f = fx[i], a = Math.max(0, 1 - f.t / f.life);
+      ctx.globalAlpha = a;
+      if (f.kind === 'x') {
+        ctx.strokeStyle = f.col; ctx.lineWidth = 2;
+        var r = 4 + f.t * 10;
+        ctx.beginPath(); ctx.moveTo(f.x - r, f.y - r); ctx.lineTo(f.x + r, f.y + r);
+        ctx.moveTo(f.x + r, f.y - r); ctx.lineTo(f.x - r, f.y + r); ctx.stroke(); ctx.lineWidth = 1;
+      } else if (f.kind === 'ring') {
+        ctx.strokeStyle = f.col; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(f.x, f.y, 3 + f.t * 14, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1;
+      } else if (f.kind === 'text') {
+        ctx.fillStyle = f.col; ctx.font = '700 12px ' + getFont(); ctx.textAlign = 'center';
+        ctx.fillText(f.text, f.x, f.y - f.t * 18);
+      } else if (f.kind === 'flash') {
+        ctx.strokeStyle = f.col; ctx.lineWidth = 3;
+        rr(f.r.x - 2, f.r.y - 2, f.r.w + 4, f.r.h + 4, 4); ctx.stroke(); ctx.lineWidth = 1;
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  var fontCache = null;
+  function getFont() {
+    if (!fontCache) fontCache = getComputedStyle(document.body).fontFamily;
+    return fontCache;
+  }
+
+  function drawUnit(i) {
+    var r = L.inl[i], d = g.inline[i];
+    var isSel = sel && sel.zone === 'inline' && sel.idx === i;
+    var canPlace = placing && C.DEVICES[placing].zone === 'inline' && !d;
+    if (!d) {
+      rr(r.x, r.y, r.w, r.h, 3);
+      ctx.fillStyle = canPlace ? '#3a3426' : '#262a30'; ctx.fill();
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = canPlace ? '#e0a43a' : '#434a53'; ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = canPlace ? '#e0a43a' : '#6b727a'; ctx.font = '12px ' + getFont();
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText((i + 1) + 'U 空き' + (canPlace ? '：ここに置く' : ''), r.x + 10, r.y + r.h / 2);
+      return;
+    }
+    var def = C.DEVICES[d.key];
+    rr(r.x, r.y, r.w, r.h, 3);
+    ctx.fillStyle = '#3a4048'; ctx.fill();
+    ctx.strokeStyle = isSel ? '#e0a43a' : (d.flash > 0 ? '#5a626b' : '#4a5159'); ctx.lineWidth = isSel ? 2 : 1; ctx.stroke(); ctx.lineWidth = 1;
+    // 取っ手
+    ctx.fillStyle = '#2c3137'; ctx.fillRect(r.x + 4, r.y + 8, 4, r.h - 16); ctx.fillRect(r.x + r.w - 8, r.y + 8, 4, r.h - 16);
+    // 名前
+    ctx.fillStyle = '#e4e1d9'; ctx.font = '700 13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    var label = def.name + (d.lv ? ' Lv2' : '');
+    var narrow = r.w < 340;
+    ctx.fillText(narrow ? def.short + (d.lv ? '+' : '') : label, r.x + 14, r.y + 17);
+    ctx.fillStyle = '#9ba2aa'; ctx.font = '11px ' + getFont();
+    ctx.fillText((i + 1) + 'U  ' + C.cap(d) + '/秒', r.x + 14, r.y + 35);
+    // 負荷バー（右側）
+    var bw = Math.min(90, r.w * 0.22), bx = r.x + r.w - bw - 34, by = r.y + r.h / 2 - 3;
+    ctx.fillStyle = '#262a30'; ctx.fillRect(bx, by, bw, 6);
+    var ld = Math.min(1, d.load);
+    ctx.fillStyle = ld > 0.8 ? '#e06a5f' : ld > 0.45 ? '#e0a43a' : '#7cc488';
+    ctx.fillRect(bx, by, bw * ld, 6);
+    led(r.x + r.w - 22, r.y + 14, '#7cc488', true);
+    led(r.x + r.w - 22, r.y + r.h - 14, ld > 0.8 ? '#e06a5f' : '#e0a43a', d.flash > 0 || ld > 0.8);
+  }
+
+  function drawServer(i) {
+    var r = L.srv[i], s = g.servers[i];
+    var isSel = sel && sel.zone === 'server' && sel.idx === i;
+    var canPlace = placing && C.DEVICES[placing].zone === 'server' && !s;
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    if (!s) {
+      rr(r.x, r.y, r.w, r.h, 3);
+      ctx.fillStyle = canPlace ? '#3a3426' : '#262a30'; ctx.fill();
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = canPlace ? '#e0a43a' : '#434a53'; ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = canPlace ? '#e0a43a' : '#6b727a'; ctx.font = '11px ' + getFont();
+      ctx.fillText(canPlace ? 'ここに置く' : '空き', r.x + 8, r.y + r.h / 2);
+      return;
+    }
+    rr(r.x, r.y, r.w, r.h, 3);
+    ctx.fillStyle = s.down > 0 ? '#4a3532' : '#3a4048'; ctx.fill();
+    ctx.strokeStyle = isSel ? '#e0a43a' : '#4a5159'; ctx.lineWidth = isSel ? 2 : 1; ctx.stroke(); ctx.lineWidth = 1;
+    ctx.fillStyle = '#e4e1d9'; ctx.font = '700 12px ' + getFont();
+    ctx.fillText('WEB-' + (i + 1) + (s.lv ? ' Lv2' : ''), r.x + 8, r.y + 14);
+    ctx.fillStyle = '#9ba2aa'; ctx.font = '11px ' + getFont();
+    if (s.down > 0) {
+      ctx.fillStyle = '#e06a5f';
+      ctx.fillText('復旧中 ' + s.down.toFixed(1) + '秒', r.x + 8, r.y + 32);
+    } else {
+      ctx.fillText('待ち ' + s.queue.length, r.x + 8, r.y + 32);
+    }
+    // 待ち行列バー
+    var bw = r.w - 16;
+    ctx.fillStyle = '#262a30'; ctx.fillRect(r.x + 8, r.y + 46, bw, 6);
+    var ld = Math.min(1, s.queue.length / 16);
+    ctx.fillStyle = ld > 0.6 ? '#e06a5f' : ld > 0.3 ? '#e0a43a' : '#7cc488';
+    ctx.fillRect(r.x + 8, r.y + 46, bw * ld, 6);
+    led(r.x + r.w - 12, r.y + 14, s.down > 0 ? '#e06a5f' : '#7cc488', true);
+  }
+
+  // ---- 入力 ----
+  function hit(x, y) {
+    var i, r;
+    for (i = 0; i < L.inl.length; i++) { r = L.inl[i]; if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { zone: 'inline', idx: i }; }
+    for (i = 0; i < L.srv.length; i++) { r = L.srv[i]; if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { zone: 'server', idx: i }; }
+    return null;
+  }
+  cv.addEventListener('click', function (ev) {
+    if (!g || g.over) return;
+    var b = cv.getBoundingClientRect();
+    var h = hit(ev.clientX - b.left, ev.clientY - b.top);
+    if (!h) { placing = null; sel = null; refreshUi(); return; }
+    var arr = h.zone === 'server' ? g.servers : g.inline;
+    if (arr[h.idx]) { placing = null; sel = h; refreshUi(); return; }
+    if (placing) {
+      var err = C.place(g, h.zone, h.idx, placing);
+      if (err) { flashMsg(err); return; }
+      addLog((h.zone === 'server' ? 'WEB-' + (h.idx + 1) : (h.idx + 1) + 'U') + 'に' + C.DEVICES[placing].name + 'を設置');
+      sel = h;
+      if (g.money < C.DEVICES[placing].cost) placing = null;
+      refreshUi();
+    } else {
+      sel = null; refreshUi();
+    }
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (!$('ovTitle').hidden || !$('ovResult').hidden || !$('ovConfirm').hidden) return;
+    if (ev.code === 'Space') { ev.preventDefault(); togglePause(); }
+    else if (ev.key === 'Escape') { placing = null; sel = null; refreshUi(); }
+  });
+
+  // ---- UI ----
+  function buildShop() {
+    var el = $('shop'); el.innerHTML = '';
+    C.DEVICE_ORDER.forEach(function (k) {
+      var d = C.DEVICES[k];
+      var b = document.createElement('button');
+      b.dataset.k = k;
+      b.innerHTML = '<span class="row1"><span class="nm">' + d.name + '</span><span class="num">' + d.cost + '</span></span><span class="rl">' + ROLE[k] + '</span>';
+      b.addEventListener('click', function () {
+        placing = placing === k ? null : k;
+        sel = null;
+        detailInfo = placing ? { kind: 'device', key: k } : null;
+        refreshUi();
+      });
+      el.appendChild(b);
+    });
+  }
+
+  var detailInfo = null, msgTimer = 0;
+  function flashMsg(t) {
+    var m = document.querySelector('#detail .msg');
+    if (m) m.textContent = t;
+    msgTimer = 2.5;
+  }
+
+  function renderDetail() {
+    var el = $('detail'), html = '';
+    if (sel) {
+      var arr = sel.zone === 'server' ? g.servers : g.inline, d = arr[sel.idx];
+      if (!d) { sel = null; return renderDetail(); }
+      var def = C.DEVICES[d.key];
+      var where = sel.zone === 'server' ? 'WEB-' + (sel.idx + 1) : (sel.idx + 1) + 'U';
+      html += '<h2>' + where + '：' + def.name + (d.lv ? '（Lv2）' : '') + '</h2>';
+      html += '<p>' + def.desc + '</p>';
+      html += '<div class="meta">処理量 <span class="num">' + C.cap(d) + '</span>/秒' + (d.lv ? '' : '（強化で ' + def.cap[1] + '/秒）') + '</div>';
+      html += '<div class="acts">';
+      if (!d.lv) html += '<button data-a="up"' + (g.money < def.up ? ' disabled' : '') + '>強化 <span class="num">' + def.up + '</span></button>';
+      if (sel.zone === 'inline') {
+        html += '<button data-a="mu"' + (sel.idx === 0 ? ' disabled' : '') + '>上へ</button>';
+        html += '<button data-a="md"' + (sel.idx === C.INLINE_SLOTS - 1 ? ' disabled' : '') + '>下へ</button>';
+      }
+      html += '<button data-a="rm">撤去（+<span class="num">' + C.refund(d) + '</span>）</button>';
+      html += '</div><div class="msg"></div>';
+    } else if (detailInfo && detailInfo.kind === 'device') {
+      var dd = C.DEVICES[detailInfo.key];
+      html += '<h2>' + dd.name + '</h2><p>' + dd.desc + '</p>';
+      html += '<div class="meta">価格 <span class="num">' + dd.cost + '</span>　処理量 <span class="num">' + dd.cap[0] + '</span>/秒　置き場所：' + (dd.zone === 'server' ? 'サーバー区画' : '前段の空き（1U〜' + C.INLINE_SLOTS + 'U）') + '</div>';
+      html += '<div class="meta">' + (g.money >= dd.cost ? 'ラックの空きを押して設置。' : '予算が足りません。') + '</div><div class="msg"></div>';
+    } else if (detailInfo && detailInfo.kind === 'type') {
+      var t = C.TYPES[detailInfo.key];
+      html += '<h2>' + shapeSvg(detailInfo.key) + ' ' + t.name + '</h2><p>' + t.desc + '</p><div class="msg"></div>';
+    } else {
+      html += '<h2>説明</h2><p class="meta" style="margin:0">機器やウェーブの種類を押すと、ここに説明が出ます。置いた機器を押すと強化・並び替え・撤去ができます。</p><div class="msg"></div>';
+    }
+    el.innerHTML = html;
+    el.querySelectorAll('button[data-a]').forEach(function (b) {
+      b.addEventListener('click', function () { act(b.dataset.a); });
+    });
+  }
+
+  function act(a) {
+    if (!sel || g.over) return;
+    var err = null, name = C.DEVICES[(sel.zone === 'server' ? g.servers : g.inline)[sel.idx].key].name;
+    if (a === 'up') { err = C.upgrade(g, sel.zone, sel.idx); if (!err) addLog(name + 'を強化'); }
+    else if (a === 'mu' || a === 'md') {
+      var dir = a === 'mu' ? -1 : 1;
+      err = C.move(g, sel.idx, dir);
+      if (!err) sel = { zone: 'inline', idx: sel.idx + dir };
+    } else if (a === 'rm') {
+      var dv = (sel.zone === 'server' ? g.servers : g.inline)[sel.idx];
+      askConfirm(name + 'を撤去しますか？（' + C.refund(dv) + ' 戻ります）', function () {
+        C.remove(g, sel.zone, sel.idx); addLog(name + 'を撤去'); sel = null; refreshUi();
+      });
+      return;
+    }
+    if (err) flashMsg(err);
+    refreshUi();
+  }
+
+  function renderNext() {
+    var u = C.upcoming(g);
+    var chips = $('nChips');
+    if (!u) {
+      $('nTitle').textContent = '最終ウェーブ';
+      $('nNote').textContent = 'これを耐えればクリア。';
+      chips.innerHTML = '';
+      return;
+    }
+    var now = g.started && !g.inGap && !g.ending;
+    $('nTitle').textContent = (now ? '現在のウェーブ ' : '次のウェーブ ') + (u.idx + 1) + ' / ' + g.stage.waves.length;
+    $('nNote').textContent = u.wave.note || '';
+    chips.innerHTML = '';
+    u.types.forEach(function (k) {
+      var b = document.createElement('button');
+      var fresh = u.fresh.indexOf(k) >= 0 && u.idx > 0;
+      b.className = 'chip' + (fresh ? ' fresh' : '');
+      b.innerHTML = shapeSvg(k) + C.TYPES[k].name + (fresh ? '<span class="new">初登場</span>' : '');
+      b.addEventListener('click', function () { sel = null; placing = null; detailInfo = { kind: 'type', key: k }; refreshUi(); });
+      chips.appendChild(b);
+    });
+  }
+
+  var nextKey = '';
+  function refreshUi() {
+    $('shop').querySelectorAll('button').forEach(function (b) {
+      var k = b.dataset.k;
+      b.classList.toggle('on', placing === k);
+      b.disabled = !g || g.over || g.money < C.DEVICES[k].cost;
+    });
+    renderDetail();
+    nextKey = '';
+    renderHud();
+  }
+
+  function renderHud() {
+    if (!g) return;
+    var tr = Math.max(0, g.trust);
+    $('kTrust').textContent = Math.ceil(tr);
+    var bar = $('kTrustBar');
+    bar.style.width = tr + '%';
+    bar.style.background = tr > 60 ? 'var(--green)' : tr > 30 ? 'var(--accent)' : 'var(--red)';
+    $('kMoney').textContent = Math.floor(g.money);
+    var s = g.stats, tot = s.served + s.failed;
+    $('kRate').textContent = tot ? (s.served / tot * 100).toFixed(1) + '%' : '-';
+    $('hStage').textContent = 'ステージ' + (stageIdx + 1) + '：' + g.stage.name;
+    var wv = Math.min(g.waveIdx + 1, g.stage.waves.length);
+    var rest = '';
+    if (g.started && !g.inGap && !g.ending) rest = '  残り' + Math.max(0, Math.ceil(g.stage.waves[g.waveIdx].dur - g.waveT)) + '秒';
+    else if (g.inGap) rest = '  小休止';
+    $('hWave').textContent = 'ウェーブ ' + wv + '/' + g.stage.waves.length + rest;
+    var bs = $('bStart');
+    if (!g.started) { bs.textContent = '開始'; bs.className = 'primary'; }
+    else { bs.textContent = paused ? '再開' : '一時停止'; bs.className = paused ? 'primary' : ''; }
+    bs.disabled = g.over;
+    var key = g.waveIdx + ':' + g.inGap + ':' + g.started + ':' + g.ending;
+    if (key !== nextKey) { nextKey = key; renderNext(); }
+    // 予算の増減でショップの押せる状態を更新
+    $('shop').querySelectorAll('button').forEach(function (b) {
+      b.disabled = g.over || g.money < C.DEVICES[b.dataset.k].cost;
+    });
+    var up = document.querySelector('#detail button[data-a="up"]');
+    if (up && sel) {
+      var d = (sel.zone === 'server' ? g.servers : g.inline)[sel.idx];
+      if (d) up.disabled = g.money < C.DEVICES[d.key].up;
+    }
+  }
+
+  // ---- グラフ ----
+  var gc = $('graph'), gx = gc.getContext('2d');
+  function drawGraph() {
+    var w = gc.clientWidth, h = gc.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (gc.width !== Math.round(w * dpr)) { gc.width = Math.round(w * dpr); gc.height = Math.round(h * dpr); }
+    gx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    gx.clearRect(0, 0, w, h);
+    gx.fillStyle = '#22262b'; gx.fillRect(0, 0, w, h);
+    gx.strokeStyle = '#30363d'; gx.lineWidth = 1;
+    for (var i = 1; i < 4; i++) { gx.beginPath(); gx.moveTo(0, h * i / 4); gx.lineTo(w, h * i / 4); gx.stroke(); }
+    if (!g || !g.hist.length) return;
+    var H = g.hist, max = 5;
+    H.forEach(function (b) { max = Math.max(max, b.served, b.failed, b.blocked); });
+    max = Math.ceil(max / 5) * 5;
+    function line(key, col) {
+      gx.strokeStyle = col; gx.lineWidth = 1.6; gx.beginPath();
+      H.forEach(function (b, j) {
+        var x = w - (H.length - 1 - j) * (w / 59), y = h - 4 - (b[key] / max) * (h - 10);
+        if (j === 0) gx.moveTo(x, y); else gx.lineTo(x, y);
+      });
+      gx.stroke();
+    }
+    line('blocked', '#e0a43a'); line('served', '#79aee0'); line('failed', '#e06a5f');
+    gx.fillStyle = '#9ba2aa'; gx.font = '10px ' + getFont(); gx.textBaseline = 'top';
+    gx.fillText(max + '/秒', 4, 3);
+  }
+
+  // ---- ログ ----
+  function addLog(text, cls) {
+    var el = $('log'), d = document.createElement('div');
+    if (cls) d.className = cls;
+    var t = g && g.started ? Math.floor(g.t) : 0;
+    var mm = Math.floor(t / 60), ss = ('0' + (t % 60)).slice(-2);
+    d.innerHTML = '<span class="t">' + mm + ':' + ss + '</span>' + text;
+    el.insertBefore(d, el.firstChild);
+    while (el.children.length > 40) el.removeChild(el.lastChild);
+  }
+
+  // ---- イベント → 表示 ----
+  var failBurst = 0, failReasons = {};
+  function unitCenter(node, lane) {
+    var r = L.inl[Math.min(node, C.INLINE_SLOTS - 1)];
+    return { x: laneX(lane || 0), y: r.y + r.h / 2 };
+  }
+  function srvCenter(i) { var r = L.srv[Math.max(0, i)]; return { x: r.x + r.w / 2, y: r.y + r.h / 2 }; }
+  function handleEvents() {
+    var ev = g.events; g.events = [];
+    ev.forEach(function (e) {
+      var c;
+      switch (e.kind) {
+        case 'block':
+          c = unitCenter(e.node, e.lane);
+          fx.push({ kind: 'x', x: c.x, y: c.y, col: TYPE_COLOR[e.type], t: 0, life: 0.45 });
+          break;
+        case 'serve':
+          if (e.where === 'cache') { c = unitCenter(e.node, e.lane); fx.push({ kind: 'ring', x: c.x, y: c.y, col: '#dcdcd4', t: 0, life: 0.4 }); }
+          break;
+        case 'fail':
+          failBurst++; failReasons[e.reason] = (failReasons[e.reason] || 0) + 1;
+          if (e.where !== undefined) c = unitCenter(e.where, e.lane);
+          else if (e.srv >= 0) c = srvCenter(e.srv);
+          else c = { x: L.cx, y: L.srv[0].y - 8 };
+          if (Math.random() < 0.5) fx.push({ kind: 'text', text: '×', x: c.x, y: c.y, col: '#e06a5f', t: 0, life: 0.7 });
+          break;
+        case 'breach':
+          c = srvCenter(e.srv);
+          fx.push({ kind: 'flash', r: L.srv[e.srv], col: '#e06a5f', t: 0, life: 0.8 });
+          fx.push({ kind: 'text', text: (e.type === 'sqli' ? '乗っ取り' : '侵入') + ' -' + e.dmg, x: c.x, y: c.y - 10, col: '#e06a5f', t: 0, life: 1.2 });
+          addLog('WEB-' + (e.srv + 1) + 'に' + C.TYPES[e.type].name + 'が届いた。' + (e.type === 'sqli' ? 'サーバーが乗っ取られ、復旧まで止まる。' : '侵入された。') + '（信頼度 -' + e.dmg + '）', 'bad');
+          break;
+        case 'recover':
+          addLog('WEB-' + (e.srv + 1) + 'が復旧');
+          break;
+        case 'newtype':
+          var t = C.TYPES[e.type];
+          addLog(shapeSvg(e.type) + ' <b>' + t.name + '</b>：' + t.desc, 'type');
+          break;
+        case 'hint':
+          addLog(e.text, 'hint');
+          break;
+        case 'wave':
+          addLog('ウェーブ ' + (e.idx + 1) + ' 開始' + (g.stage.waves[e.idx].note ? '：' + g.stage.waves[e.idx].note : ''));
+          break;
+        case 'waveEnd':
+          addLog('ウェーブ ' + (e.idx + 1) + ' 終了。予算 +' + e.bonus);
+          break;
+        case 'end':
+          setTimeout(showResult, 600);
+          break;
+      }
+    });
+  }
+  var failLogT = 0;
+  function flushFailLog(dt) {
+    failLogT += dt;
+    if (failLogT < 3) return;
+    failLogT = 0;
+    if (!failBurst) return;
+    var parts = Object.keys(failReasons).map(function (k) { return REASON[k] + ' ' + failReasons[k]; });
+    addLog('利用者の失敗 ' + failBurst + '件（' + parts.join('、') + '）', 'bad');
+    failBurst = 0; failReasons = {};
+  }
+
+  // ---- ループ ----
+  function frame(ts) {
+    var real = Math.min(0.1, (ts - (lastFrame || ts)) / 1000);
+    lastFrame = ts;
+    if (g && !paused && !g.over && g.started) {
+      acc += real * speed;
+      var n = 0;
+      while (acc >= C.DT && n < 12) { C.step(g); acc -= C.DT; n++; }
+      if (n >= 12) acc = 0;
+      flushFailLog(real * speed);
+    }
+    if (g) handleEvents();
+    for (var i = fx.length - 1; i >= 0; i--) { fx[i].t += real; if (fx[i].t >= fx[i].life) fx.splice(i, 1); }
+    if (msgTimer > 0) { msgTimer -= real; if (msgTimer <= 0) { var m = document.querySelector('#detail .msg'); if (m) m.textContent = ''; } }
+    draw();
+    hudT += real;
+    if (hudT > 0.2) { hudT = 0; renderHud(); drawGraph(); }
+    requestAnimationFrame(frame);
+  }
+  var hudT = 0;
+
+  function togglePause() {
+    if (!g || g.over) return;
+    if (!g.started) { C.start(g); paused = false; addLog('開始'); }
+    else paused = !paused;
+    renderHud();
+  }
+
+  // ---- 画面遷移 ----
+  function startStage(i) {
+    stageIdx = i;
+    g = C.createGame(i, (Date.now() & 0xffff) + 1);
+    paused = true; placing = null; sel = null; detailInfo = null; fx = []; acc = 0;
+    failBurst = 0; failReasons = {};
+    $('log').innerHTML = '';
+    addLog(g.stage.brief);
+    addLog('組み終わったら「開始」。始まってからでも置けます。', 'hint');
+    $('ovTitle').hidden = true; $('ovResult').hidden = true;
+    refreshUi(); drawGraph();
+  }
+
+  function buildTitle() {
+    var el = $('stageList'); el.innerHTML = '';
+    C.STAGES.forEach(function (st, i) {
+      var open = i === 0 || save.stars[i - 1] > 0;
+      var b = document.createElement('button');
+      b.disabled = !open;
+      var stars = save.stars[i] ? '★★★'.slice(0, save.stars[i]) + '☆☆☆'.slice(0, 3 - save.stars[i]) : '';
+      b.innerHTML = '<span><b>ステージ' + (i + 1) + '　' + st.name + '</b><br><span class="sub" style="font-size:12px">' + (open ? st.brief : '前のステージをクリアすると開く') + '</span></span><span class="st">' + stars + '</span>';
+      b.addEventListener('click', function () { startStage(i); });
+      el.appendChild(b);
+    });
+  }
+  function showTitle() {
+    paused = true;
+    buildTitle();
+    $('ovResult').hidden = true;
+    $('ovTitle').hidden = false;
+  }
+
+  function showResult() {
+    var r = g.result, s = g.stats;
+    if (r.won && r.stars > save.stars[stageIdx]) { save.stars[stageIdx] = r.stars; writeSave(); }
+    $('rTitle').textContent = r.won ? 'ステージ' + (stageIdx + 1) + ' クリア' : 'サービス停止';
+    $('rStars').textContent = r.won ? '★★★'.slice(0, r.stars) + '☆☆☆'.slice(0, 3 - r.stars) : '';
+    $('rStats').innerHTML =
+      '<dt>残り信頼度</dt><dd>' + Math.ceil(Math.max(0, g.trust)) + '</dd>' +
+      '<dt>処理成功率</dt><dd>' + (r.rate * 100).toFixed(1) + '%</dd>' +
+      '<dt>届けた利用者</dt><dd>' + s.served + '（うちキャッシュ ' + s.cacheHits + '）</dd>' +
+      '<dt>失敗した利用者</dt><dd>' + s.failed + '</dd>' +
+      '<dt>止めた攻撃</dt><dd>' + s.blocked + '</dd>' +
+      '<dt>サーバーに届いた攻撃</dt><dd>' + s.breaches + '</dd>';
+    $('rMsg').textContent = r.won ? (r.stars === 3 ? '安定運用。' : '耐えたが、取りこぼしや侵入があった。構成を見直すと★が増える。') : adviceFor();
+    var bt = $('rBtns'); bt.innerHTML = '';
+    function btn(t, cls, fn) { var b = document.createElement('button'); b.textContent = t; if (cls) b.className = cls; b.addEventListener('click', fn); bt.appendChild(b); }
+    if (r.won && stageIdx < C.STAGES.length - 1) btn('次のステージへ', 'primary', function () { startStage(stageIdx + 1); });
+    btn('もう一度', r.won ? '' : 'primary', function () { startStage(stageIdx); });
+    btn('ステージ選択', '', showTitle);
+    $('ovResult').hidden = false;
+    refreshUi();
+  }
+  function adviceFor() {
+    var has = function (k) { return g.inline.some(function (d) { return d && d.key === k; }); };
+    var seen = g.seen;
+    if (seen.port && !has('fw')) return 'ポート攻撃がサーバーまで届いていた。ファイアウォールで止められる。';
+    if (seen.sqli && !has('waf')) return 'SQLインジェクションはファイアウォールを通り抜ける。中身を見るWAFが要る。';
+    if (seen.bot && !has('rl')) return 'ボットの連打でサーバーが埋まっていた。レート制限で送信元ごとに落とせる。';
+    if (g.servers.filter(Boolean).length >= 2 && !has('lb')) return 'ロードバランサーがないと、2台目以降のサーバーは使われない。';
+    return '取りこぼしが多かった。ログで「どこで」失敗したかを見て、強化や増設、並び順を見直す。';
+  }
+
+  var confirmFn = null, cancelFn = null;
+  function askConfirm(msg, fn, onNo) {
+    $('cMsg').textContent = msg; confirmFn = fn; cancelFn = onNo || null;
+    $('ovConfirm').hidden = false;
+  }
+  $('cYes').addEventListener('click', function () { $('ovConfirm').hidden = true; var f = confirmFn; confirmFn = cancelFn = null; if (f) f(); });
+  $('cNo').addEventListener('click', function () { $('ovConfirm').hidden = true; var f = cancelFn; confirmFn = cancelFn = null; if (f) f(); });
+
+  $('bStart').addEventListener('click', togglePause);
+  $('bSpeed').addEventListener('click', function () {
+    speed = speed === 1 ? 2 : 1;
+    this.textContent = speed + '倍速';
+  });
+  $('bMenu').addEventListener('click', function () {
+    if (g && g.started && !g.over) {
+      var was = paused; paused = true; renderHud();
+      askConfirm('ステージ選択に戻りますか？いまの進行は失われます。', showTitle, function () { paused = was; renderHud(); });
+    } else showTitle();
+  });
+
+  window.addEventListener('resize', function () { layout(); fontCache = null; });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fontCache = null; });
+
+  buildShop();
+  layout();
+  g = C.createGame(0, 1);
+  refreshUi();
+  showTitle();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
