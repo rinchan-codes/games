@@ -132,7 +132,9 @@ header.top .count { font-size: 13px; color: var(--ink-soft); white-space: nowrap
 .choice[disabled] { cursor: default; }
 .choice.correct { border-color: var(--shu); background: var(--shu-soft); }
 .choice.correct .k { border-color: var(--shu); color: var(--shu); font-weight: 700; }
-.choice.wrong { border-style: dashed; color: var(--ink-soft); }
+.choice.wrong { border: 1px dashed var(--ink); background: var(--paper-2); }
+.choice.wrong .k { border-color: var(--ink); color: var(--ink); }
+.choice .t small.yours { color: var(--ink); font-weight: 700; }
 .choice.dim { opacity: .55; }
 
 .verdict { display: flex; align-items: center; gap: 12px; margin: 18px 0 10px; }
@@ -171,7 +173,7 @@ header.top .count { font-size: 13px; color: var(--ink-soft); white-space: nowrap
 
 /* book */
 .map {
-  display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px;
+  display: grid; gap: 3px;
   max-width: 560px; margin: 0 auto;
 }
 .tile {
@@ -203,7 +205,8 @@ header.top .count { font-size: 13px; color: var(--ink-soft); white-space: nowrap
 .note { font-size: 12px; color: var(--ink-soft); margin-top: 28px; }
 
 @media (max-width: 480px) {
-  .wrap { padding: 16px 16px 64px; }
+  .wrap { padding: 16px 16px 8px; }
+  .age { position: static; display: table; margin: 0 16px 16px auto; }
   .qbig { font-size: 25px; }
   .tile { font-size: 9px; }
   .map { gap: 2px; }
@@ -318,45 +321,45 @@ header.top .count { font-size: 13px; color: var(--ink-soft); white-space: nowrap
 var SakeCore = (function () {
   // [名前, 地方, 列, 行]
   var PREFS = [
-    ["北海道", "北海道・東北", 11, 0],
-    ["青森県", "北海道・東北", 11, 1],
-    ["岩手県", "北海道・東北", 11, 2],
-    ["宮城県", "北海道・東北", 11, 3],
-    ["秋田県", "北海道・東北", 10, 2],
-    ["山形県", "北海道・東北", 10, 3],
-    ["福島県", "北海道・東北", 11, 4],
-    ["茨城県", "関東", 10, 5],
-    ["栃木県", "関東", 10, 4],
-    ["群馬県", "関東", 9, 4],
-    ["埼玉県", "関東", 9, 5],
-    ["千葉県", "関東", 10, 6],
-    ["東京都", "関東", 9, 6],
-    ["神奈川県", "関東", 8, 6],
-    ["新潟県", "中部", 9, 3],
-    ["富山県", "中部", 8, 3],
-    ["石川県", "中部", 7, 3],
-    ["福井県", "中部", 6, 4],
-    ["山梨県", "中部", 8, 5],
-    ["長野県", "中部", 8, 4],
-    ["岐阜県", "中部", 7, 4],
-    ["静岡県", "中部", 7, 6],
-    ["愛知県", "中部", 7, 5],
-    ["三重県", "近畿", 6, 6],
-    ["滋賀県", "近畿", 6, 5],
-    ["京都府", "近畿", 5, 5],
-    ["大阪府", "近畿", 4, 6],
-    ["兵庫県", "近畿", 4, 5],
-    ["奈良県", "近畿", 5, 6],
-    ["和歌山県", "近畿", 5, 7],
-    ["鳥取県", "中国・四国", 3, 5],
-    ["島根県", "中国・四国", 2, 5],
-    ["岡山県", "中国・四国", 3, 6],
-    ["広島県", "中国・四国", 2, 6],
-    ["山口県", "中国・四国", 1, 6],
-    ["徳島県", "中国・四国", 4, 8],
-    ["香川県", "中国・四国", 4, 7],
-    ["愛媛県", "中国・四国", 3, 7],
-    ["高知県", "中国・四国", 3, 8],
+    ["北海道", "北海道・東北", 12, 0],
+    ["青森県", "北海道・東北", 12, 1],
+    ["岩手県", "北海道・東北", 12, 2],
+    ["宮城県", "北海道・東北", 12, 3],
+    ["秋田県", "北海道・東北", 11, 2],
+    ["山形県", "北海道・東北", 11, 3],
+    ["福島県", "北海道・東北", 12, 4],
+    ["茨城県", "関東", 11, 5],
+    ["栃木県", "関東", 11, 4],
+    ["群馬県", "関東", 10, 4],
+    ["埼玉県", "関東", 10, 5],
+    ["千葉県", "関東", 11, 6],
+    ["東京都", "関東", 10, 6],
+    ["神奈川県", "関東", 9, 6],
+    ["新潟県", "中部", 10, 3],
+    ["富山県", "中部", 9, 3],
+    ["石川県", "中部", 8, 3],
+    ["福井県", "中部", 7, 4],
+    ["山梨県", "中部", 9, 5],
+    ["長野県", "中部", 9, 4],
+    ["岐阜県", "中部", 8, 4],
+    ["静岡県", "中部", 8, 6],
+    ["愛知県", "中部", 8, 5],
+    ["三重県", "近畿", 7, 6],
+    ["滋賀県", "近畿", 7, 5],
+    ["京都府", "近畿", 6, 5],
+    ["大阪府", "近畿", 5, 6],
+    ["兵庫県", "近畿", 5, 5],
+    ["奈良県", "近畿", 6, 6],
+    ["和歌山県", "近畿", 6, 7],
+    ["鳥取県", "中国・四国", 4, 5],
+    ["島根県", "中国・四国", 3, 5],
+    ["岡山県", "中国・四国", 4, 6],
+    ["広島県", "中国・四国", 3, 6],
+    ["山口県", "中国・四国", 2, 6],
+    ["徳島県", "中国・四国", 5, 8],
+    ["香川県", "中国・四国", 5, 7],
+    ["愛媛県", "中国・四国", 4, 7],
+    ["高知県", "中国・四国", 4, 8],
     ["福岡県", "九州・沖縄", 1, 7],
     ["佐賀県", "九州・沖縄", 0, 7],
     ["長崎県", "九州・沖縄", 0, 8],
@@ -596,7 +599,7 @@ if (typeof module !== "undefined") module.exports = SakeCore;
     var html = header() +
       '<p class="lead">全国の酒蔵を4択でめぐる。正解した県に印が付き、手帖が埋まっていく。1回10問。</p>' +
       '<div class="modes">' +
-      '<button class="mode" data-act="all"><b>全国</b><span>47都道府県からランダムに出題</span><i>10問</i></button>' +
+      '<button class="mode" data-act="all"><b>全国</b><span>収録している' + TOTAL + '都道府県からランダムに出題</span><i>10問</i></button>' +
       '<button class="mode" data-act="region"><b>地方をえらぶ</b><span>6つの地方から1つ選ぶ</span><i>10問</i></button>' +
       (showRegions ? '<div class="regions">' + C.REGIONS.map(function (r) {
         return '<button data-region="' + esc(r) + '">' + esc(r) + '</button>';
@@ -702,7 +705,10 @@ if (typeof module !== "undefined") module.exports = SakeCore;
     app.querySelectorAll(".choice").forEach(function (b, j) {
       b.disabled = true;
       if (j === q.answer) b.classList.add("correct");
-      else if (j === i) b.classList.add("wrong");
+      else if (j === i) {
+        b.classList.add("wrong");
+        b.querySelector(".t").insertAdjacentHTML("beforeend", '<small class="yours">あなたの答え</small>');
+      }
       else b.classList.add("dim");
     });
     var items = q.pair ? q.pair : [q.item];
@@ -710,7 +716,7 @@ if (typeof module !== "undefined") module.exports = SakeCore;
     document.getElementById("after").innerHTML =
       '<div class="verdict">' +
       (ok ? '<div class="stamp">正解</div><p>' + esc(C.shortPref(q.item.pref)) + 'に印。</p>'
-          : '<div class="stamp miss">惜しい</div><p>正解は ' + (q.answer + 1) + '。</p>') +
+          : '<div class="stamp miss">はずれ</div><p>正解は ' + esc(q.choices[q.answer].label) + '。</p>') +
       '</div>' +
       items.map(infoHtml).join("") +
       '<div class="actions"><button class="btn" id="next">' + (last ? '結果を見る' : '次へ') + '</button></div>' +
@@ -760,8 +766,11 @@ if (typeof module !== "undefined") module.exports = SakeCore;
   // ---- 手帖 ----
   function book(sel) {
     setKeys(null);
-    var maxRow = 0;
-    C.PREFS.forEach(function (p) { if (p[3] > maxRow) maxRow = p[3]; });
+    var maxRow = 0, maxCol = 0;
+    C.PREFS.forEach(function (p) {
+      if (p[3] > maxRow) maxRow = p[3];
+      if (p[2] > maxCol) maxCol = p[2];
+    });
     var tiles = C.PREFS.map(function (p) {
       var on = state.stamps[p[0]] && prefsWithData[p[0]];
       return '<button class="tile' + (on ? ' on' : '') + (sel === p[0] ? ' sel' : '') + '" data-pref="' + esc(p[0]) +
@@ -778,7 +787,7 @@ if (typeof module !== "undefined") module.exports = SakeCore;
         '</div>';
     }
     var html = header() +
-      '<div class="map" style="grid-template-rows:repeat(' + (maxRow + 1) + ',auto)">' + tiles + '</div>' +
+      '<div class="map" style="grid-template-columns:repeat(' + (maxCol + 1) + ',1fr);grid-template-rows:repeat(' + (maxRow + 1) + ',auto)">' + tiles + '</div>' +
       '<div class="legend"><span class="l-on">印あり</span><span>まだ</span></div>' +
       (card || '<p class="lead" style="margin-top:16px;text-align:center">県をえらぶと、集めた銘柄が見られる。</p>') +
       '<div class="actions"><button class="btn" id="totop">はじめに戻る</button>' +
