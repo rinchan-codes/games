@@ -100,7 +100,7 @@ function shop(s, town) {
   for (const id of T.equips) {
     const e = C.EQUIPS[id];
     const cur = s.equip[e.slot] ? C.EQUIPS[s.equip[e.slot]] : null;
-    const val = x => x ? (x.atk || 0) + (x.def || 0) + (x.hp || 0) / 3 + (x.agi || 0) / 2 + (x.int || 0) / 2 + (x.mp || 0) / 3 : 0;
+    const val = x => x ? (x.atk || 0) + (x.def || 0) + (x.hp || 0) / 3 + (x.agi || 0) / 2 + (x.int || 0) / 2 + (x.mp || 0) / 3 + (x.mres || 0) * 0.6 : 0;
     if (val(e) > val(cur) && s.gold >= e.price + 30) { s.gold -= e.price; s.equip[e.slot] = id; }
   }
   const herb = T.items.includes("honey") && s.lv >= 10 ? "honey" : "herb";
@@ -119,7 +119,7 @@ function fieldHeal(s) {
   }
 }
 function battleOnce(s, encId, rng, stat) {
-  const g = C.pickGroup(encId, rng);
+  const g = C.pickGroup(encId, rng, s.lv);
   const r = fight(s, g, rng, false);
   stat.battles++; stat.turns += r.turns;
   if (r.res === "win") {

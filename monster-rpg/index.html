@@ -387,6 +387,7 @@ var CORE = (function () {
     starclaw:  { slot: "claw", name: "星鉄のツメ", price: 1500, atk: 28, int: 4 },
     oldwood:   { slot: "shell", name: "古木のカラ", price: 1700, def: 26 },
     lifecharm: { slot: "charm", name: "いのちのおまもり", price: 2000, hp: 50, mp: 20, def: 6 },
+    ashcharm:  { slot: "charm", name: "灰よけのおまもり", price: 1800, hp: 30, def: 4, mres: 20 }, // mres: 術のダメージを%減らす
     ashclaw:   { slot: "claw", name: "灰払いのツメ", price: 0, atk: 36, int: 12, agi: 6 }
   };
   var SLOTS = { claw: "ツメ", shell: "カラ", charm: "おまもり" };
@@ -396,8 +397,9 @@ var CORE = (function () {
     ["claw", "shell", "charm"].forEach(function (sl) {
       var e = s.equip[sl] && EQUIPS[s.equip[sl]];
       if (!e) return;
-      ["hp", "mp", "atk", "def", "agi", "int"].forEach(function (k) { if (e[k]) st[k] += e[k]; });
+      ["hp", "mp", "atk", "def", "agi", "int", "mres"].forEach(function (k) { if (e[k]) st[k] = (st[k] || 0) + e[k]; });
     });
+    st.mres = st.mres || 0;
     st.maxhp = st.hp; st.maxmp = st.mp; delete st.hp; delete st.mp;
     return st;
   }
@@ -407,7 +409,7 @@ var CORE = (function () {
     "1": { name: "苔の里", inn: 4, save: true, items: ["herb", "nut", "feather", "smoke"], equips: ["pebble", "bark", "mosscharm"] },
     "2": { name: "岩窟の市", inn: 12, items: ["herb", "honey", "nut", "feather", "smoke"], equips: ["ironclaw", "slate", "windcharm"] },
     "3": { name: "しずく村", inn: 25, items: ["herb", "honey", "drop", "nut", "feather", "smoke"], equips: ["obsidian", "shellmail", "springcharm"] },
-    "4": { name: "灰よけの宿", inn: 40, items: ["honey", "nectar", "drop", "nut", "feather", "smoke"], equips: ["starclaw", "oldwood", "lifecharm"] }
+    "4": { name: "灰よけの宿", inn: 40, items: ["honey", "nectar", "drop", "nut", "feather", "smoke"], equips: ["starclaw", "oldwood", "lifecharm", "ashcharm"] }
   };
 
   // ---------- 敵 ----------
@@ -439,11 +441,11 @@ var CORE = (function () {
   var ENEMIES = {};
   [
     E("koke", "コケまり", "moss", P.moss, 7, 8, 3, 4, 6, 4, [[1, "atk"]], { drop: ["herb", 0.15] }),
-    E("chibi", "ちびコウモリ", "bat", P.bat, 9, 10, 3, 12, 8, 5),
+    E("chibi", "ちびコウモリ", "bat", P.bat, 9, 9, 3, 12, 8, 5),
     E("kinoko", "キノコぼうず", "mush", P.mush, 13, 9, 6, 4, 10, 6, [[3, "atk"], [1, "sleep"]], { drop: ["nut", 0.1] }),
-    E("tsuchi", "ツチヘビ", "snake", P.snake, 16, 13, 6, 8, 14, 8, [[3, "atk"], [1, "poison"]]),
-    E("nekui", "ネクイムシ", "beetle", P.beetle, 22, 16, 16, 6, 20, 12, [[3, "atk"], [1, "harden"]]),
-    E("honoji", "ほのじろ", "wisp", P.wisp, 18, 12, 9, 14, 20, 13, [[2, "atk"], [2, "mag", { lo: 6, hi: 9, n: "冷たい火をとばした" }]]),
+    E("tsuchi", "ツチヘビ", "snake", P.snake, 15, 12, 6, 8, 14, 8, [[3, "atk"], [1, "poison"]]),
+    E("nekui", "ネクイムシ", "beetle", P.beetle, 20, 14, 16, 6, 20, 12, [[3, "atk"], [1, "harden"]]),
+    E("honoji", "ほのじろ", "wisp", P.wisp, 18, 12, 9, 14, 20, 13, [[2, "atk"], [2, "mag", { lo: 5, hi: 7, n: "冷たい火をとばした" }]]),
 
     E("iwakoro", "イワコロ", "rock", P.rock, 30, 23, 22, 5, 22, 14, [[3, "atk"], [1, "pow"]], { drop: ["herb", 0.15] }),
     E("tsutsuki", "ツツキドリ", "bird", P.bird, 26, 24, 12, 20, 24, 17, [[2, "atk"], [1, "dbl"]]),
@@ -470,7 +472,7 @@ var CORE = (function () {
     E("haikihei", "灰の騎兵", "knight", P.knight2, 112, 76, 74, 36, 128, 84, [[3, "atk"], [1, "pow"], [1, "harden"]]),
 
     // 主
-    E("nejire", "ネジレ根", "plant", P.root, 90, 20, 12, 8, 70, 90,
+    E("nejire", "ネジレ根", "plant", P.root, 80, 20, 12, 8, 70, 90,
       [[3, "atk"], [2, "pow"], [1, "poison"], [1, "heal"]], { boss: true, scale: 7, healAmt: 20 }),
     E("iwanaki", "イワナキ", "rock", P.golem, 400, 52, 30, 12, 260, 280,
       [[3, "atk"], [2, "pow"], [2, "mag", { lo: 26, hi: 34, n: "大地を鳴らした" }]], { boss: true, scale: 7 }),
@@ -494,12 +496,15 @@ var CORE = (function () {
     D: { rate: 0.075, groups: [[3, ["haiyoroi"]], [3, ["haimari", "haimari"]], [3, ["sunadori"]], [2, ["haigolem"]], [2, ["haiyoroi", "sunadori"]], [1, ["haimari", "haigolem"]]] },
     t: { rate: 0.085, groups: [[3, ["susukou", "susukou"]], [3, ["haibi"]], [3, ["haikihei"]], [2, ["haibi", "susukou"]], [2, ["haikihei", "haimari"]], [1, ["haibi", "susukou", "susukou"]]] }
   };
-  function pickGroup(encId, rng) {
-    var t = ENC[encId], sum = 0, i, r;
-    for (i = 0; i < t.groups.length; i++) sum += t.groups[i][0];
+  // Lv3までは1体の群れだけ出す（始めてすぐの全滅を避ける）
+  var SOLO_UNTIL = 3;
+  function pickGroup(encId, rng, lv) {
+    var gs = ENC[encId].groups, sum = 0, i, r;
+    if (lv && lv <= SOLO_UNTIL) gs = gs.filter(function (g) { return g[1].length === 1; });
+    for (i = 0; i < gs.length; i++) sum += gs[i][0];
     r = rng() * sum;
-    for (i = 0; i < t.groups.length; i++) { r -= t.groups[i][0]; if (r < 0) return t.groups[i][1]; }
-    return t.groups[0][1];
+    for (i = 0; i < gs.length; i++) { r -= gs[i][0]; if (r < 0) return gs[i][1]; }
+    return gs[0][1];
   }
 
   // ---------- セーブデータ ----------
@@ -696,7 +701,7 @@ var CORE = (function () {
     } else if (k === "mag") {
       var p = act[2];
       ev.push(snap(B, { t: e.name + "は" + p.n + "！", fx: "emag", i: e.slot }));
-      hurtPlayer(B, rint(rng, p.lo, p.hi), ev);
+      hurtPlayer(B, Math.round(rint(rng, p.lo, p.hi) * (100 - B.st.mres) / 100), ev);
     } else if (k === "sleep") {
       ev.push(snap(B, { t: e.name + (e.d.spr === "mush" ? "はねむりの胞子をまきちらした！" : "はあやしい声で鳴いた！"), fx: "emag", i: e.slot }));
       if (rng() < (B.boss ? 0.25 : 0.35)) { B.sleep = 1 + Math.floor(rng() * 2); ev.push(snap(B, { t: s.name + "はねむってしまった！" })); }
@@ -1237,7 +1242,7 @@ var CORE = (function () {
       "霧を吸ったモンスターは我を忘れ、なかまにも牙をむく。",
       "苔の里の長老「" + S.name + "や。おまえのツノは、霧をはらう力をもって生まれた」",
       "長老「塔の主をとめねば、この里もいずれ霧にのまれる。……行ってくれるか」",
-      "長老「まずは北西の《根の洞》へ。東への道をふさぐ根は、あそこの主が張ったものじゃ」",
+      "長老「まずは北の《根の洞》へ。東への道をふさぐ根は、あそこの主が張ったものじゃ」",
       "（矢印キーで移動、Z/Enterで決定、X/Escでメニュー）"
     ]);
     await fadeOut();
@@ -1440,6 +1445,7 @@ var CORE = (function () {
   function equipText(e) {
     var p = [], names = { atk: "攻", def: "守", agi: "速", int: "魔", hp: "HP", mp: "MP" };
     for (var k in names) if (e[k]) p.push(names[k] + "+" + e[k]);
+    if (e.mres) p.push("術のダメージ-" + e.mres + "%");
     return p.join(" ");
   }
   function equipItem(id) {
@@ -1572,7 +1578,7 @@ var CORE = (function () {
   // ---------- 戦闘 ----------
   async function encounter(encId, bg) {
     G.held = null;
-    var ids = C.pickGroup(encId, Math.random);
+    var ids = C.pickGroup(encId, Math.random, S.lv);
     await battle(ids, { bg: bg });
   }
   async function bossEvent(dg) {

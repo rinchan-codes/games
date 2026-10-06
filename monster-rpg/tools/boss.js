@@ -11,7 +11,7 @@ const cases=[["nejire",[5,6,7],["pebble","bark",null],{herb:5}],
  ["iwanaki",[11,12,13],["ironclaw","slate","rootcharm"],{herb:3,honey:4}],
  ["kageuo",[17,18,19],["obsidian","shellmail","springcharm"],{honey:6,drop:2}],
  ["banpei",[22,23,24],["starclaw","oldwood","lifecharm"],{honey:6,drop:3}],
- ["hainoou",[23,24,25,26],["ashclaw","oldwood","lifecharm"],{honey:6,drop:3,nectar:2}]];
+ ["hainoou",[23,24,25,26],["ashclaw","oldwood","ashcharm"],{honey:6,drop:3,nectar:2}]];
 for(const [boss,lvs,eq,items] of cases){
   for(const br of ["kiba","koura","tomo"]){
     const row=[];
