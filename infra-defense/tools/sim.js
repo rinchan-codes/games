@@ -44,6 +44,7 @@ const plans = {
     fwServersNoLb: [I(0,'fw'),S(1),S(2),S(3)],
     sensible: [I(0,'fw'),I(4,'lb'),S(1),I(2,'cache'),S(2),S(3),...ups(3)],
     fwLb2: [I(0,'fw'),I(4,'lb'),S(1)],
+    fwLb3: [I(0,'fw'),I(4,'lb'),S(1),S(2)],
     fwLb2up: [I(0,'fw'),I(4,'lb'),S(1),...ups(2)],
     noCache: [I(0,'fw'),I(4,'lb'),S(1),S(2),S(3),S(4),...ups(4)],
   },

@@ -61,6 +61,8 @@ header .ctrl { display: flex; gap: 6px; }
 }
 @media (max-width: 760px) {
   .layout { grid-template-columns: 1fr; padding: 12px 16px; }
+  /* 狭い画面ではラックのすぐ下に置き場を寄せる */
+  .p-shop { order: 1; } .p-detail { order: 2; } .p-next { order: 3; } .p-mon { order: 4; } .p-log { order: 5; }
 }
 .rackwrap { position: relative; min-width: 0; }
 #rack { display: block; width: 100%; touch-action: manipulation; }
@@ -86,6 +88,7 @@ header .ctrl { display: flex; gap: 6px; }
 .shop { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
 .shop button { text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; }
 .shop button.on { border-color: var(--accent); background: #3a3426; }
+.shop button.short .nm, .shop button.short .num { opacity: .5; }
 .shop .row1 { display: flex; justify-content: space-between; gap: 6px; }
 .shop .nm { font-weight: 700; }
 .shop .rl { font-size: 11px; color: var(--muted); }
@@ -144,7 +147,7 @@ header .ctrl { display: flex; gap: 6px; }
 <main class="layout">
   <section class="rackwrap"><canvas id="rack" aria-label="ラック"></canvas></section>
   <aside class="monitor">
-    <div class="pn">
+    <div class="pn p-mon">
       <h2>監視</h2>
       <div class="kpis">
         <div class="kpi"><div class="k">信頼度</div><div class="v" id="kTrust">100</div><div class="bar"><i id="kTrustBar"></i></div></div>
@@ -154,17 +157,17 @@ header .ctrl { display: flex; gap: 6px; }
       <canvas id="graph"></canvas>
       <div class="legend"><span style="color:var(--blue)">処理/秒</span><span style="color:var(--red)">失敗/秒</span><span style="color:var(--accent)">遮断/秒</span></div>
     </div>
-    <div class="pn next">
+    <div class="pn next p-next">
       <h2 id="nTitle">次のウェーブ</h2>
       <div class="note" id="nNote"></div>
       <div class="chips" id="nChips"></div>
     </div>
-    <div class="pn">
+    <div class="pn p-shop">
       <h2>機器を置く</h2>
       <div class="shop" id="shop"></div>
     </div>
-    <div class="pn detail" id="detail"></div>
-    <div class="pn">
+    <div class="pn detail p-detail" id="detail"></div>
+    <div class="pn p-log">
       <h2>ログ</h2>
       <div class="log" id="log"></div>
     </div>
@@ -177,7 +180,7 @@ header .ctrl { display: flex; gap: 6px; }
     <p class="sub">サーバー構成を組んで、押し寄せるアクセスと攻撃をさばく。1ステージ3〜4分。</p>
     <h3>遊び方</h3>
     <ol class="howto">
-      <li>右の「機器を置く」で機器を選び、ラックの空きスロットを押して設置。</li>
+      <li>「機器を置く」で機器を選び、ラックの空きスロットを押して設置。</li>
       <li>通信は上のインターネットから下へ流れ、置いた機器を順に通ってWebサーバーへ行く。</li>
       <li>本物の利用者（青丸・白四角）はサーバーまで届ける。攻撃（赤三角・桃ひし形・橙の点）は途中で止める。</li>
       <li>利用者が取りこぼされたり、攻撃がサーバーに届くと信頼度が減る。0で終了。</li>
@@ -258,16 +261,16 @@ var CORE = (function () {
   }
 
   var STAGES = [
-    { name: '小さなWebサイト', money: 250, start: { servers: ['web'] },
+    { name: '小さなWebサイト', money: 150, start: { servers: ['web'] },
       brief: '個人の小さなサイト。まずはアクセスをさばきつつ、怪しい通信を止める。',
       waves: [
         W(25, 1.5, 1.0, 0,   0, 0),
         W(25, 2.0, 1.5, 0.4, 0, 0, '別のポートを探る通信が来る'),
         W(25, 3.0, 2.0, 0.5, 0, 0),
         W(25, 4.0, 3.0, 0.6, 0, 0, '紹介されてアクセスが増える'),
-        W(25, 5.0, 4.0, 0.8, 0, 0),
-        W(25, 6.0, 5.0, 1.0, 0, 0, 'アクセスの山'),
-        W(25, 7.0, 6.0, 1.2, 0, 0)
+        W(25, 5.0, 6.0, 0.8, 0, 0, '画像の多いページが話題になる'),
+        W(25, 6.0, 10.0, 1.0, 0, 0, 'アクセスの山'),
+        W(25, 7.0, 13.0, 1.2, 0, 0)
       ] },
     { name: '通販のセール', money: 450, start: { inline: ['fw', 'lb'], servers: ['web', 'web'] },
       brief: 'セール当日。注文画面にアクセスが集まり、入力欄を狙う攻撃も来る。',
@@ -967,7 +970,7 @@ var CORE = (function () {
       var dd = C.DEVICES[detailInfo.key];
       html += '<h2>' + dd.name + '</h2><p>' + dd.desc + '</p>';
       html += '<div class="meta">価格 <span class="num">' + dd.cost + '</span>　処理量 <span class="num">' + dd.cap[0] + '</span>/秒　置き場所：' + (dd.zone === 'server' ? 'サーバー区画' : '前段の空き（1U〜' + C.INLINE_SLOTS + 'U）') + '</div>';
-      html += '<div class="meta">' + (g.money >= dd.cost ? 'ラックの空きを押して設置。' : '予算が足りません。') + '</div><div class="msg"></div>';
+      html += '<div class="meta" id="dAfford">' + affordText(dd.cost) + '</div><div class="msg"></div>';
     } else if (detailInfo && detailInfo.kind === 'type') {
       var t = C.TYPES[detailInfo.key];
       html += '<h2>' + shapeSvg(detailInfo.key) + ' ' + t.name + '</h2><p>' + t.desc + '</p><div class="msg"></div>';
@@ -979,6 +982,8 @@ var CORE = (function () {
       b.addEventListener('click', function () { act(b.dataset.a); });
     });
   }
+
+  function affordText(cost) { return g.money >= cost ? 'ラックの空きを押して設置。' : '予算が足りません。'; }
 
   function act(a) {
     if (!sel || g.over) return;
@@ -1027,7 +1032,8 @@ var CORE = (function () {
     $('shop').querySelectorAll('button').forEach(function (b) {
       var k = b.dataset.k;
       b.classList.toggle('on', placing === k);
-      b.disabled = !g || g.over || g.money < C.DEVICES[k].cost;
+      b.disabled = !g || g.over;
+      b.classList.toggle('short', !!g && g.money < C.DEVICES[k].cost);
     });
     renderDetail();
     nextKey = '';
@@ -1058,8 +1064,14 @@ var CORE = (function () {
     if (key !== nextKey) { nextKey = key; renderNext(); }
     // 予算の増減でショップの押せる状態を更新
     $('shop').querySelectorAll('button').forEach(function (b) {
-      b.disabled = g.over || g.money < C.DEVICES[b.dataset.k].cost;
+      b.disabled = g.over;
+      b.classList.toggle('short', g.money < C.DEVICES[b.dataset.k].cost);
     });
+    var af = $('dAfford');
+    if (af && detailInfo && detailInfo.kind === 'device') {
+      var at = affordText(C.DEVICES[detailInfo.key].cost);
+      if (af.textContent !== at) af.textContent = at;
+    }
     var up = document.querySelector('#detail button[data-a="up"]');
     if (up && sel) {
       var d = (sel.zone === 'server' ? g.servers : g.inline)[sel.idx];
