@@ -1021,10 +1021,7 @@ var CORE = (function () {
     }
   }
   function drawTitle() {
-    rect("#20304a", 0, 0, CW, CH);
-    rect("#2c4060", 0, 96, CW, 80);
-    for (var i = 0; i < 15; i++) { grass(i * 16, 128, i, 99); grass(i * 16, 144, i, 100); grass(i * 16, 160, i, 101); }
-    for (i = 0; i < 6; i++) mountain(i * 40 + (i % 2) * 8, 112, i, 0);
+    drawScene("title");
     ctx.drawImage(sprite("base", C.BASE_PAL), 0, 0, 16, 16, 104, 84 - ((G.fr >> 4) % 2), 32, 32);
     ctx.fillStyle = "#f2e8cc"; ctx.font = "28px 'DotGothic16', monospace"; ctx.textAlign = "center";
     ctx.fillText("ツノノコ", CW / 2, 56);
@@ -1033,35 +1030,298 @@ var CORE = (function () {
   }
   function drawTown() {
     var t = C.TOWNS[G.town];
-    var sky = { "1": "#5e8eb0", "2": "#8a7e6e", "3": "#6a9cc0", "4": "#7a706a" }[G.town];
-    rect(sky, 0, 0, CW, CH);
-    for (var i = 0; i < 15; i++) for (var j = 7; j < 11; j++) { if (G.town === "4") ash(i * 16, j * 16, i, j); else grass(i * 16, j * 16, i, j + 40); }
-    var roofs = { "1": ["#5e8a3a", "#d8c8a0"], "2": ["#8a6a4a", "#c8bca8"], "3": ["#4a6e8a", "#e0d8c4"], "4": ["#a05a2e", "#cfc6b4"] }[G.town];
-    ctx.save(); ctx.scale(3, 3);
-    hut(8, 30, roofs[0], roofs[1]); hut(22, 28, roofs[0], roofs[1]); hut(56, 30, roofs[0], roofs[1]);
-    ctx.restore();
-    ctx.drawImage(playerSprite(), 112, 132 - ((G.fr >> 4) % 2));
-    ctx.fillStyle = "#f2e8cc"; ctx.font = "14px 'DotGothic16', monospace"; ctx.textAlign = "center";
-    ctx.fillText(t.name, CW / 2, 20); ctx.textAlign = "left";
+    drawScene("town" + G.town);
+    ctx.globalAlpha = 0.25; rect("#000", 110, 151, 20, 3); ctx.globalAlpha = 1;
+    ctx.drawImage(playerSprite(), 0, 0, 16, 16, 104, 122 - ((G.fr >> 4) % 2), 32, 32);
+    ctx.font = "14px 'DotGothic16', monospace"; ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(20,27,46,0.55)"; ctx.fillText(t.name, CW / 2 + 1, 21);
+    ctx.fillStyle = "#fbf4e0"; ctx.fillText(t.name, CW / 2, 20); ctx.textAlign = "left";
   }
   function drawEvo() {
     rect("#1e2a40", 0, 0, CW, CH); rect("#2a3a56", 0, 100, CW, CH - 100);
+    for (var i = 0; i < 12; i++) { var a = i / 12 * Math.PI * 2 + G.fr / 60; ctx.globalAlpha = 0.12; ctx.fillStyle = "#f0e0b0"; ctx.beginPath(); ctx.moveTo(CW / 2, 70); ctx.lineTo(CW / 2 + Math.cos(a) * 200, 70 + Math.sin(a) * 200); ctx.lineTo(CW / 2 + Math.cos(a + 0.18) * 200, 70 + Math.sin(a + 0.18) * 200); ctx.fill(); }
+    ctx.globalAlpha = 1;
     ctx.globalAlpha = 0.25 + 0.15 * Math.sin(G.fr / 8); rect("#f0e0b0", CW / 2 - 44, 26, 88, 88); ctx.globalAlpha = 1;
     ctx.drawImage(playerSprite(), 0, 0, 16, 16, CW / 2 - 32, 38, 64, 64);
   }
   function drawEnding() {
-    rect("#3a5a7a", 0, 0, CW, CH);
-    rect("#6a8ab0", 0, 0, CW, 60);
-    for (var i = 0; i < 15; i++) for (var j = 8; j < 11; j++) grass(i * 16, j * 16, i, j);
-    ctx.drawImage(playerSprite(), 0, 0, 16, 16, 104, 96, 32, 32);
+    drawScene("ending");
+    ctx.globalAlpha = 0.25; rect("#000", 108, 127, 24, 3); ctx.globalAlpha = 1;
+    ctx.drawImage(playerSprite(), 0, 0, 16, 16, 104, 96 - ((G.fr >> 4) % 2), 32, 32);
   }
-  var BG = { A: ["#7ea6c8", "#6a9a50"], B: ["#a8a090", "#8a7a5e"], C: ["#8ab8d8", "#5e9a7a"], D: ["#a8a098", "#8e8476"],
-    root: ["#2e2418", "#5a4a34"], mine: ["#2a2622", "#5a554e"], shrine: ["#1e2c38", "#4a6070"], tower: ["#2a2624", "#5e5956"], top: ["#4a4038", "#8e8880"] };
+  // ---------- 背景の絵（戦闘・町・タイトル・エンディング） ----------
+  // 動かない部分は一度だけ描いてキャッシュし、雲・水面・灰などの動く部分だけ毎フレーム重ねる。
+  function srand(seed) { var a = seed | 0; return function () { a = (a + 0x6D2B79F5) | 0; var t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function hex(c) { return [parseInt(c.substr(1, 2), 16), parseInt(c.substr(3, 2), 16), parseInt(c.substr(5, 2), 16)]; }
+  function mix(c0, c1, t) {
+    var a = hex(c0), b = hex(c1); t = Math.max(0, Math.min(1, t));
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * t) + "," + Math.round(a[1] + (b[1] - a[1]) * t) + "," + Math.round(a[2] + (b[2] - a[2]) * t) + ")";
+  }
+  // 縦のグラデーションを数px刻みの帯で塗る（ドット絵らしく）
+  function bands(g, y0, y1, c0, c1, step) {
+    step = step || 4;
+    for (var y = y0; y < y1; y += step) { g.fillStyle = mix(c0, c1, (y - y0) / Math.max(1, y1 - y0 - step)); g.fillRect(0, y, CW, Math.min(step, y1 - y)); }
+  }
+  // 稜線（山並み・丘）。base が麓の高さ、amp が起伏
+  function ridge(g, base, amp, color, seed, fine) {
+    var r = srand(seed), p1 = r() * 6, p2 = r() * 6, p3 = r() * 6;
+    g.fillStyle = color;
+    for (var x = 0; x < CW; x += 2) {
+      var y = Math.round(base - amp * (0.55 * Math.sin(x / 37 + p1) + 0.3 * Math.sin(x / 17 + p2) + 0.15 * Math.sin(x / (fine || 6) + p3)));
+      g.fillRect(x, y, 2, CH - y);
+    }
+  }
+  // 稜線のてっぺんだけ明るく（雪や日の当たり）
+  function ridgeCap(g, base, amp, color, seed, fine, thick) {
+    var r = srand(seed), p1 = r() * 6, p2 = r() * 6, p3 = r() * 6;
+    g.fillStyle = color;
+    for (var x = 0; x < CW; x += 2) {
+      var y = Math.round(base - amp * (0.55 * Math.sin(x / 37 + p1) + 0.3 * Math.sin(x / 17 + p2) + 0.15 * Math.sin(x / (fine || 6) + p3)));
+      if (y < base - amp * 0.35) g.fillRect(x, y, 2, thick || 2);
+    }
+  }
+  function cloud(g, x, y, w, c, shade) {
+    g.fillStyle = c; g.fillRect(x + 4, y, w - 8, 3); g.fillRect(x, y + 3, w, 4); g.fillRect(x + (w >> 2), y - 3, w >> 2, 3); g.fillRect(x + (w >> 1), y - 2, w >> 3, 2);
+    g.fillStyle = shade; g.fillRect(x + 2, y + 7, w - 4, 2);
+  }
+  function roundTree(g, x, y, r, c, c2) {
+    g.fillStyle = "#4a3424"; g.fillRect(x - 1, y, 2, r + 3);
+    g.fillStyle = c; g.fillRect(x - r, y - r + 2, 2 * r, r); g.fillRect(x - r + 2, y - r, 2 * r - 4, r + 4);
+    g.fillStyle = c2; g.fillRect(x - r + 2, y - r + 1, r - 1, 2); g.fillRect(x - r + 1, y - r + 3, 2, 2);
+  }
+  function pine(g, x, y, h, c, c2) {
+    for (var i = 0; i < h; i++) { var w = 1 + ((i * 0.6) | 0) * 2 - ((i % 4 === 3) ? 2 : 0); g.fillStyle = i % 4 < 2 ? c : c2; g.fillRect(x - (w >> 1), y + i, Math.max(1, w), 1); }
+    g.fillStyle = "#3e2c1e"; g.fillRect(x, y + h, 1, 2);
+  }
+  function deadTree(g, x, y, h, c) {
+    g.fillStyle = c; g.fillRect(x, y, 2, h);
+    g.fillRect(x - 5, y + 4, 5, 1); g.fillRect(x - 6, y + 1, 1, 3); g.fillRect(x + 2, y + 7, 5, 1); g.fillRect(x + 6, y + 4, 1, 3); g.fillRect(x - 3, y + 11, 3, 1);
+  }
+  // 地面：奥ほど細かく、手前ほど大きい草や石を散らす
+  function groundBand(g, y0, c0, c1, specks, seed, n) {
+    bands(g, y0, CH, c0, c1, 3);
+    var r = srand(seed);
+    for (var i = 0; i < n; i++) {
+      var d = r(), y = y0 + 2 + Math.floor(d * d * (CH - y0 - 4)), x = Math.floor(r() * CW), s = 1 + Math.floor(d * 3);
+      g.fillStyle = specks[Math.floor(r() * specks.length)];
+      if (r() < 0.6) { g.fillRect(x, y, 1, s); g.fillRect(x + 2, y + 1, 1, Math.max(1, s - 1)); }
+      else g.fillRect(x, y, s, Math.max(1, s - 1));
+    }
+  }
+  // 奥へすぼまる道
+  function path(g, y0, cTop, cBot, wTop, wBot, cx) {
+    for (var y = y0; y < CH; y++) {
+      var t = (y - y0) / (CH - y0), w = wTop + (wBot - wTop) * t;
+      g.fillStyle = mix(cTop, cBot, t); g.fillRect(Math.round(cx - w / 2), y, Math.round(w), 1);
+    }
+  }
+  function house(g, x, y, w, h, roof, roof2, wall, lit) {
+    g.fillStyle = "#2a2018"; g.fillRect(x - 1, y - 1, w + 2, h + 2);
+    g.fillStyle = wall; g.fillRect(x, y, w, h);
+    g.fillStyle = "rgba(0,0,0,0.12)"; g.fillRect(x, y + h - 3, w, 3);
+    for (var i = 0; i < 6; i++) { g.fillStyle = i % 2 ? roof2 : roof; g.fillRect(x - 3 + i, y - 12 + i * 2, w + 6 - i * 2, 2); }
+    g.fillStyle = "#2a2018"; g.fillRect(x - 3, y - 1, w + 6, 1);
+    g.fillStyle = "#3a2818"; g.fillRect(x + (w >> 1) - 2, y + h - 7, 4, 7);
+    g.fillStyle = lit ? "#f0c060" : "#4a5468"; g.fillRect(x + 2, y + 3, 4, 3); if (w > 16) g.fillRect(x + w - 6, y + 3, 4, 3);
+    g.fillStyle = "#5a4a3a"; g.fillRect(x + w - 6, y - 12, 3, 6);
+  }
+  function fence(g, x0, x1, y, c) { g.fillStyle = c; for (var x = x0; x < x1; x += 5) g.fillRect(x, y - 5, 1, 6); g.fillRect(x0, y - 4, x1 - x0, 1); g.fillRect(x0, y - 1, x1 - x0, 1); }
+  function bricks(g, y0, y1, c, c2, line) {
+    g.fillStyle = c; g.fillRect(0, y0, CW, y1 - y0);
+    for (var y = y0; y < y1; y += 6) {
+      var off = ((y - y0) / 6) % 2 ? 6 : 0;
+      g.fillStyle = line; g.fillRect(0, y, CW, 1);
+      for (var x = -off; x < CW; x += 12) { g.fillRect(x, y, 1, 6); g.fillStyle = c2; g.fillRect(x + 1, y + 1, 4, 1); g.fillStyle = line; }
+    }
+  }
+  function pillar(g, x, w, y0, y1, c, light, dark) {
+    g.fillStyle = c; g.fillRect(x, y0, w, y1 - y0);
+    g.fillStyle = light; g.fillRect(x + 1, y0, 2, y1 - y0);
+    g.fillStyle = dark; g.fillRect(x + w - 2, y0, 2, y1 - y0);
+    g.fillStyle = light; g.fillRect(x - 2, y0, w + 4, 3); g.fillRect(x - 2, y1 - 3, w + 4, 3);
+  }
+
+  var SCENES = {
+    // 苔の原：青空、遠い山、森の帯、草原の道
+    A: function (g) {
+      bands(g, 0, 78, "#6aa6d8", "#d4ecf0");
+      ridge(g, 70, 16, "#93aec8", 11, 7); ridgeCap(g, 70, 16, "#e8f0f4", 11, 7, 2);
+      ridge(g, 82, 8, "#7aa478", 12, 9);
+      var r = srand(13);
+      for (var x = -4; x < CW + 8; x += 7 + Math.floor(r() * 5)) roundTree(g, x, 82 + Math.floor(r() * 4), 5 + Math.floor(r() * 3), r() < 0.5 ? "#3f7a46" : "#356a3e", "#5a9a5a");
+      groundBand(g, 92, "#86b862", "#5a9244", ["#4e8a3e", "#6aa452", "#e8d070", "#f2f0e2", "#d88a9a"], 14, 160);
+      path(g, 92, "#c8b48a", "#b49a6e", 6, 70, CW / 2);
+    },
+    // 岩の谷：砂ぼこりの空、台地、ごつい崖
+    B: function (g) {
+      bands(g, 0, 80, "#c8a47a", "#f0dcb4");
+      var r = srand(21);
+      for (var i = 0; i < 5; i++) { var x = Math.floor(r() * CW) - 20, w = 30 + Math.floor(r() * 40), h = 14 + Math.floor(r() * 14); g.fillStyle = "#b8926a"; g.fillRect(x, 74 - h, w, h + 10); g.fillStyle = "#cca478"; g.fillRect(x, 74 - h, w, 2); g.fillStyle = "#a4805c"; g.fillRect(x + w - 4, 74 - h + 2, 4, h + 8); }
+      ridge(g, 88, 12, "#8e7056", 22, 4); ridgeCap(g, 88, 12, "#a88a6a", 22, 4, 2);
+      groundBand(g, 94, "#b09474", "#8a7054", ["#7a6248", "#c4ab88", "#6e5a44"], 23, 140);
+      var r2 = srand(24);
+      for (var k = 0; k < 4; k++) { var bx = Math.floor(r2() * CW), by = 104 + Math.floor(r2() * 50), bs = 6 + Math.floor((by - 100) / 6); g.fillStyle = "#6e6458"; g.fillRect(bx, by, bs, bs * 0.7); g.fillStyle = "#8e8474"; g.fillRect(bx + 1, by, bs - 3, 2); }
+    },
+    // 水の野：湖と葦
+    C: function (g) {
+      bands(g, 0, 66, "#7cbce8", "#e2f2f4");
+      ridge(g, 66, 5, "#7aa0ae", 31, 8);
+      bands(g, 68, 94, "#5a94c0", "#3c76a6", 2);
+      ridge(g, 70, 2, "#86ab8a", 32, 12);
+      g.fillStyle = "#7aa070"; g.fillRect(0, 69, CW, 2);
+      groundBand(g, 94, "#8ab87a", "#5e9466", ["#4e8a56", "#a4c890", "#e8e0b0"], 33, 120);
+      g.fillStyle = "#c4b88a"; g.fillRect(0, 93, CW, 2);
+      var r = srand(34);
+      for (var i = 0; i < 26; i++) { var x = i < 13 ? Math.floor(r() * 50) : CW - Math.floor(r() * 50), h = 10 + Math.floor(r() * 16); g.fillStyle = r() < 0.5 ? "#5e7e3a" : "#6e8e46"; g.fillRect(x, 96 - h, 1, h); g.fillStyle = "#7a5a3a"; g.fillRect(x, 96 - h - 3, 2, 4); }
+    },
+    // 灰の荒野：くすんだ空、遠くに灰の塔、枯れ木
+    D: function (g) {
+      bands(g, 0, 80, "#8a8088", "#d8b494");
+      g.fillStyle = "#5e5656"; g.fillRect(186, 18, 12, 66); g.fillRect(183, 30, 18, 4); g.fillRect(189, 10, 6, 8);
+      g.fillStyle = "#e07a30"; g.fillRect(191, 13, 2, 2);
+      ridge(g, 80, 9, "#8e8480", 41, 6);
+      ridge(g, 90, 5, "#9e9286", 42, 9);
+      groundBand(g, 94, "#b0a490", "#867a6a", ["#988c7a", "#c8bca8", "#6e645a"], 43, 140);
+      var r = srand(44);
+      for (var i = 0; i < 9; i++) { var x = Math.floor(r() * CW), y = 100 + Math.floor(r() * 60); g.fillStyle = "#6e645a"; g.fillRect(x, y, 6 + Math.floor(r() * 10), 1); g.fillRect(x + 3, y + 1, 1, 2); }
+      deadTree(g, 24, 70, 26, "#4a4240"); deadTree(g, 214, 76, 20, "#4a4240"); deadTree(g, 60, 82, 12, "#6e6460");
+    },
+    // 根の洞：土の壁、垂れた根、光る苔
+    root: function (g) {
+      bands(g, 0, 96, "#2a1e14", "#3e2e1e");
+      var r = srand(51);
+      for (var i = 0; i < 70; i++) { var x = Math.floor(r() * CW), y = Math.floor(r() * 90), s = 4 + Math.floor(r() * 10); g.fillStyle = r() < 0.5 ? "#4a3826" : "#33261a"; g.fillRect(x, y, s, Math.ceil(s * 0.6)); }
+      g.fillStyle = "#18120c"; g.fillRect(70, 30, 100, 66); g.fillRect(80, 22, 80, 8); g.fillRect(92, 16, 56, 6);
+      for (var k = 0; k < 18; k++) { var rx = Math.floor(r() * CW), len = 20 + Math.floor(r() * 50); g.fillStyle = "#6a4e32"; for (var y2 = 0; y2 < len; y2 += 2) g.fillRect(rx + Math.round(Math.sin((y2 + k * 7) / 6) * 2), y2, 2, 2); }
+      groundBand(g, 96, "#5a4630", "#3a2c1c", ["#6e5a40", "#2e2216", "#4e8a3e"], 52, 110);
+    },
+    // 鳴き岩の坑道：坑木、水晶、レール
+    mine: function (g) {
+      bands(g, 0, 96, "#2a2622", "#3e3832");
+      var r = srand(61);
+      for (var i = 0; i < 60; i++) { var x = Math.floor(r() * CW), y = Math.floor(r() * 90), s = 5 + Math.floor(r() * 9); g.fillStyle = r() < 0.5 ? "#4a443c" : "#36312c"; g.fillRect(x, y, s, Math.ceil(s * 0.7)); }
+      g.fillStyle = "#16130f"; g.fillRect(64, 26, 112, 70);
+      [[22, 20], [206, 20], [70, 8], [166, 8]].forEach(function (b) { g.fillStyle = "#6e5236"; g.fillRect(b[0], b[1], 8, 96 - b[1]); g.fillStyle = "#8a6a46"; g.fillRect(b[0] + 1, b[1], 2, 96 - b[1]); });
+      g.fillStyle = "#6e5236"; g.fillRect(14, 14, 98, 7); g.fillRect(128, 14, 98, 7); g.fillRect(64, 4, 112, 6); g.fillStyle = "#8a6a46"; g.fillRect(14, 14, 98, 2); g.fillRect(128, 14, 98, 2);
+      [[40, 60], [190, 46], [100, 30], [150, 70], [10, 80]].forEach(function (c) { g.fillStyle = "#5ab8d8"; g.fillRect(c[0], c[1], 3, 8); g.fillRect(c[0] + 3, c[1] + 3, 3, 5); g.fillStyle = "#a8e8f8"; g.fillRect(c[0], c[1], 1, 5); });
+      groundBand(g, 96, "#6a6258", "#4a443c", ["#5a5248", "#857c6c", "#3e3832"], 62, 100);
+      for (var y = 96; y < CH; y++) { var t = (y - 96) / (CH - 96), w = 10 + t * 120; g.fillStyle = "#4a3a2a"; if ((y - 96) % Math.max(2, Math.round(3 + t * 10)) === 0) g.fillRect(Math.round(CW / 2 - w / 2) - 2, y, Math.round(w) + 4, 1 + Math.round(t * 2)); g.fillStyle = "#9a948a"; g.fillRect(Math.round(CW / 2 - w / 2), y, 1, 1); g.fillRect(Math.round(CW / 2 + w / 2), y, 1, 1); }
+    },
+    // 沈み社：石の柱、水の床
+    shrine: function (g) {
+      bands(g, 0, 94, "#1a2834", "#34505e");
+      g.fillStyle = "#14202a"; g.fillRect(84, 24, 72, 70);
+      g.fillStyle = "#2e4250"; g.fillRect(78, 18, 84, 6); g.fillRect(72, 12, 96, 6);
+      g.fillStyle = "#5a7e8e"; g.fillRect(118, 40, 4, 4); g.fillStyle = "#8ad0d8"; g.fillRect(119, 41, 2, 2);
+      [14, 52, 176, 212].forEach(function (x) { pillar(g, x, 12, 6, 94, "#5e7686", "#7e98a6", "#465e6c"); });
+      bands(g, 94, CH, "#2e5a7e", "#1e3e5a", 2);
+      [14, 52, 176, 212].forEach(function (x) { for (var y = 96; y < 150; y += 3) { g.fillStyle = "rgba(126,152,166," + (0.35 - (y - 96) / 200) + ")"; g.fillRect(x + ((y >> 2) % 2), y, 12, 2); } });
+    },
+    // 灰の塔：れんが、光る窓、旗
+    tower: function (g) {
+      bricks(g, 0, 96, "#5a5552", "#6e6864", "#3e3a38");
+      [[50, 18], [170, 18]].forEach(function (w) { g.fillStyle = "#2a2624"; g.fillRect(w[0] - 2, w[1] - 2, 24, 40); g.fillRect(w[0] + 2, w[1] - 6, 16, 4); bands0(g, w[0], w[1], 20, 36, "#f0b060", "#a04a20"); g.fillStyle = "#2a2624"; g.fillRect(w[0] + 9, w[1], 2, 36); g.fillRect(w[0], w[1] + 16, 20, 2); });
+      [[100, 0], [130, 0]].forEach(function (b) { g.fillStyle = "#7a3a2a"; g.fillRect(b[0], b[1], 12, 44); g.fillRect(b[0], 44, 5, 4); g.fillRect(b[0] + 7, 44, 5, 4); g.fillStyle = "#c8a050"; g.fillRect(b[0] + 4, 14, 4, 4); g.fillRect(b[0] + 5, 20, 2, 10); });
+      g.fillStyle = "#3a3634"; g.fillRect(0, 90, CW, 6);
+      for (var y = 96; y < CH; y += 0) { var t = (y - 96) / (CH - 96), h = Math.max(2, Math.round(2 + t * 12)); for (var x = 0; x < CW; x += 16) { g.fillStyle = ((x / 16 + Math.round(y / 3)) % 2) ? "#7e7872" : "#6a645e"; g.fillRect(x, y, 16, h); } g.fillStyle = "#4a4542"; g.fillRect(0, y, CW, 1); y += h; }
+    },
+    // 頂上：吹きさらしの夕空、折れた柱
+    top: function (g) {
+      bands(g, 0, 100, "#3a3040", "#d07a48");
+      ridge(g, 100, 6, "#6e4e48", 71, 10);
+      pillar(g, 12, 14, 30, 100, "#7a746e", "#9a948e", "#5a5450"); pillar(g, 214, 14, 50, 100, "#7a746e", "#9a948e", "#5a5450");
+      g.fillStyle = "#3a3434"; g.fillRect(10, 26, 6, 4); g.fillRect(20, 24, 4, 6); g.fillRect(212, 46, 8, 4);
+      groundBand(g, 100, "#9a948a", "#6e6860", ["#857f76", "#aaa49a", "#c07030"], 72, 90);
+    },
+    // タイトル：夜の草原
+    title: function (g) {
+      bands(g, 0, 110, "#16203a", "#3e5478");
+      var r = srand(81);
+      for (var i = 0; i < 60; i++) { g.fillStyle = r() < 0.2 ? "#f2e8cc" : "#9aa8c8"; g.fillRect(Math.floor(r() * CW), Math.floor(r() * 90), 1, 1); }
+      g.fillStyle = "#e8e0c4"; g.fillRect(196, 18, 10, 10); g.fillRect(194, 20, 14, 6); g.fillStyle = "#16203a"; g.fillRect(200, 18, 8, 8);
+      ridge(g, 100, 16, "#2c3c5a", 82, 7); ridgeCap(g, 100, 16, "#5a6a8a", 82, 7, 1);
+      ridge(g, 112, 7, "#24384a", 83, 9);
+      groundBand(g, 116, "#2e4a3a", "#1e3426", ["#3e5e48", "#4e6e56", "#e8d070"], 84, 90);
+    },
+    // エンディング：朝焼けの苔の原
+    ending: function (g) {
+      bands(g, 0, 80, "#f0b890", "#f4e4c8");
+      g.fillStyle = "#fff0c8"; g.fillRect(150, 58, 20, 12); g.fillRect(146, 62, 28, 8);
+      ridge(g, 72, 14, "#b49ab0", 91, 7);
+      ridge(g, 84, 7, "#7a9e6e", 92, 9);
+      var r = srand(93);
+      for (var x = -4; x < CW + 8; x += 8 + Math.floor(r() * 6)) roundTree(g, x, 86 + Math.floor(r() * 3), 4 + Math.floor(r() * 3), "#4a7a46", "#7aa86a");
+      groundBand(g, 94, "#8cbc66", "#5e9448", ["#4e8a3e", "#e8d070", "#f2f0e2", "#d88a9a"], 94, 160);
+      path(g, 94, "#d8c49a", "#b49a6e", 6, 60, CW / 2);
+    }
+  };
+  function bands0(g, x, y, w, h, c0, c1) { for (var i = 0; i < h; i += 3) { g.fillStyle = mix(c0, c1, i / h); g.fillRect(x, y + i, w, Math.min(3, h - i)); } }
+
+  // 町は地方の景色の上に家並みを描く
+  var TOWN_SCENE = {
+    "1": function (g) {
+      SCENES.A(g);
+      house(g, 18, 70, 26, 18, "#5e8a3a", "#4a7a32", "#d8c8a0", false); house(g, 196, 68, 28, 20, "#5e8a3a", "#4a7a32", "#d8c8a0", true); house(g, 60, 78, 20, 14, "#6a9a44", "#5a8a3a", "#cdbd96", false);
+      fence(g, 0, 70, 98, "#8a6a46"); fence(g, 170, CW, 98, "#8a6a46");
+      roundTree(g, 160, 80, 8, "#3f7a46", "#5a9a5a");
+    },
+    "2": function (g) {
+      SCENES.B(g);
+      house(g, 14, 72, 30, 18, "#8a6a4a", "#7a5a3e", "#c8bca8", true); house(g, 196, 70, 30, 20, "#7a5a3e", "#6a4a32", "#b8ac98", false);
+      // 市の屋台
+      [[62, 84, "#c05a3a"], [154, 84, "#3a7aa0"]].forEach(function (s) { g.fillStyle = "#6e5236"; g.fillRect(s[0], s[1], 2, 14); g.fillRect(s[0] + 22, s[1], 2, 14); for (var i = 0; i < 6; i++) { g.fillStyle = i % 2 ? "#f0e4cc" : s[2]; g.fillRect(s[0] - 2 + i * 4, s[1] - 4, 4, 5); } g.fillStyle = "#8a6a46"; g.fillRect(s[0], s[1] + 8, 24, 3); g.fillStyle = "#e0a040"; g.fillRect(s[0] + 4, s[1] + 6, 3, 2); g.fillStyle = "#a0c060"; g.fillRect(s[0] + 12, s[1] + 6, 3, 2); });
+    },
+    "3": function (g) {
+      SCENES.C(g);
+      // 高床の家と桟橋
+      [[24, 60], [190, 58]].forEach(function (h) { g.fillStyle = "#5a4430"; g.fillRect(h[0] + 2, h[1] + 16, 2, 18); g.fillRect(h[0] + 22, h[1] + 16, 2, 18); house(g, h[0], h[1], 26, 16, "#4a6e8a", "#3e607a", "#e0d8c4", h[0] > 100); });
+      g.fillStyle = "#8a6a46"; g.fillRect(96, 84, 48, 3); g.fillStyle = "#6e5236"; for (var x = 98; x < 144; x += 10) g.fillRect(x, 87, 2, 6);
+    },
+    "4": function (g) {
+      SCENES.D(g);
+      house(g, 92, 62, 56, 28, "#a05a2e", "#8a4a24", "#cfc6b4", true);
+      g.fillStyle = "#4a3a2a"; g.fillRect(154, 64, 2, 26); g.fillRect(150, 64, 14, 2);
+      g.fillStyle = "#e8b44a"; g.fillRect(156, 68, 6, 8);
+      fence(g, 40, 88, 96, "#7a6a5a"); fence(g, 152, 200, 96, "#7a6a5a");
+    }
+  };
+
+  var sceneCache = {};
+  function scene(key, painter) {
+    if (!sceneCache[key]) {
+      var c = document.createElement("canvas"); c.width = CW; c.height = CH;
+      var g = c.getContext("2d"); painter(g); sceneCache[key] = c;
+    }
+    return sceneCache[key];
+  }
+  // 毎フレーム重ねる動き
+  function sceneMotion(key) {
+    var f = G.fr, i, x, y;
+    if (key === "A" || key === "C" || key === "ending" || key === "town1" || key === "town3") {
+      var cs = [[20, 14, 34], [120, 26, 26], [200, 8, 40]];
+      for (i = 0; i < cs.length; i++) { x = ((cs[i][0] + f / (6 + i * 3)) % (CW + 60)) - 50; cloud(ctx, Math.round(x), cs[i][1], cs[i][2], key === "ending" ? "#fff4e4" : "#f6f8f8", key === "ending" ? "#f0d4b8" : "#c8dce6"); }
+    }
+    if (key === "C" || key === "town3") for (i = 0; i < 14; i++) { x = (i * 37 + (f >> 2) * (i % 2 ? 1 : -1)) % CW; if (x < 0) x += CW; rect("rgba(220,240,250,0.55)", x, 72 + (i * 7) % 20, 6 + (i % 3) * 3, 1); }
+    if (key === "shrine") for (i = 0; i < 10; i++) { x = (i * 29 + (f >> 3)) % CW; rect("rgba(160,210,230,0.35)", x, 100 + (i * 11) % 60, 8 + (i % 4) * 4, 1); }
+    if (key === "D" || key === "tower" || key === "top" || key === "town4") {
+      var n = key === "top" ? 40 : 24;
+      for (i = 0; i < n; i++) { x = (i * 53 + f * (0.3 + (i % 5) * 0.1) + Math.sin((f + i * 20) / 30) * 6) % CW; y = (i * 31 + f * (0.4 + (i % 3) * 0.2)) % CH; rect(i % 4 ? "rgba(200,190,180,0.6)" : "rgba(240,140,70,0.7)", Math.round(x), Math.round(y), i % 3 ? 1 : 2, 1); }
+    }
+    if (key === "root") for (i = 0; i < 12; i++) { var a = 0.4 + 0.4 * Math.sin(f / 20 + i); rect("rgba(154,208,106," + a.toFixed(2) + ")", (i * 47) % CW, 10 + (i * 23) % 80, 2, 2); }
+    if (key === "mine") { var fl = 0.18 + 0.06 * Math.sin(f / 5) + 0.04 * Math.sin(f / 2.3); [[26, 30], [210, 30]].forEach(function (l) { ctx.globalAlpha = fl; rect("#f0c060", l[0] - 10, l[1] - 6, 24, 22); ctx.globalAlpha = 1; rect("#3a2a1a", l[0], l[1], 4, 6); rect("#f8d070", l[0] + 1, l[1] + 1, 2, 4); }); }
+    if (key === "town1" || key === "town2" || key === "town4") { // 煙突のけむり
+      var ch = { town1: [[212, 56]], town2: [[38, 60]], town4: [[136, 50]] }[key];
+      ch.forEach(function (c) { for (var k = 0; k < 4; k++) { var t = ((f / 3 + k * 12) % 48) / 48; ctx.globalAlpha = 0.5 * (1 - t); rect("#e8e4dc", Math.round(c[0] + Math.sin(t * 5 + k) * 3), Math.round(c[1] - t * 30), 3 + Math.round(t * 3), 3); } ctx.globalAlpha = 1; });
+    }
+  }
+  function drawScene(key) {
+    var p = SCENES[key] || (key.indexOf("town") === 0 && TOWN_SCENE[key.slice(4)]) || SCENES.A;
+    ctx.drawImage(scene(key, p), 0, 0);
+    sceneMotion(key);
+  }
   function drawBattle() {
     var B = G.battle; if (!B) return;
-    var bg = BG[B.bg] || BG.A;
-    rect(bg[0], 0, 0, CW, CH); rect(bg[1], 0, 96, CW, CH - 96);
-    rect("rgba(0,0,0,0.15)", 0, 96, CW, 2);
+    drawScene(SCENES[B.bg] ? B.bg : "A");
     var es = B.core.es, n = es.length;
     es.forEach(function (e, i) {
       var vis = B.vis[i]; if (!vis || vis.gone) return;
@@ -1071,6 +1331,7 @@ var CORE = (function () {
       if (vis.blink > 0) { vis.blink--; if ((vis.blink >> 1) % 2) return; }
       if (vis.fade > 0) { ctx.globalAlpha = vis.fade / 12; vis.fade--; if (vis.fade === 0) vis.gone = true; }
       var dy = vis.lunge > 0 ? (vis.lunge--, 4) : 0;
+      ctx.globalAlpha *= 0.3; rect("#000", x + w * 0.15, 104 + (e.d.boss ? 6 : 0), w * 0.7, 3); rect("#000", x + w * 0.25, 103 + (e.d.boss ? 6 : 0), w * 0.5, 5); ctx.globalAlpha = vis.fade > 0 ? vis.fade / 12 : 1;
       ctx.drawImage(sprite(e.d.spr, e.d.pal), 0, 0, 16, 16, x, y + dy, w, w);
       ctx.globalAlpha = 1;
       if (vis.glow > 0) { vis.glow--; ctx.globalAlpha = 0.4; rect(e.d.pal[3], x, y, w, w); ctx.globalAlpha = 1; }
