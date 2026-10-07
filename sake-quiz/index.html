@@ -1,0 +1,1433 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>酒どころ手帖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f4efe4;
+  --paper-2: #ebe3d2;
+  --card: #fbf8f1;
+  --ink: #1f3550;
+  --ink-soft: #5d6c7f;
+  --line: #cdc2ab;
+  --shu: #c4432e;
+  --shu-soft: rgba(196, 67, 46, .12);
+  --focus: #2f6fb0;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #131a24;
+    --paper-2: #1b2430;
+    --card: #19212c;
+    --ink: #ece4d2;
+    --ink-soft: #a2acb9;
+    --line: #36424f;
+    --shu: #e3664d;
+    --shu-soft: rgba(227, 102, 77, .16);
+    --focus: #7fb2e6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #131a24;
+  --paper-2: #1b2430;
+  --card: #19212c;
+  --ink: #ece4d2;
+  --ink-soft: #a2acb9;
+  --line: #36424f;
+  --shu: #e3664d;
+  --shu-soft: rgba(227, 102, 77, .16);
+  --focus: #7fb2e6;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+button { font: inherit; color: inherit; }
+a { color: var(--ink); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 72px; }
+.mincho { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; }
+
+header.top {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid var(--ink); padding-bottom: 8px; margin-bottom: 20px;
+}
+header.top h1 { font-size: 20px; margin: 0; letter-spacing: .08em; font-weight: 700; }
+header.top .count { font-size: 13px; color: var(--ink-soft); white-space: nowrap; }
+.linkbtn {
+  background: none; border: none; padding: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px; font-size: 14px; color: var(--ink-soft);
+}
+
+.lead { margin: 0 0 20px; color: var(--ink-soft); font-size: 14px; }
+
+.modes { display: grid; gap: 10px; }
+.mode {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px;
+  width: 100%; text-align: left; cursor: pointer;
+  background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 14px 16px;
+}
+.mode:hover { border-color: var(--ink); }
+.mode b { font-size: 17px; }
+.mode span { grid-column: 1; font-size: 13px; color: var(--ink-soft); }
+.mode i { grid-row: 1 / span 2; grid-column: 2; font-style: normal; font-size: 13px; color: var(--ink-soft); }
+
+.regions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.regions button {
+  background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 10px 4px;
+  cursor: pointer; font-size: 14px;
+}
+.regions button:hover { border-color: var(--ink); }
+
+.section-label {
+  font-size: 12px; letter-spacing: .15em; color: var(--ink-soft); margin: 28px 0 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* quiz */
+.qhead { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--ink-soft); margin-bottom: 8px; }
+.pips { display: flex; gap: 4px; }
+.pip { width: 14px; height: 4px; background: var(--line); border-radius: 2px; }
+.pip.ok { background: var(--shu); }
+.pip.ng { background: var(--ink-soft); }
+.pip.now { background: var(--ink); }
+
+.qcard { background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 20px 18px; }
+.qkind { font-size: 12px; letter-spacing: .12em; color: var(--ink-soft); }
+.qtext { font-size: 19px; margin: 6px 0 4px; font-weight: 500; }
+.qsub { font-size: 14px; color: var(--ink-soft); margin: 0; }
+.qbig { font-size: 30px; margin: 10px 0 2px; line-height: 1.3; word-break: break-all; }
+
+.choices { display: grid; gap: 8px; margin-top: 16px; }
+.choice {
+  display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 10px;
+  width: 100%; text-align: left; cursor: pointer;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 12px 12px;
+  min-height: 52px;
+}
+.choice:hover:not([disabled]) { border-color: var(--ink); }
+.choice .k {
+  width: 26px; height: 26px; border: 1px solid var(--line); border-radius: 50%;
+  display: grid; place-items: center; font-size: 12px; color: var(--ink-soft);
+}
+.choice .t { word-break: break-all; }
+.choice .t small { display: block; font-size: 12px; color: var(--ink-soft); }
+.choice[disabled] { cursor: default; }
+.choice.correct { border-color: var(--shu); background: var(--shu-soft); }
+.choice.correct .k { border-color: var(--shu); color: var(--shu); font-weight: 700; }
+.choice.wrong { border: 1px dashed var(--ink); background: var(--paper-2); }
+.choice.wrong .k { border-color: var(--ink); color: var(--ink); }
+.choice .t small.yours { color: var(--ink); font-weight: 700; }
+.choice.dim { opacity: .55; }
+
+.verdict { display: flex; align-items: center; gap: 12px; margin: 18px 0 10px; }
+.stamp {
+  width: 56px; height: 56px; font-size: 13px !important; letter-spacing: 0; border: 2px solid var(--shu); border-radius: 50%;
+  color: var(--shu); display: grid; place-items: center; font-weight: 700; font-size: 15px;
+  transform: rotate(-8deg); flex: none;
+}
+.stamp.miss { border-color: var(--ink-soft); color: var(--ink-soft); transform: none; border-style: dashed; }
+.verdict p { margin: 0; font-size: 15px; }
+
+.info { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 4px; }
+.info + .info { margin-top: 14px; }
+.info h3 { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.4; }
+.info .kana { font-size: 12px; color: var(--ink-soft); }
+.info-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.wish {
+  flex: none; background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  padding: 2px 12px; font-size: 12px; cursor: pointer; color: var(--ink-soft); white-space: nowrap;
+}
+.wish:hover { border-color: var(--ink); color: var(--ink); }
+.wish.on { border-color: var(--shu); color: var(--shu); background: var(--shu-soft); }
+.explain { margin: 6px 0 0; font-size: 14px; }
+.wishlist { list-style: none; padding: 0; margin: 0; }
+.wishlist li {
+  display: grid; grid-template-columns: 1fr auto; gap: 0 10px; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
+}
+.wishlist li span { font-size: 17px; }
+.wishlist li small { grid-column: 1; font-size: 12px; color: var(--ink-soft); }
+.wishlist li .wish { grid-column: 2; grid-row: 1 / span 3; }
+.none { font-size: 14px; color: var(--ink-soft); }
+.mode[disabled] { opacity: .5; cursor: default; }
+ruby { ruby-align: center; }
+ruby rt { font-size: .5em; color: var(--ink-soft); font-weight: 400; letter-spacing: 0; }
+.spec { margin-top: 10px; }
+.spec-title { font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; flex-direction: column; border: 1px solid var(--line); border-radius: 4px;
+  padding: 2px 8px; font-size: 13px; background: var(--paper); line-height: 1.4;
+}
+.chip small { font-size: 10px; color: var(--ink-soft); }
+.taste { font-size: 13px; margin-top: 6px; }
+.smv { margin-top: 10px; max-width: 320px; }
+.smv-track { position: relative; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--paper-2), var(--line)); }
+.smv-zero { position: absolute; top: -3px; width: 1px; height: 12px; background: var(--ink-soft); }
+.smv-dot {
+  position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px;
+  border-radius: 50%; background: var(--shu); border: 2px solid var(--card);
+}
+.smv-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+.tmap { display: flex; gap: 12px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+.tmap-box {
+  position: relative; width: 112px; height: 112px; flex: none;
+  border: 1px solid var(--line); border-radius: 4px; background: var(--paper);
+}
+.tmap-h { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line); }
+.tmap-v { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--line); }
+.tmap-dot {
+  position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%;
+  background: var(--shu); border: 2px solid var(--card);
+}
+.tmap-box i { position: absolute; font-style: normal; font-size: 10px; color: var(--ink-soft); }
+.t-top { top: 2px; left: 50%; transform: translateX(-50%); }
+.t-bottom { bottom: 2px; left: 50%; transform: translateX(-50%); }
+.t-left { left: 4px; top: 50%; transform: translateY(-50%); }
+.t-right { right: 4px; top: 50%; transform: translateY(-50%); }
+.tmap-note { flex: 1; min-width: 160px; margin: 0; font-size: 12px; color: var(--ink-soft); }
+.tabs { display: flex; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.tabs button {
+  background: none; border: none; padding: 8px 16px; cursor: pointer; color: var(--ink-soft);
+  border-bottom: 2px solid transparent; margin-bottom: -1px; font-weight: 500;
+}
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+.search {
+  width: 100%; font: inherit; color: var(--ink); background: var(--card);
+  border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px;
+}
+.filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.filters button {
+  background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 2px 12px;
+  font-size: 13px; cursor: pointer; color: var(--ink-soft);
+}
+.filters button[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); background: var(--card); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 8px; }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px 14px;
+  cursor: pointer; position: relative; min-width: 0;
+}
+.card::before {
+  content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; border-radius: 0 2px 2px 0; background: var(--line);
+}
+.card.term::before { background: var(--ink-soft); }
+.card:hover { border-color: var(--ink); }
+.card.open { grid-column: 1 / -1; cursor: default; border-color: var(--ink); }
+.card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-soft); }
+.card h3 { margin: 6px 0 0; font-size: 22px; line-height: 1.6; word-break: break-all; }
+.card-sub { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.card-body { border-top: none; padding-top: 0; }
+.card .chips { margin-top: 8px; }
+.info dl { display: grid; grid-template-columns: 4.5em 1fr; gap: 2px 10px; margin: 8px 0 0; font-size: 14px; }
+.info dt { color: var(--ink-soft); }
+.info dd { margin: 0; word-break: break-all; }
+.info .src { font-size: 12px; }
+.info .src a { color: var(--ink-soft); }
+
+.actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.btn {
+  background: var(--ink); color: var(--paper); border: 1px solid var(--ink); border-radius: 4px;
+  padding: 10px 20px; cursor: pointer; font-weight: 500;
+}
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn:hover { opacity: .88; }
+.hint { font-size: 12px; color: var(--ink-soft); margin-top: 8px; }
+
+/* result */
+.score { font-size: 44px; margin: 4px 0; }
+.score small { font-size: 18px; color: var(--ink-soft); }
+.newstamps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.newstamps span { border: 1px solid var(--shu); color: var(--shu); border-radius: 3px; padding: 0 8px; font-size: 13px; }
+
+/* book */
+.map {
+  display: grid; gap: 3px;
+  max-width: 560px; margin: 0 auto;
+}
+.tile {
+  aspect-ratio: 1; border: 1px solid var(--line); border-radius: 3px; background: var(--card);
+  font-size: 11px; line-height: 1.1; padding: 0; cursor: pointer; color: var(--ink-soft);
+  display: grid; place-items: center; text-align: center; overflow: hidden;
+}
+.tile.on { border-color: var(--shu); color: var(--shu); background: var(--shu-soft); font-weight: 700; }
+.tile.sel { outline: 2px solid var(--ink); outline-offset: 1px; }
+.tile:hover { border-color: var(--ink); }
+.legend { font-size: 12px; color: var(--ink-soft); display: flex; gap: 14px; justify-content: center; margin: 10px 0 0; flex-wrap: wrap; }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border: 1px solid var(--line); margin-right: 4px; vertical-align: -1px; }
+.legend .l-on::before { border-color: var(--shu); background: var(--shu-soft); }
+.prefcard { margin-top: 18px; }
+.prefcard h2 { font-size: 18px; margin: 0 0 6px; }
+.prefcard .none { font-size: 14px; color: var(--ink-soft); }
+
+.modal-back {
+  position: fixed; inset: 0; background: rgba(10, 15, 22, .45);
+  display: grid; place-items: center; padding: 16px; z-index: 20;
+}
+.modal { background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 20px; max-width: 360px; width: 100%; }
+.modal p { margin: 0 0 4px; }
+
+.age {
+  position: fixed; right: 10px; bottom: 8px; font-size: 11px; color: var(--ink-soft);
+  background: var(--paper); padding: 2px 8px; border: 1px solid var(--line); border-radius: 3px; z-index: 10;
+}
+.note { font-size: 12px; color: var(--ink-soft); margin-top: 28px; line-height: 2.1; }
+
+@media (max-width: 480px) {
+  .wrap { padding: 16px 16px 8px; }
+  .age { position: static; display: table; margin: 0 16px 16px auto; }
+  .qbig { font-size: 25px; }
+  .tile { font-size: 9px; }
+  .map { gap: 2px; }
+  .regions { grid-template-columns: repeat(2, 1fr); }
+  .cards { grid-template-columns: 1fr; }
+  .info dl { grid-template-columns: 4em 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="age">お酒は20歳になってから</div>
+
+<script type="application/json" id="sake-data">
+[
+{"pref": "北海道", "brand": "国稀", "brand_kana": "くにまれ", "brewery": "国稀酒造株式会社", "city": "増毛町", "founded": 1882, "facts": [{"text": "仕込み水は暑寒別岳連峰の残雪を源とする伏流水", "url": "https://www.kunimare.co.jp/whats_kunimare/company_profile"}, {"text": "山田錦・五百万石のほか増毛町産の吟風も使う", "url": "https://www.kunimare.co.jp/whats_kunimare/company_profile"}, {"text": "2001年度に蔵が「北海道遺産」に選ばれた", "url": "https://www.kunimare.co.jp/whats_kunimare/company_profile"}], "spec": {"product": "国稀 生酛純米", "grade": "純米", "abv": {"min": 16, "max": 16}, "polish": 65, "rice": "国産 五百万石100％", "taste_official": "辛口", "spec_url": "https://www.kunimare.co.jp/online_shop/products/detail/99"}, "urls": ["https://www.kunimare.co.jp/whats_kunimare/company_profile"]},
+{"pref": "北海道", "brand": "男山", "brand_kana": "おとこやま", "brewery": "男山株式会社", "city": "旭川市", "facts": [{"text": "仕込み水は大雪山の伏流水", "url": "https://www.otokoyama.com/museum/"}, {"text": "1977年、日本酒で初めてモンドセレクション金賞を受賞", "url": "https://www.otokoyama.com/"}, {"text": "2024年に「OTOKOYAMA SAKE PARK」として再開業", "url": "https://www.otokoyama.com/"}], "spec": {"product": "男山 純米大吟醸", "grade": "純米大吟醸", "abv": {"min": 16, "max": 16}, "polish": 38, "rice": "兵庫県産山田錦", "taste_official": "やや辛口", "spec_url": "https://otokoyama.shop/shopdetail/000000000002/"}, "urls": ["https://www.otokoyama.com/corp/", "https://www.otokoyama.com/museum/", "https://www.otokoyama.com/"]},
+{"pref": "北海道", "brand": "福司", "brand_kana": "ふくつかさ", "brewery": "福司酒造株式会社", "city": "釧路市", "founded": 1919, "facts": [{"text": "名は福を司り福を招く酒との願いを込めたものと伝わる", "url": "https://www.fukutsukasa.jp/history.html"}, {"text": "1922年、釧路の現在地に酒蔵を建てて醸造を始めた", "url": "https://www.fukutsukasa.jp/history.html"}, {"text": "仕込み水は道東の自然に濾過された伏流水", "url": "https://www.fukutsukasa.jp/passion.html"}], "spec": {"product": "福司 純米酒", "grade": "純米", "abv": {"min": 14, "max": 14}, "smv": {"min": 4, "max": 4}, "acidity": {"min": 1.5, "max": 1.5}, "polish": 60, "rice": "吟風", "taste_official": "芳醇 やや辛口", "spec_url": "https://www.fukutsukasa.jp/product/?no=1378795609"}, "urls": ["https://www.fukutsukasa.jp/", "https://www.fukutsukasa.jp/history.html", "https://www.fukutsukasa.jp/company.html", "https://www.fukutsukasa.jp/passion.html"]},
+{"pref": "青森県", "brand": "豊盃", "brand_kana": "ほうはい", "brewery": "三浦酒造株式会社", "city": "弘前市", "founded": 1930, "facts": [{"text": "仕込み水は岩木山・赤倉山系の伏流水", "url": "https://houhai.co.jp/aboutus/"}, {"text": "契約栽培の酒造好適米を少量ずつ丁寧に仕込む", "url": "https://houhai.co.jp/aboutus/"}, {"text": "昭和5年創業、平成19年に株式会社となった", "url": "https://houhai.co.jp/aboutus/"}], "spec": {"product": "豊盃 特別純米酒", "grade": "特別純米", "rice": "豊盃米", "spec_url": "https://houhai.co.jp/product/", "polish_note": "麹米55%・掛米60%"}, "urls": ["https://houhai.co.jp/aboutus/"]},
+{"pref": "青森県", "brand": "陸奥八仙", "brewery": "八戸酒造株式会社", "city": "八戸市", "facts": [{"text": "仕込み水は八戸・蟹沢地区の名水、米は全量青森県産", "url": "https://mutsu8000.com/about/"}, {"text": "名は中国の故事「酔八仙」にちなむ", "url": "https://mutsu8000.com/about/"}, {"text": "1910年に「陸奥男山」を商標登録した", "url": "https://mutsu8000.com/about/"}], "spec": {"product": "陸奥八仙 特別純米（火入）", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "rice": "青森県産米", "spec_url": "https://mutsu8000.com/product/%e9%99%b8%e5%a5%a5%e5%85%ab%e4%bb%99-%e7%89%b9%e5%88%a5%e7%b4%94%e7%b1%b3/", "polish_note": "麹米55%・掛米60%"}, "urls": ["https://www.mutsu8000.com/", "https://mutsu8000.com/about/"]},
+{"pref": "青森県", "brand": "桃川", "brand_kana": "ももかわ", "brewery": "桃川株式会社", "city": "おいらせ町", "founded": 1889, "facts": [{"text": "名は創業時に使った百石川の「百」を「桃」に替えたもの", "url": "https://www.momokawa.co.jp/company/"}, {"text": "百石川は奥入瀬川の旧称", "url": "https://www.momokawa.co.jp/company/"}, {"text": "1889年に本格的な酒造りを始めた", "url": "https://www.momokawa.co.jp/company/"}], "urls": ["https://www.momokawa.co.jp/", "https://www.momokawa.co.jp/company/"]},
+{"pref": "岩手県", "brand": "南部美人", "brand_kana": "なんぶびじん", "brewery": "株式会社南部美人", "city": "二戸市", "founded": 1902, "facts": [{"text": "仕込み水は折爪馬仙峡からの伏流水", "url": "https://www.nanbubijin.co.jp/kodawari/water/"}, {"text": "仕込み水は鉄分・マンガンを含まない中硬水", "url": "https://www.nanbubijin.co.jp/kodawari/water/"}, {"text": "2017年、IWCで特別純米酒がチャンピオン・サケに", "url": "https://www.nanbubijin.co.jp/"}], "spec": {"product": "南部美人 純米大吟醸", "grade": "純米大吟醸", "abv": {"min": 15, "max": 15}, "spec_url": "https://www.nanbubijin.jp/shopdetail/000000000002/"}, "urls": ["https://www.nanbubijin.co.jp/", "https://www.nanbubijin.co.jp/company/", "https://www.nanbubijin.co.jp/kodawari/water/"]},
+{"pref": "岩手県", "brand": "あさ開", "brand_kana": "あさびらき", "brewery": "株式会社あさ開", "city": "盛岡市", "founded": 1871, "facts": [{"text": "銘柄名は万葉集の和歌にある船出の枕詞にちなむ", "url": "https://www.asabiraki-net.jp/company/"}, {"text": "1871年、七代目村井源三が現在地で酒造りを始めた", "url": "https://www.asabiraki-net.jp/company/"}, {"text": "1988年に「昭和旭蔵」を新設した", "url": "https://www.asabiraki-net.jp/company/"}], "spec": {"product": "あさ開 純米酒 黄ラベル", "grade": "純米", "abv": {"min": 14, "max": 14}, "polish": 55, "rice": "国産米", "spec_url": "https://www.asabiraki-net.jp/item/206/"}, "urls": ["https://www.asabiraki-net.jp/company/"]},
+{"pref": "岩手県", "brand": "鷲の尾", "brand_kana": "わしのお", "brewery": "株式会社わしの尾", "city": "八幡平市", "founded": 1829, "facts": [{"text": "仕込み水は岩手山の山麓に湧く水", "url": "https://www.washinoo.co.jp/"}, {"text": "名は大鷲が棲んだという巌鷲山（岩手山）にちなむ", "url": "https://www.washinoo.co.jp/"}, {"text": "「秋あがり」は自社田で有機栽培したはなの舞で造る", "url": "https://www.washinoo.co.jp/products/"}], "urls": ["https://www.washinoo.co.jp/", "https://www.washinoo.co.jp/products/"]},
+{"pref": "宮城県", "brand": "浦霞", "brand_kana": "うらかすみ", "brewery": "株式会社佐浦", "city": "塩竈市", "founded": 1724, "facts": [{"text": "南部杜氏・平野佐五郎らが築いた酒造りを受け継ぐ", "url": "https://www.urakasumi.com/commitment/brewing/"}, {"text": "きょうかい12号酵母の発祥蔵", "url": "https://www.urakasumi.com/about/"}, {"text": "江戸時代後半に鹽竈神社の御神酒酒屋となった", "url": "https://www.urakasumi.com/about/"}], "spec": {"product": "特別純米酒 生一本(きいっぽん) 浦霞", "grade": "特別純米", "abv": {"min": 15, "max": 16}, "smv": {"min": 1, "max": 2}, "acidity": {"min": 1.5, "max": 1.5}, "polish": 60, "rice": "宮城県産ササニシキ", "spec_url": "https://www.urakasumi.com/items/kiippon/"}, "urls": ["https://www.urakasumi.com/about/", "https://www.urakasumi.com/commitment/brewing/"]},
+{"pref": "宮城県", "brand": "綿屋", "brewery": "金の井酒造株式会社", "city": "栗原市", "founded": 1915, "facts": [{"text": "1998年に井戸が枯れ、名水「小僧山水」を仕込み水に確保", "url": "https://www.kanenoi.co.jp/company"}, {"text": "2014年に自社の「綿屋酵母」の分離に成功した", "url": "https://www.kanenoi.co.jp/company"}, {"text": "2004年から地元農家と酒米の契約栽培を始めた", "url": "https://www.kanenoi.co.jp/company"}], "spec": {"product": "綿屋 特別純米酒 美山錦 60", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "smv": {"min": 3, "max": 3}, "acidity": {"min": 1.7, "max": 1.7}, "polish": 60, "rice": "長野県産美山錦100%", "spec_url": "https://www.kanenoi.co.jp/tokubetujunmai"}, "urls": ["https://www.kanenoi.co.jp/company", "https://www.kanenoi.co.jp/"]},
+{"pref": "宮城県", "brand": "乾坤一", "brand_kana": "けんこんいち", "brewery": "有限会社大沼酒造店", "city": "村田町", "founded": 1712, "facts": [{"text": "初代宮城県知事・松平正直が名付けた銘柄", "url": "https://kenkonichi.com/about/"}, {"text": "江戸時代の創業時は「不二正宗」の名で売っていた", "url": "https://kenkonichi.com/about/"}, {"text": "亀の尾・神力・愛国を宮城県内で契約栽培している", "url": "https://kenkonichi.com/about/"}], "spec": {"product": "特別純米辛口", "grade": "特別純米", "polish": 55, "rice": "ササニシキ", "taste_official": "辛口", "spec_url": "https://kenkonichi.com/products/item/"}, "urls": ["https://kenkonichi.com/", "https://kenkonichi.com/about/"]},
+{"pref": "秋田県", "brand": "新政", "brand_kana": "あらまさ", "brewery": "新政酒造株式会社", "city": "秋田市", "founded": 1852, "facts": [{"text": "きょうかい6号酵母の発祥蔵", "url": "https://aramasa.jp/company/"}, {"text": "原料米は秋田県産米のみ", "url": "https://aramasa.jp/company/"}, {"text": "生酛の酒母による純米造り", "url": "https://aramasa.jp/company/"}], "urls": ["https://aramasa.jp/company/", "https://www.aramasa.jp/"]},
+{"pref": "秋田県", "brand": "雪の茅舎", "brand_kana": "ゆきのぼうしゃ", "brewery": "株式会社齋彌酒造店", "city": "由利本荘市", "founded": 1902, "facts": [{"text": "敷地内に湧く伏流水で仕込む", "url": "https://www.yukinobosha.jp/aboutus/"}, {"text": "自社で培養した酵母を使う", "url": "https://www.yukinobosha.jp/aboutus/"}, {"text": "住宅や蔵など11棟が国の登録有形文化財", "url": "https://www.yukinobosha.jp/aboutus/"}], "spec": {"product": "雪の茅舎 純米吟醸", "grade": "純米吟醸", "polish": 55, "spec_url": "https://www.yukinobosha.jp/products/"}, "urls": ["https://www.yukinobosha.jp/aboutus/"]},
+{"pref": "秋田県", "brand": "太平山", "brand_kana": "たいへいざん", "brewery": "小玉醸造株式会社", "city": "潟上市", "founded": 1879, "facts": [{"text": "名は地域で親しまれる名峰・太平山にちなむ", "url": "https://www.kodamajozo.co.jp/kigyou/"}, {"text": "手間のかかる生酛造りや吟醸を主力にしている", "url": "https://www.kodamajozo.co.jp/kigyou/"}, {"text": "1913年に清酒「太平山」の醸造を始めた", "url": "https://www.kodamajozo.co.jp/kigyou/"}], "spec": {"product": "太平山 大吟醸 壽保年", "grade": "大吟醸", "abv": {"min": 17, "max": 17}, "smv": {"min": 4, "max": 4}, "polish": 35, "rice": "山田錦100%", "taste_official": "やや辛", "spec_url": "https://shop.kodamajozo.jp/products/detail.php?product_id=3309"}, "urls": ["https://www.kodamajozo.co.jp/", "https://www.kodamajozo.co.jp/kigyou/"]},
+{"pref": "秋田県", "brand": "天の戸", "brand_kana": "あまのと", "brewery": "浅舞酒造株式会社", "city": "横手市", "founded": 1917, "facts": [{"text": "仕込み水は蔵近くの湧水「琵琶沼寒泉」", "url": "https://amanoto.co.jp/quality/"}, {"text": "原料米は全量が横手盆地産", "url": "https://amanoto.co.jp/company/"}, {"text": "名は創業者が古歌「天の戸は静かに明けて…」から取った", "url": "https://amanoto.co.jp/company/"}], "spec": {"product": "純米酒 天の戸", "grade": "純米", "abv": {"min": 15.5, "max": 15.5}, "smv": {"min": 2.3, "max": 2.3}, "acidity": {"min": 1.8, "max": 1.8}, "polish": 65, "rice": "秋田県産米", "spec_url": "https://amanoto.co.jp/item_lineup/item_lineup-141/"}, "urls": ["https://amanoto.co.jp/company/", "https://amanoto.co.jp/quality/"]},
+{"pref": "山形県", "brand": "出羽桜", "brand_kana": "でわざくら", "brewery": "出羽桜酒造株式会社", "city": "天童市", "founded": 1892, "facts": [{"text": "天童の本蔵のほか山形市にも醸造蔵「山形蔵」を持つ", "url": "https://www.dewazakura.co.jp/about/"}, {"text": "明治25年に天童で創業した", "url": "https://www.dewazakura.co.jp/about/"}], "spec": {"product": "出羽桜 桜花吟醸酒", "grade": "吟醸", "abv": {"min": 15, "max": 15}, "polish": 50, "rice": "国産米", "spec_url": "https://www.dewazakura.co.jp/item/cat03/oka.html"}, "urls": ["https://www.dewazakura.co.jp/about/"]},
+{"pref": "山形県", "brand": "初孫", "brand_kana": "はつまご", "brewery": "東北銘醸株式会社", "city": "酒田市", "founded": 1893, "facts": [{"text": "全量を生酛造りで醸す", "url": "https://hatsumago.co.jp/"}, {"text": "「香が星」は山形県産出羽燦々を100%使用", "url": "https://hatsumago.co.jp/"}], "urls": ["https://hatsumago.co.jp/"]},
+{"pref": "山形県", "brand": "楯野川", "brand_kana": "たてのかわ", "brewery": "楯の川酒造株式会社", "city": "酒田市", "founded": 1832, "facts": [{"text": "1855年、荘内藩主の酒井公が「楯野川」の酒銘を与えたと伝わる", "url": "https://www.tatenokawa.com/ja/sake/company/"}, {"text": "造る酒をすべて純米大吟醸にしている蔵", "url": "https://www.tatenokawa.com/ja/sake/company/"}], "spec": {"product": "楯野川 純米大吟醸 清流", "grade": "純米大吟醸", "abv": {"min": 14, "max": 14}, "smv": -3, "acidity": 1.4, "polish": 50, "rice": "酒造好適米出羽燦々100％", "spec_url": "https://www.tatenokawa.com/ja/sake/products/detail.html?id=1738199762"}, "urls": ["https://www.tatenokawa.com/ja/sake/", "https://www.tatenokawa.com/ja/sake/company/"]},
+{"pref": "山形県", "brand": "米鶴", "brand_kana": "よねつる", "brewery": "米鶴酒造株式会社", "city": "高畠町", "founded": 1697, "facts": [{"text": "稲穂のお辞儀する姿と民話「鶴の恩返し」が名の由来", "url": "https://yonetsuru.com/"}, {"text": "江戸末期には上杉家の御用酒蔵を務めた", "url": "https://yonetsuru.com/"}, {"text": "1983年から酒米の栽培から手がけている", "url": "https://japansake.or.jp/sakagura/jp/yamagata/yonetsuru-shuzou/"}], "urls": ["https://yonetsuru.com/", "https://japansake.or.jp/sakagura/jp/yamagata/yonetsuru-shuzou/"]},
+{"pref": "福島県", "brand": "大七", "brand_kana": "だいしち", "brewery": "大七酒造株式会社", "city": "二本松市", "founded": 1752, "facts": [{"text": "創業以来、伝統的な生酛造りを貫いて酒を醸す蔵", "url": "https://www.daishichi.com/about/company.html"}, {"text": "米を薄く平たく削る「超扁平精米」を採り入れる", "url": "https://www.daishichi.com/about/company.html"}, {"text": "伊勢国から二本松に移り住んだ家が始めた蔵", "url": "https://www.daishichi.com/about/company.html"}], "spec": {"product": "純米生酛", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 69, "rice": "五百万石等", "spec_url": "https://www.daishichi.com/sake/junmaikimoto.html"}, "urls": ["https://www.daishichi.com/about/company.html", "https://www.daishichi.com/"]},
+{"pref": "福島県", "brand": "末廣", "brand_kana": "すえひろ", "brewery": "末廣酒造株式会社", "city": "会津若松市", "founded": 1850, "facts": [{"text": "会津美里町の博士蔵は博士山の伏流水が流れる地に建つ", "url": "https://sake-suehiro.co.jp/history"}, {"text": "1982年に自社酵母「T-1」を見つけ分離した", "url": "https://sake-suehiro.co.jp/history"}, {"text": "2018年に嘉永蔵が国の登録有形文化財に", "url": "https://sake-suehiro.co.jp/history"}], "spec": {"product": "山廃純米 末廣", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 60, "rice": "国産米", "spec_url": "https://sake-suehiro.co.jp/product/117"}, "urls": ["https://sake-suehiro.co.jp/about", "https://sake-suehiro.co.jp/history", "https://sake-suehiro.co.jp/"]},
+{"pref": "福島県", "brand": "國権", "brand_kana": "こっけん", "brewery": "国権酒造株式会社", "city": "南会津町", "founded": 1870, "facts": [{"text": "南会津町田島に蔵を構え、明治3年に創業", "url": "https://kokken.co.jp/about/"}], "spec": {"product": "純米酒 國権", "grade": "純米", "abv": {"min": 15.5, "max": 15.5}, "smv": 2.0, "acidity": 1.3, "polish": 60, "rice": "〈麹米〉山田錦〈掛米〉夢の香", "taste_official": "ちょっと辛口", "spec_url": "https://kokken.co.jp/%e7%b4%94%e7%b1%b3%e9%85%92-%e5%9c%8b%e6%a8%a9/"}, "urls": ["https://www.kokken.co.jp/", "https://kokken.co.jp/about/"]},
+{"pref": "福島県", "brand": "会津娘", "brand_kana": "あいづむすめ", "brewery": "株式会社髙橋庄作酒造店", "city": "会津若松市", "facts": [{"text": "四代目が自社田すべてで五百万石の栽培を始めた", "url": "https://www.aizumusume.co.jp/company"}, {"text": "戦時の企業整備で一度廃業し、戦後に酒蔵として再興", "url": "https://www.aizumusume.co.jp/company"}, {"text": "三倍増醸酒をやめ、地元米の純米酒中心に転換した", "url": "https://www.aizumusume.co.jp/company"}], "spec": {"product": "純米酒 会津娘", "grade": "純米", "abv": {"min": 15.0, "max": 15.0}, "smv": {"min": 1, "max": 3}, "polish": 60, "rice": "会津産五百万石", "spec_url": "https://www.aizumusume.co.jp/products/mujyn/"}, "urls": ["https://www.aizumusume.co.jp/", "https://www.aizumusume.co.jp/company"]},
+{"pref": "茨城県", "brand": "来福", "brand_kana": "らいふく", "brewery": "来福酒造株式会社", "city": "筑西市", "founded": 1716, "facts": [{"text": "銘柄名は俳句「福や来む 笑う上戸の 門の松」に由来", "url": "https://www.raifuku.co.jp/"}, {"text": "天然の花酵母を自社で培養して使う", "url": "https://www.raifuku.co.jp/"}, {"text": "1716年に近江商人が創業した", "url": "https://www.raifuku.co.jp/"}], "spec": {"product": "來福 純米吟醸「愛山」", "grade": "純米吟醸", "abv": {"min": 15, "max": 15}, "polish": 50, "rice": "兵庫県産愛山", "spec_url": "https://raifuku.co.jp/list/list-junmai/"}, "urls": ["https://www.raifuku.co.jp/", "https://raifuku.co.jp/about/"]},
+{"pref": "茨城県", "brand": "月の井", "brand_kana": "つきのい", "brewery": "株式会社月の井酒造店", "city": "大洗町", "founded": 1865, "facts": [{"text": "大洗の温暖な気候とミネラル豊富な中硬水を生かした酒造り", "url": "https://www.tsukinoi.co.jp/"}, {"text": "名は中秋の名月に輝く波頭にあやかる", "url": "https://www.tsukinoi.co.jp/"}, {"text": "創業当初の屋号は「松前屋」", "url": "https://www.tsukinoi.co.jp/"}], "urls": ["https://tsukinoi.co.jp/about_us/", "https://www.tsukinoi.co.jp/"]},
+{"pref": "茨城県", "brand": "霧筑波", "brand_kana": "きりつくば", "brewery": "合資会社浦里酒造店", "city": "つくば市", "founded": 1877, "facts": [{"text": "特別純米 霧筑波は小川酵母で仕込む", "url": "https://www.kiritsukuba.co.jp/product/junmai/"}, {"text": "2020年に新ブランド「浦里」を出した", "url": "https://www.kiritsukuba.co.jp/about-urazato/"}], "spec": {"product": "特別純米 霧筑波", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "smv": 4, "acidity": 1.4, "rice": "五百万石", "taste_official": "淡麗辛口", "spec_url": "https://www.kiritsukuba.co.jp/product/junmai/", "polish_note": "スペック表は60%、本文は「精米歩合55％まで高精白」と食い違うため null"}, "urls": ["https://www.kiritsukuba.co.jp/", "https://www.kiritsukuba.co.jp/about-urazato/", "https://www.kiritsukuba.co.jp/product/junmai/"]},
+{"pref": "茨城県", "brand": "稲里", "brand_kana": "いなさと", "brewery": "磯蔵酒造有限会社", "city": "笠間市", "founded": 1868, "facts": [{"text": "稲田地区が「稲の里」と呼ばれたことにちなむ酒名", "url": "https://isokura.jp/"}, {"text": "仕込み水は御影石から湧く地下水「石透水」", "url": "https://isokura.jp/"}], "spec": {"product": "稲里 純米", "abv": {"min": 15, "max": 15}, "polish": 65, "rice": "ひたち錦（地元産100％使用）", "spec_url": "https://isokura.ocnk.net/product/2"}, "urls": ["https://isokura.jp/"]},
+{"pref": "栃木県", "brand": "仙禽", "brand_kana": "せんきん", "brewery": "株式会社せんきん", "city": "さくら市", "facts": [{"text": "古代の亀の尾を原原種管理で復活させた", "url": "https://www.senkin.co.jp/"}, {"text": "すべての酒を生酛造りに切り替えると掲げる", "url": "https://www.senkin.co.jp/"}, {"text": "シンボルは仙界に棲む鶴", "url": "https://www.senkin.co.jp/"}], "urls": ["https://www.senkin.co.jp/", "https://www.senkin.co.jp/index.html"]},
+{"pref": "栃木県", "brand": "澤姫", "brand_kana": "さわひめ", "brewery": "株式会社井上清吉商店", "city": "宇都宮市", "founded": 1868, "facts": [{"text": "全製品の原料米を栃木県産米100%にした", "url": "https://sawahime.co.jp/会社概要/"}, {"text": "2004年に「真・地酒宣言」を始めた", "url": "https://sawahime.co.jp/会社概要/"}, {"text": "2019年から県の酒米「夢ささら」を使う", "url": "https://sawahime.co.jp/会社概要/"}], "spec": {"product": "澤姫 吟醸酒 真・地酒宣言", "grade": "吟醸", "abv": {"min": 16, "max": 16}, "polish": 50, "rice": "栃木県産酒造好適米「ひとごこち」100％", "taste_official": "芳醇辛口", "spec_url": "https://sawahime.co.jp/ginjo/"}, "urls": ["https://www.sawahime.co.jp/", "https://sawahime.co.jp/会社概要/"]},
+{"pref": "栃木県", "brand": "惣譽", "brand_kana": "そうほまれ", "brewery": "惣譽酒造株式会社", "city": "市貝町", "founded": 1872, "facts": [{"text": "仕込み水は鬼怒川水系の伏流水", "url": "https://sohomare.co.jp/company/"}, {"text": "2001年に生酛仕込みを復活させた", "url": "https://sohomare.co.jp/company/"}, {"text": "もとは滋賀県の蔵の出店として明治5年に始まった", "url": "https://sohomare.co.jp/company/"}], "spec": {"product": "生酛仕込 特別純米", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "smv": {"min": 4, "max": 5}, "polish": 60, "rice": "特A地区山田錦", "spec_url": "https://sohomare.co.jp/lineup/lineup03.html"}, "urls": ["https://www.sohomare.co.jp/", "https://sohomare.co.jp/company/"]},
+{"pref": "栃木県", "brand": "天鷹", "brand_kana": "てんたか", "brewery": "天鷹酒造株式会社", "city": "大田原市", "founded": 1914, "facts": [{"text": "2010年、有機食品でEUとの同等性認証を日本で初めて取得", "url": "https://www.tentaka.co.jp/company.html"}, {"text": "2017年、有機日本酒で初めて全国新酒鑑評会の金賞を受けた", "url": "https://www.tentaka.co.jp/company.html"}, {"text": "2023年から使用米がほぼ県産米になった", "url": "https://www.tentaka.co.jp/company.html"}], "urls": ["https://tentaka.co.jp/", "https://www.tentaka.co.jp/company.html", "https://japansake.or.jp/sakagura/jp/tochigi/tentaka-shuzou/"]},
+{"pref": "群馬県", "brand": "水芭蕉", "brand_kana": "みずばしょう", "brewery": "永井酒造株式会社", "city": "川場村", "founded": 1886, "facts": [{"text": "尾瀬の山々に由来する川場村の軟らかな天然水で仕込む", "url": "https://www.nagai-sake.co.jp/"}, {"text": "酒米は兵庫県三木市産山田錦か川場村産米", "url": "https://www.nagai-sake.co.jp/"}, {"text": "初代永井庄治がこの地の水に出会い酒造りを始めた", "url": "https://www.nagai-sake.co.jp/"}], "spec": {"product": "水芭蕉 純米吟醸", "grade": "純米吟醸", "abv": {"min": 15, "max": 15}, "smv": {"min": 2, "max": 2}, "polish": 60, "rice": "兵庫県三木市 三木・別所地区産 山田錦", "spec_url": "https://www.mizubasho.jp/item_category/fullyear/"}, "urls": ["https://www.nagai-sake.co.jp/", "https://nagai-sake.co.jp/corporate/"]},
+{"pref": "群馬県", "brand": "赤城山", "brand_kana": "あかぎさん", "brewery": "近藤酒造株式会社", "city": "みどり市", "founded": 1875, "facts": [{"text": "「赤城」「赤城正宗」を経て「赤城山」と名を改めた銘柄", "url": "https://www.akagisan.com/"}, {"text": "仕込み水は赤城山の伏流水", "url": "https://www.akagisan.com/"}, {"text": "酒米にみどり市産の五百万石を使う", "url": "https://www.akagisan.com/"}], "urls": ["https://www.akagisan.com/", "https://www.pref.gunma.jp/site/sake/500075.html"]},
+{"pref": "群馬県", "brand": "群馬泉", "brand_kana": "ぐんまいずみ", "brewery": "島岡酒造株式会社", "city": "太田市", "founded": 1863, "facts": [{"text": "生酛系の山廃造りを続ける", "url": "https://www.pref.gunma.jp/site/sake/500076.html"}, {"text": "造った酒の多くを1〜2年熟成させてから出す", "url": "https://www.pref.gunma.jp/site/sake/500076.html"}], "spec": {"product": "山廃純米", "grade": "純米", "abv": {"min": 15.5, "max": 15.5}, "smv": 3, "acidity": 1.7, "polish": 60, "rice": "若水・他", "spec_url": "https://shimaokasyuzo.com/products"}, "urls": ["https://shimaokasyuzo.com/", "https://www.pref.gunma.jp/site/sake/500076.html"]},
+{"pref": "群馬県", "brand": "町田酒造", "brewery": "株式会社町田酒造店", "city": "前橋市", "founded": 1883, "facts": [{"text": "しぼってから3分以内に瓶詰めしている", "url": "https://www.pref.gunma.jp/site/sake/500059.html"}, {"text": "もう一つの銘柄は「清嘹（せいりょう）」", "url": "https://www.pref.gunma.jp/site/sake/500059.html"}], "urls": ["https://www.seiryo-sake.co.jp/", "https://www.pref.gunma.jp/site/sake/500059.html"]},
+{"pref": "埼玉県", "brand": "神亀", "brand_kana": "しんかめ", "brewery": "神亀酒造株式会社", "city": "蓮田市", "founded": 1848, "facts": [{"text": "仕込み水は秩父系荒川の伏流水（硬水）", "url": "https://www.shinkame.co.jp/"}, {"text": "1987年に全量純米へ転換、戦後初の全量純米蔵", "url": "https://shinkame.co.jp/about/"}, {"text": "名は蔵の裏の天神池に棲む神の使いの亀にちなむ", "url": "https://shinkame.co.jp/about/"}], "spec": {"product": "神亀 純米清酒", "grade": "純米", "polish": 60, "rice": "酒造好適米100%使用", "spec_url": "https://shinkame.co.jp/2021/06/23/shinkame-junmai-seishu-1800ml/"}, "urls": ["https://www.shinkame.co.jp/", "https://shinkame.co.jp/about/"]},
+{"pref": "埼玉県", "brand": "秩父錦", "brand_kana": "ちちぶにしき", "brewery": "株式会社矢尾本店", "city": "秩父市", "founded": 1749, "facts": [{"text": "甲武信ヶ岳を源とする荒川水系の水に恵まれる", "url": "https://www.chichibunishiki.com/"}, {"text": "兵庫県産山田錦や長野県産美山錦を使う", "url": "https://www.chichibunishiki.com/"}], "spec": {"product": "秩父錦 特別純米酒", "grade": "特別純米", "abv": {"min": 15, "max": 16}, "polish": 60, "spec_url": "https://chichibunishiki.com/meishu/catalog/"}, "urls": ["https://www.chichibunishiki.com/"]},
+{"pref": "埼玉県", "brand": "武甲正宗", "brewery": "武甲酒造株式会社", "city": "秩父市", "founded": 1753, "facts": [{"text": "仕込み水は平成の名水百選「武甲山伏流水」", "url": "https://www.bukou.co.jp/"}], "spec": {"product": "武甲正宗 本醸造", "grade": "本醸造", "abv": {"min": 15, "max": 15}, "taste_official": "やや辛口", "spec_url": "https://bukou.raku-uru.jp/item-detail/399697"}, "urls": ["https://www.bukou.co.jp/", "https://www.nta.go.jp/about/organization/kantoshinetsu/sake/sake_breweries_map/pdf/sake_jp/sake_saitama_jp.pdf"]},
+{"pref": "埼玉県", "brand": "帝松", "brand_kana": "みかどまつ", "brewery": "松岡醸造株式会社", "city": "小川町", "founded": 1851, "facts": [{"text": "全国新酒鑑評会で平成16〜23年に8年連続金賞", "url": "https://www.mikadomatsu.com/company/"}], "spec": {"product": "帝松 龍躍 さけ武蔵 純米大吟醸", "grade": "純米大吟醸", "rice": "埼玉県産酒造好適米のさけ武蔵", "spec_url": "https://www.mikadomatsu.com/item/"}, "urls": ["https://www.mikadomatsu.com/", "https://www.mikadomatsu.com/company/", "https://www.mikadomatsu.com/item/"]},
+{"pref": "千葉県", "brand": "甲子", "brand_kana": "きのえね", "brewery": "株式会社飯沼本家", "city": "酒々井町", "facts": [{"text": "自社の田園で酒米「五百万石」を栽培している", "url": "https://www.iinumahonke.co.jp/"}], "urls": ["https://www.iinumahonke.co.jp/", "https://www.iinumahonke.co.jp/about/company"]},
+{"pref": "千葉県", "brand": "五人娘", "brand_kana": "ごにんむすめ", "brewery": "株式会社寺田本家", "city": "神崎町", "facts": [{"text": "原料米は全量無農薬米", "url": "https://www.teradahonke.co.jp/about/"}, {"text": "純粋培養の酵母でなく蔵付きの菌で発酵させる", "url": "https://www.teradahonke.co.jp/about/"}, {"text": "添加物を使わず手造りで醸す", "url": "https://www.teradahonke.co.jp/about/"}], "spec": {"product": "五人娘 純米酒", "grade": "純米", "abv": {"min": 14, "max": 14}, "smv": {"min": -3, "max": 1}, "acidity": {"min": 2.5, "max": 3.8}, "polish": 70, "rice": "美山錦", "spec_url": "https://www.teradahonke.co.jp/c/all/sake/goninmusume/gd18"}, "urls": ["https://www.teradahonke.co.jp/", "https://www.teradahonke.co.jp/about/"]},
+{"pref": "千葉県", "brand": "木戸泉", "brand_kana": "きどいずみ", "brewery": "木戸泉酒造株式会社", "city": "いすみ市", "founded": 1879, "facts": [{"text": "屋号の「木戸」と酒を表す「泉」を合わせた名", "url": "https://www.kidoizumi.jp/about/"}, {"text": "1956年に独自の高温山廃もとを取り入れた", "url": "https://www.kidoizumi.jp/about/"}, {"text": "1972年に一段仕込みの多酸酒「アフス」を発売", "url": "https://www.kidoizumi.jp/about/"}], "spec": {"product": "木戸泉 純米醍醐", "grade": "純米", "abv": {"min": 16, "max": 16}, "polish": 60, "rice": "酒造好適米 山田錦", "spec_url": "https://www.kidoizumi.jp/products/junmai-daigo720/"}, "urls": ["https://www.kidoizumi.jp/", "https://www.kidoizumi.jp/about/"]},
+{"pref": "千葉県", "brand": "福祝", "brand_kana": "ふくいわい", "brewery": "藤平酒造合資会社", "city": "君津市", "founded": 1716, "facts": [{"text": "銘柄「福祝」は先代の藤平富雄が考えた", "url": "https://fukuiwai.com/about/"}, {"text": "自社田を切り拓き、米づくりから取り組む", "url": "https://fukuiwai.com/about/"}], "spec": {"product": "福祝 山田錦55％磨き特別純米酒", "grade": "特別純米", "abv": {"min": 16, "max": 16}, "polish": 55, "rice": "山田錦", "spec_url": "https://fukuiwai.com/ec/216/"}, "urls": ["https://www.fukuiwai.com/", "https://fukuiwai.com/about/"]},
+{"pref": "東京都", "brand": "澤乃井", "brand_kana": "さわのい", "brewery": "小澤酒造株式会社", "city": "青梅市", "founded": 1702, "facts": [{"text": "秩父古生層の岩盤を掘った洞窟から湧く水を仕込みに使用", "url": "https://www.sawanoi-sake.com/company/"}, {"text": "名は蔵のある地がかつて「沢井村」と呼ばれたことにちなむ", "url": "https://www.sawanoi-sake.com/company/"}, {"text": "1966年に酒蔵見学を始め、翌年に澤乃井園を開いた", "url": "https://www.sawanoi-sake.com/company/"}], "spec": {"product": "純米大辛口", "grade": "純米", "abv": {"min": 15, "max": 15}, "smv": {"min": 10, "max": 10}, "acidity": {"min": 1.7, "max": 1.7}, "polish": 65, "taste_official": "大辛口", "spec_url": "https://www.sawanoi-sake.com/item/item-624/"}, "urls": ["https://www.sawanoi-sake.com/", "https://www.sawanoi-sake.com/company/"]},
+{"pref": "東京都", "brand": "多満自慢", "brand_kana": "たまじまん", "brewery": "石川酒造株式会社", "city": "福生市", "facts": [{"text": "昭和8年から「多満自慢」の銘柄名を使用", "url": "https://www.tamajiman.co.jp/about/"}, {"text": "最初の銘柄は「八重桜」、大正8年に「八重梅」へ改めた", "url": "https://www.tamajiman.co.jp/about/"}, {"text": "明治20年からビールも造り「日本麦酒」の名で売った", "url": "https://www.tamajiman.co.jp/about/"}], "urls": ["https://www.tamajiman.co.jp/", "https://www.tamajiman.co.jp/about/", "https://www.tamajiman.co.jp/access/"]},
+{"pref": "東京都", "brand": "千代鶴", "brand_kana": "ちよつる", "brewery": "中村酒造", "city": "あきる野市", "founded": 1804, "facts": [{"text": "昔、秋川流域に鶴が飛来したことにちなんだ縁起の良い名", "url": "https://www.chiyotsuru.jp/"}, {"text": "秩父古生層で磨かれた地下170mの水を汲み上げて使う", "url": "https://www.chiyotsuru.jp/"}, {"text": "江戸時代の土蔵と、通年10度以下に保つ近代蔵で仕込む", "url": "https://www.chiyotsuru.jp/"}], "spec": {"product": "千代鶴 吟醸辛口", "grade": "吟醸", "abv": {"min": 15, "max": 16}, "smv": {"min": 5, "max": 5}, "taste_official": "辛口", "spec_url": "https://www.chiyotsuru.jp/商品紹介/"}, "urls": ["https://www.chiyotsuru.jp/", "https://chiyotsuru.com/pages/会社概要", "https://japansake.or.jp/sakagura/jp/tokyo/nakamura-shuzou/"]},
+{"pref": "神奈川県", "brand": "いづみ橋", "brand_kana": "いづみばし", "brewery": "泉橋酒造株式会社", "city": "海老名市", "founded": 1857, "facts": [{"text": "仕込み水は丹沢山系の伏流水（硬水）", "url": "https://izumibashi.com/company/"}, {"text": "原料米の8〜9割が神奈川県産で、一部は自社で栽培", "url": "https://izumibashi.com/company/"}, {"text": "仕込みの半分ほどを生酛で行い、全量を槽で搾る", "url": "https://izumibashi.com/company/"}], "spec": {"product": "いづみ橋 楽風舞 純米吟醸酒", "grade": "純米吟醸", "abv": {"min": 16, "max": 16}, "polish": 55, "rice": "楽風舞", "spec_url": "https://izumibashi.com/product/izumibashi_raku_fumai/"}, "urls": ["https://www.izumibashi.com/", "https://izumibashi.com/company/"]},
+{"pref": "神奈川県", "brand": "天青", "brewery": "熊澤酒造株式会社", "city": "茅ヶ崎市", "founded": 1872, "facts": [{"text": "湘南に残る唯一の蔵元", "url": "https://www.kumazawa.jp/"}, {"text": "明治5年の創業から150年にわたり酒を造り続けている", "url": "https://www.kumazawa.jp/"}], "spec": {"product": "千峰天青 純米吟醸", "grade": "純米吟醸", "abv": {"min": 16, "max": 16}, "smv": {"min": 3.5, "max": 4.5}, "acidity": {"min": 1.3, "max": 1.5}, "polish": 50, "rice": "山田錦", "spec_url": "https://kumazawa.jp/sake-beer/kumazawa/lineup/"}, "urls": ["https://www.kumazawa.jp/", "https://kumazawa.jp/company/"]},
+{"pref": "神奈川県", "brand": "箱根山", "brand_kana": "はこねやま", "brewery": "井上酒造株式会社", "city": "大井町", "founded": 1789, "facts": [{"text": "昭和42年、西ドイツへの輸出を機に箱根にちなんで命名", "url": "https://www.hakoneyama.co.jp/history/"}, {"text": "能登流の酒造りを取り入れ、伝統の製法を守っている", "url": "https://www.hakoneyama.co.jp/"}, {"text": "創業時からの自社井戸で汲むミネラル豊富な硬水で仕込む", "url": "https://www.hakoneyama.co.jp/"}], "spec": {"product": "純米酒 箱根山", "grade": "純米", "abv": {"min": 15.5, "max": 15.5}, "spec_url": "https://www.hakoneyama.co.jp/products/junmai-hakoneyama.html"}, "urls": ["https://www.hakoneyama.co.jp/", "https://www.hakoneyama.co.jp/about/", "https://www.hakoneyama.co.jp/history/"]},
+{"pref": "新潟県", "brand": "久保田", "brand_kana": "くぼた", "brewery": "朝日酒造株式会社", "city": "長岡市", "founded": 1830, "facts": [{"text": "創業家・平澤家の屋号「久保田屋」が名の由来", "url": "https://www.asahi-shuzo.co.jp/kubota/"}, {"text": "新潟県生まれの酒米「五百万石」を使う", "url": "https://www.asahi-shuzo.co.jp/kubota/"}, {"text": "酵母を自社で育種し、実際の酒造りに用いている", "url": "https://www.asahi-shuzo.co.jp/kubota/"}], "spec": {"product": "久保田 千寿", "grade": "吟醸", "abv": {"min": 15, "max": 15}, "smv": {"min": 5, "max": 5}, "acidity": {"min": 1.1, "max": 1.1}, "rice": "五百万石", "taste_official": "すっきり、淡麗", "spec_url": "https://www.asahi-shuzo.co.jp/kubota/senjyu/", "polish_note": "麹米50%・掛米55%"}, "urls": ["https://www.asahi-shuzo.co.jp/company/", "https://www.asahi-shuzo.co.jp/kubota/"]},
+{"pref": "新潟県", "brand": "八海山", "brand_kana": "はっかいさん", "brewery": "八海醸造株式会社", "city": "南魚沼市", "founded": 1922, "facts": [{"text": "八海山の伏流水「雷電様の清水」を仕込み水に使う", "url": "https://www.hakkaisan.co.jp/company/history/"}, {"text": "2001年、水源から約4.2kmの水道を引き込む工事を終えた", "url": "https://www.hakkaisan.co.jp/company/history/"}, {"text": "1983年に地下貯蔵用のタンクを埋設した", "url": "https://www.hakkaisan.co.jp/company/history/"}], "spec": {"product": "特別本醸造 八海山", "grade": "特別本醸造", "abv": {"min": 15.5, "max": 15.5}, "smv": {"min": 4, "max": 4}, "acidity": {"min": 1.3, "max": 1.3}, "polish": 55, "rice": "麹米 五百万石 / 掛米 五百万石、トドロキワセ他", "spec_url": "https://www.hakkaisan.co.jp/sake/honjyozo/"}, "urls": ["https://www.hakkaisan.co.jp/company/about/", "https://www.hakkaisan.co.jp/company/history/"]},
+{"pref": "新潟県", "brand": "越乃寒梅", "brand_kana": "こしのかんばい", "brewery": "石本酒造株式会社", "city": "新潟市", "founded": 1907, "facts": [{"text": "厳寒の残雪の中で咲く梅一輪に酒造りの美意識を重ねた名", "url": "https://koshinokanbai.co.jp/pages/thought"}, {"text": "1967年に雑誌「酒」で取り上げられ注目を集めた", "url": "https://koshinokanbai.co.jp/pages/about"}, {"text": "1999年にアメリカへの輸出を始めた", "url": "https://koshinokanbai.co.jp/pages/about"}], "spec": {"product": "白ラベル", "grade": "普通酒", "abv": {"min": 15, "max": 15}, "smv": {"min": 6, "max": 6}, "polish": 58, "rice": "五百万石（新潟県産）他、全量酒造好適米使用", "spec_url": "https://koshinokanbai.co.jp/products/whitelabel"}, "urls": ["https://www.koshinokanbai.co.jp/", "https://koshinokanbai.co.jp/pages/about", "https://koshinokanbai.co.jp/pages/thought"]},
+{"pref": "新潟県", "brand": "〆張鶴", "brand_kana": "しめはりつる", "brewery": "宮尾酒造株式会社", "city": "村上市", "founded": 1819, "facts": [{"text": "朝日連峰の伏流水を敷地内の井戸から汲んで仕込む", "url": "https://www.shimeharitsuru.co.jp/"}, {"text": "新潟の酒米「五百万石」などを使い、原料米は自社で精米", "url": "https://www.shimeharitsuru.co.jp/"}, {"text": "昭和40年代から純米酒造りに取り組んできた", "url": "https://www.shimeharitsuru.co.jp/about/index.html"}], "spec": {"product": "〆張鶴 純", "grade": "純米吟醸", "abv": {"min": 15, "max": 15}, "smv": {"min": 2, "max": 2}, "acidity": {"min": 1.3, "max": 1.3}, "polish": 50, "rice": "五百万石", "spec_url": "https://www.shimeharitsuru.co.jp/english/index.html"}, "urls": ["https://www.shimeharitsuru.co.jp/", "https://www.shimeharitsuru.co.jp/about/index.html", "https://www.shimeharitsuru.co.jp/contact/index.html"]},
+{"pref": "富山県", "brand": "満寿泉", "brand_kana": "ますいずみ", "brewery": "株式会社桝田酒造店", "city": "富山市", "facts": [{"text": "立山連峰を源とする常願寺川系の伏流水で醸す", "url": "https://www.masuizumi.co.jp/"}, {"text": "昭和初期、名字の桝田にちなみ「満寿泉」と名付けた", "url": "https://www.masuizumi.co.jp/"}, {"text": "明治38年から岩瀬の地で酒造りを始めた", "url": "https://www.masuizumi.co.jp/"}], "urls": ["https://www.masuizumi.co.jp/", "https://www.toyama-sake.or.jp/kuramoto"]},
+{"pref": "富山県", "brand": "羽根屋", "brewery": "富美菊酒造株式会社", "city": "富山市", "founded": 1916, "facts": [{"text": "蔵の屋号「羽根屋」をそのまま冠した日本酒ブランド", "url": "https://fumigiku.co.jp/"}, {"text": "すべての酒を大吟醸と同じ手間をかけて醸すとしている", "url": "https://fumigiku.co.jp/"}, {"text": "一年を通して酒を造る四季醸造を行っている", "url": "https://fumigiku.co.jp/"}], "urls": ["https://fumigiku.co.jp/", "https://fumigiku.co.jp/company/"]},
+{"pref": "富山県", "brand": "若鶴", "brand_kana": "わかつる", "brewery": "若鶴酒造株式会社", "city": "砺波市", "founded": 1862, "facts": [{"text": "庄川の伏流水を仕込み水に使う", "url": "https://wakatsuru.co.jp/"}, {"text": "大正7年、若鶴酒造株式会社を設立した", "url": "https://www.wakatsuru.co.jp/history/index.html"}, {"text": "1952年からウイスキーの製造も手がけている", "url": "https://wakatsuru.co.jp/"}], "urls": ["https://wakatsuru.co.jp/", "https://www.wakatsuru.co.jp/history/index.html", "https://japansake.or.jp/sakagura/jp/toyama/wakatsuru-shuzou/"]},
+{"pref": "石川県", "brand": "天狗舞", "brand_kana": "てんぐまい", "brewery": "株式会社車多酒造", "city": "白山市", "founded": 1823, "facts": [{"text": "霊峰白山の伏流水を仕込みに用いる", "url": "https://www.tengumai.co.jp/kura?id=cont03"}, {"text": "昭和40年代に七代当主と杜氏が独自の山廃仕込を築いた", "url": "https://www.tengumai.co.jp/sake"}], "spec": {"product": "山廃仕込純米酒", "grade": "純米", "polish": 60, "spec_url": "https://www.tengumai.co.jp/products/junmai/19.html"}, "urls": ["https://www.tengumai.co.jp/", "https://www.tengumai.co.jp/kura?id=cont03", "https://www.tengumai.co.jp/sake"]},
+{"pref": "石川県", "brand": "加賀鳶", "brand_kana": "かがとび", "brewery": "株式会社福光屋", "city": "金沢市", "founded": 1625, "facts": [{"text": "白山麓から百年かけて湧く「百年水」で仕込む", "url": "https://www.fukumitsuya.co.jp/company/"}, {"text": "2001年度の造りから全量を純米造りに切り替えた", "url": "https://www.fukumitsuya.co.jp/company/"}, {"text": "1960年から農家と組んで酒米の契約栽培に取り組む", "url": "https://www.fukumitsuya.co.jp/company/"}], "urls": ["https://www.fukumitsuya.co.jp/", "https://www.fukumitsuya.co.jp/company/", "https://www.fukumitsuya.co.jp/en/"]},
+{"pref": "石川県", "brand": "常きげん", "brand_kana": "じょうきげん", "brewery": "鹿野酒造株式会社", "city": "加賀市", "founded": 1819, "facts": [{"text": "蔵に湧く「白水の井戸」の水を守り、酒造りに使う", "url": "https://www.jokigen.co.jp/kodawari/"}, {"text": "自社の田んぼで酒米の山田錦を作り続けている", "url": "https://www.jokigen.co.jp/kodawari/"}, {"text": "山廃仕込を得意とする", "url": "https://www.jokigen.co.jp/kodawari/"}], "spec": {"product": "山廃純米", "grade": "純米", "abv": {"min": 16, "max": 16}, "smv": {"min": 3, "max": 3}, "acidity": {"min": 1.8, "max": 1.8}, "polish": 65, "rice": "五百万石", "taste_official": "やや辛口", "spec_url": "https://jokigen.co.jp/products/yamahaishikomishu/"}, "urls": ["https://www.jokigen.co.jp/", "https://www.jokigen.co.jp/company/", "https://www.jokigen.co.jp/kodawari/"]},
+{"pref": "福井県", "brand": "梵", "brewery": "合資会社加藤吉平商店", "city": "鯖江市", "facts": [{"text": "添加物を一切使わない純米酒だけを醸している", "url": "https://www.born.co.jp/"}, {"text": "1966年に「梵」を国内で正式に商標登録した", "url": "https://www.born.co.jp/history"}, {"text": "昭和46年に3年熟成の純米酒「梵 三年酒オールド」を発売", "url": "https://www.born.co.jp/history"}], "spec": {"product": "梵・ゴールド", "grade": "純米大吟醸", "abv": {"min": 14, "max": 15}, "polish": 50, "rice": "兵庫県特Ａ地区産契約栽培山田錦", "taste_official": "芳醇旨口", "spec_url": "https://www.born.co.jp/product/gold/"}, "urls": ["https://www.born.co.jp/", "https://www.born.co.jp/history", "https://japansake.or.jp/sakagura/jp/fukui/katou-kichibei-shouten/"]},
+{"pref": "福井県", "brand": "一本義", "brand_kana": "いっぽんぎ", "brewery": "株式会社一本義久保本店", "city": "勝山市", "founded": 1902, "facts": [{"text": "福井の酒米「越の雫」「さかほまれ」を主軸に醸す", "url": "https://www.ippongi.co.jp/company"}], "spec": {"product": "辛口 純米酒", "grade": "純米", "abv": {"min": 16, "max": 16}, "polish": 70, "rice": "麹米 越の雫 / 掛米 越の雫・福井県産米", "taste_official": "辛口", "spec_url": "https://www.ippongi.co.jp/product/content/60"}, "urls": ["https://www.ippongi.co.jp/", "https://www.ippongi.co.jp/company", "https://www.ippongi.co.jp/en/"]},
+{"pref": "福井県", "brand": "黒龍", "brand_kana": "こくりゅう", "brewery": "黒龍酒造株式会社", "city": "永平寺町", "founded": 1804, "facts": [{"text": "初代・石田屋二左衛門が良水に恵まれた永平寺町松岡で創業", "url": "https://japansake.or.jp/sakagura/jp/fukui/kokuryuu-shuzou/"}, {"text": "蔵に隣接する小売店は「石田屋」の名を持つ", "url": "https://japansake.or.jp/sakagura/jp/fukui/kokuryuu-shuzou/"}], "urls": ["https://kokuryu.co.jp/", "https://japansake.or.jp/sakagura/jp/fukui/kokuryuu-shuzou/"]},
+{"pref": "福井県", "brand": "白岳仙", "brand_kana": "はくがくせん", "brewery": "安本酒造有限会社", "city": "福井市", "founded": 1853, "facts": [{"text": "白山水脈の伏流水を蔵の井戸の地下100mから汲み上げる", "url": "https://www.hakugakusen.jp/"}, {"text": "専用のオリジナル酵母「HGS-01」「HGS-02」を使う", "url": "https://www.hakugakusen.jp/"}, {"text": "2001年、当主が自ら杜氏となり新ブランドとして立ち上げた", "url": "https://www.hakugakusen.jp/"}], "spec": {"product": "辛口純米 真紅", "grade": "純米", "abv": {"min": 15, "max": 15}, "smv": {"min": 10, "max": 10}, "acidity": {"min": 1.7, "max": 1.7}, "rice": "福井県指定栽培地区 五百万石", "taste_official": "辛口", "spec_url": "https://www.hakugakusen.jp/products/content/72", "polish_note": "55%・65%"}, "urls": ["https://www.hakugakusen.jp/", "https://www.hakugakusen.jp/company", "https://www.hakugakusen.jp/history", "https://japansake.or.jp/sakagura/jp/fukui/yasumoto-shuzou/"]},
+{"pref": "山梨県", "brand": "七賢", "brand_kana": "しちけん", "brewery": "山梨銘醸株式会社", "city": "北杜市", "founded": 1750, "facts": [{"text": "南アルプス・甲斐駒ヶ岳の天然水で酒を醸す", "url": "https://www.sake-shichiken.co.jp/company/"}, {"text": "蔵の建物は明治天皇の行在所にもなった木造建築", "url": "https://www.sake-shichiken.co.jp/"}], "spec": {"product": "風凛美山", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 70, "rice": "ひとごこち、あさひの夢", "spec_url": "https://www.sake-shichiken.co.jp/products/hurinbizan"}, "urls": ["https://www.sake-shichiken.co.jp/", "https://www.sake-shichiken.co.jp/company/"]},
+{"pref": "山梨県", "brand": "春鶯囀", "brand_kana": "しゅんのうてん", "brewery": "株式会社萬屋醸造店", "city": "富士川町", "founded": 1790, "facts": [{"text": "昭和8年、与謝野鉄幹・晶子夫妻が蔵に泊まり歌を詠んだ", "url": "https://www.shunnoten.co.jp/yorozuya/"}, {"text": "地元産の山田錦や、増穂で育てた酒米「玉栄」を使う", "url": "https://www.shunnoten.co.jp/yorozuya/"}, {"text": "糖類の使用を完全にやめ、純米酒を軸にしている", "url": "https://www.shunnoten.co.jp/yorozuya/"}], "spec": {"product": "春鶯囀 純米酒", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 63, "rice": "山梨県産米", "taste_official": "中口", "spec_url": "https://www.shunnoten.co.jp/shop/products/detail/17"}, "urls": ["https://www.shunnoten.co.jp/", "https://www.shunnoten.co.jp/yorozuya/"]},
+{"pref": "山梨県", "brand": "甲斐の開運", "brand_kana": "かいのかいうん", "brewery": "井出醸造店", "city": "富士河口湖町", "facts": [{"text": "1850年頃、16代当主が清酒造りを始め「開運」と名付けた", "url": "https://www.kainokaiun.jp/company.html"}, {"text": "1985年に「甲斐の開運」を正式な名称とした", "url": "https://www.kainokaiun.jp/company.html"}, {"text": "富士山の湧水を使い、標高850mの冷涼な地で醸す", "url": "https://www.kainokaiun.jp/concept.html"}], "urls": ["https://www.kainokaiun.jp/", "https://www.kainokaiun.jp/company.html", "https://www.kainokaiun.jp/concept.html", "https://japansake.or.jp/sakagura/jp/yamanashi/ide-jozo/"]},
+{"pref": "長野県", "brand": "真澄", "brand_kana": "ますみ", "brewery": "宮坂醸造株式会社", "city": "諏訪市", "founded": 1662, "facts": [{"text": "全国の酒蔵で使われる「七号酵母」が生まれた蔵", "url": "https://www.masumi.co.jp/"}, {"text": "諏訪大社の宝物「真澄の鏡」を酒の名に冠している", "url": "https://www.masumi.co.jp/"}, {"text": "2012年に創業350周年を迎えた", "url": "https://www.masumi.co.jp/"}], "urls": ["https://www.masumi.co.jp/", "https://www.masumi.co.jp/en/", "https://www.nagano-sake.or.jp/intro/suwa/"]},
+{"pref": "長野県", "brand": "大信州", "brand_kana": "だいしんしゅう", "brewery": "大信州酒造株式会社", "city": "松本市", "facts": [{"text": "北アルプス連峰の雪解け水を命の水として仕込む", "url": "https://www.daishinsyu.com/"}, {"text": "契約栽培農家が育てた長野県産「金紋錦」を使う", "url": "https://www.daishinsyu.com/kamosu"}, {"text": "2019年の造りから豊野蔵を閉じ、松本蔵に一本化した", "url": "https://www.daishinsyu.com/story/matsumotokura"}], "spec": {"product": "大信州 超辛口純米吟醸", "grade": "純米吟醸", "rice": "長野県産契約栽培米「ひとごこち」", "taste_official": "超辛口", "spec_url": "https://www.daishinsyu.com/products"}, "urls": ["https://www.daishinsyu.com/", "https://www.daishinsyu.com/about", "https://japansake.or.jp/sakagura/jp/nagano/daishinshuu-shuzou/", "https://www.daishinsyu.com/story/matsumotokura", "https://www.daishinsyu.com/kamosu"]},
+{"pref": "長野県", "brand": "水尾", "brand_kana": "みずお", "brewery": "株式会社田中屋酒造店", "city": "飯山市", "facts": [{"text": "「水尾」の名には水の源という意味があるという", "url": "https://www.mizuo.co.jp/guide/"}, {"text": "野沢温泉村の水尾山のふもとに湧く水をトラックで運ぶ", "url": "https://www.mizuo.co.jp/guide/"}, {"text": "「ひとごこち」と木島平村発祥の「金紋錦」を使う", "url": "https://www.mizuo.co.jp/guide/"}], "spec": {"product": "水尾 特別純米酒 金紋錦仕込", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "smv": {"min": 1, "max": 1}, "rice": "長野県木島平村産金紋錦100％使用", "spec_url": "https://www.mizuo.co.jp/products/58182/"}, "urls": ["https://mizuo.co.jp/", "https://www.mizuo.co.jp/company/", "https://www.mizuo.co.jp/guide/", "https://japansake.or.jp/sakagura/jp/nagano/tanakaya-shuzouten/"]},
+{"pref": "岐阜県", "brand": "小左衛門", "brand_kana": "こざえもん", "brewery": "中島醸造株式会社", "city": "瑞浪市", "founded": 1702, "facts": [{"text": "地元農家に育ててもらった「瑞浪米」で純米吟醸を造る", "url": "https://kozaemon.jp/about"}, {"text": "初代の中島小左衛門が年貢米を生かして酒造りを始めた", "url": "https://kozaemon.jp/about"}, {"text": "2004年から蔵の社員だけで酒を醸すようになった", "url": "https://kozaemon.jp/about"}], "spec": {"product": "特別純米信濃美山錦", "grade": "特別純米", "polish": 55, "rice": "美山錦", "spec_url": "https://kozaemon.jp/menu/853052"}, "urls": ["https://www.kozaemon.jp/", "https://kozaemon.jp/about"]},
+{"pref": "岐阜県", "brand": "三千盛", "brand_kana": "みちさかり", "brewery": "株式会社三千盛", "city": "多治見市", "facts": [{"text": "日本酒度＋10の「超からくち」を看板とする蔵", "url": "https://www.michisakari.com/"}, {"text": "安永年間（1772〜1781年）に創業した", "url": "https://www.michisakari.com/corp.html"}], "spec": {"product": "三千盛 超特", "grade": "大吟醸", "abv": {"min": 15, "max": 16}, "smv": {"min": 16, "max": 17}, "polish": 45, "taste_official": "すっきりからくち", "spec_url": "https://www.michisakari.com/product/archives/57"}, "urls": ["https://www.michisakari.com/", "https://www.michisakari.com/corp.html"]},
+{"pref": "岐阜県", "brand": "蓬莱", "brand_kana": "ほうらい", "brewery": "有限会社渡辺酒造店", "city": "飛騨市", "founded": 1870, "facts": [{"text": "謡曲「鶴亀」に謡われる不老長寿の仙境「蓬莱」から命名", "url": "https://www.sake-hourai.co.jp/watanabe/history/"}, {"text": "井戸から汲み上げる飛騨山脈の伏流水で仕込む", "url": "https://www.sake-hourai.co.jp/"}, {"text": "酒米は「飛騨ほまれ」を中心に使う", "url": "https://www.sake-hourai.co.jp/"}], "urls": ["https://www.sake-hourai.co.jp/", "https://www.sake-hourai.co.jp/about/gaiyo/", "https://www.sake-hourai.co.jp/watanabe/history/"]},
+{"pref": "静岡県", "brand": "開運", "brand_kana": "かいうん", "brewery": "株式会社土井酒造場", "city": "掛川市", "founded": 1872, "facts": [{"text": "能登流の酒造りを受け継ぎ、精米も自社で行う", "url": "https://kaiunsake.com/"}, {"text": "土井弥市が15歳で創業し、2022年に創業150年を迎えた", "url": "https://kaiunsake.com/"}], "spec": {"product": "開運 特別純米", "grade": "特別純米", "abv": {"min": 16, "max": 16}, "polish": 55, "rice": "兵庫県産山田錦", "spec_url": "https://kaiunsake.com/item/3446.html"}, "urls": ["https://kaiunsake.com/", "https://kaiunsake.com/company"]},
+{"pref": "静岡県", "brand": "富士錦", "brand_kana": "ふじにしき", "brewery": "富士錦酒造株式会社", "city": "富士宮市", "facts": [{"text": "蔵の井戸に湧く富士山の雪解け水で仕込む", "url": "https://www.fujinishiki.com/company"}, {"text": "1914年、尾崎行雄から「富士錦」の酒銘を贈られた", "url": "https://www.fujinishiki.com/company"}, {"text": "静岡酵母を使って仕込んでいる", "url": "https://www.fujinishiki.com/company"}], "urls": ["https://www.fujinishiki.com/", "https://www.fujinishiki.com/company"]},
+{"pref": "静岡県", "brand": "白隠正宗", "brand_kana": "はくいんまさむね", "brewery": "高嶋酒造株式会社", "city": "沼津市", "founded": 1804, "facts": [{"text": "明治17年、山岡鉄舟が白隠禅師にちなみ「白隠正宗」と命名", "url": "https://hakuinmasamune.com/"}, {"text": "網元だった先代が1804年に酒造業を創業した", "url": "https://hakuinmasamune.com/"}, {"text": "平成24酒造年度から全量純米の蔵になった", "url": "https://japansake.or.jp/sakagura/jp/shizuoka/takashima-shuzou/"}], "spec": {"product": "白隠正宗 誉富士純米酒", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 60, "rice": "令和誉富士", "spec_url": "https://hakuinmasamune.com/"}, "urls": ["https://hakuinmasamune.com/", "https://japansake.or.jp/sakagura/jp/shizuoka/takashima-shuzou/"]},
+{"pref": "愛知県", "brand": "醸し人九平次", "brand_kana": "かもしびとくへいじ", "brewery": "株式会社萬乗醸造", "city": "名古屋市", "founded": 1647, "facts": [{"text": "兵庫・黒田庄の自社田での米づくりから酒造りを手がける", "url": "https://kuheiji.co.jp/"}, {"text": "黒田庄の自社田の中に新しい醸造所を設けた", "url": "https://kuheiji.co.jp/"}, {"text": "フランスでワインも醸し、2020年4月に初リリースした", "url": "https://kuheiji.co.jp/"}], "spec": {"product": "彼の地（かのち）", "polish": 40, "rice": "山田錦", "spec_url": "https://kuheiji.co.jp/kamoshibito/collection/"}, "urls": ["https://www.kuheiji.co.jp/", "https://kuheiji.co.jp/about/", "https://kuheiji.co.jp/kamoshibito/", "https://kuheiji.co.jp/"]},
+{"pref": "愛知県", "brand": "白老", "brand_kana": "はくろう", "brewery": "澤田酒造株式会社", "city": "常滑市", "founded": 1848, "facts": [{"text": "初代・澤田儀平冶が良質な水を求め常滑で酒造りを始めた", "url": "https://hakurou.com/f/_aboutus"}, {"text": "米を磨く「白」と長寿や熟練の「老」を重ねた名と伝わる", "url": "https://hakurou.com/f/_aboutus"}, {"text": "昭和44年に生の酒「蔵人だけしか飲めぬ酒」を発売した", "url": "https://hakurou.com/f/_aboutus"}], "spec": {"product": "純米 白老", "grade": "純米", "abv": {"min": 15, "max": 15}, "smv": {"min": 2, "max": 2}, "acidity": {"min": 1.5, "max": 1.5}, "polish": 65, "rice": "若水100%", "taste_official": "濃醇旨口", "spec_url": "https://hakurou.com/c/item/seisyu_2/30009"}, "urls": ["https://www.hakurou.com/", "https://hakurou.com/f/_aboutus"]},
+{"pref": "愛知県", "brand": "神杉", "brand_kana": "かみすぎ", "brewery": "神杉酒造株式会社", "city": "安城市", "founded": 1805, "facts": [{"text": "醸造の神を祀る奈良・三輪の大神神社から拝名した酒名", "url": "https://japansake.or.jp/sakagura/jp/aichi/kamisugi-shuzou/"}, {"text": "敷地内の井戸から汲む、矢作川の伏流水の軟水で仕込む", "url": "https://www.kamisugi.co.jp/sake_mizu/"}, {"text": "平成16年から安城市の農家に酒米「若水」を育ててもらう", "url": "https://www.kamisugi.co.jp/sake_kome/"}], "urls": ["https://kamisugi.co.jp/", "https://www.kamisugi.co.jp/sake_mizu/", "https://www.kamisugi.co.jp/sake_kome/", "https://japansake.or.jp/sakagura/jp/aichi/kamisugi-shuzou/"]},
+{"pref": "三重県", "brand": "作", "brand_kana": "ざく", "brewery": "清水清三郎商店株式会社", "city": "鈴鹿市", "founded": 1869, "facts": [{"text": "造り手と飲み手が共に作り上げる酒という思いを銘に込めた", "url": "https://seizaburo.jp/zaku/"}, {"text": "目の行き届く比較的小さな仕込みタンクで造る", "url": "https://seizaburo.jp/zaku/"}], "spec": {"product": "作 穂乃智", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 60, "spec_url": "https://seizaburo.jp/zaku/products/ho"}, "urls": ["https://www.seizaburo.jp/", "https://seizaburo.jp/company/", "https://seizaburo.jp/zaku/"]},
+{"pref": "三重県", "brand": "半蔵", "brand_kana": "はんぞう", "brewery": "株式会社大田酒造", "city": "伊賀市", "founded": 1892, "facts": [{"text": "服部半蔵ゆかりの伊賀上野にちなみ、その名を冠した酒", "url": "https://www.hanzo-sake.com/profile/index.html"}, {"text": "三重県産「神の穂」を中心に、伊賀産山田錦も使う", "url": "https://www.hanzo-sake.com/profile/index.html"}, {"text": "2016年のG7伊勢志摩サミットで乾杯酒に選ばれた", "url": "https://www.hanzo-sake.com/"}], "spec": {"product": "半蔵 純米大吟醸 磨き40【サミット乾杯酒】", "grade": "純米大吟醸", "abv": {"min": 16, "max": 16}, "polish": 40, "rice": "山田錦", "spec_url": "https://www.hanzo-sake.com/migaki40/index.html"}, "urls": ["https://www.hanzo-sake.com/", "https://www.hanzo-sake.com/profile/index.html"]},
+{"pref": "三重県", "brand": "瀧自慢", "brand_kana": "たきじまん", "brewery": "瀧自慢酒造株式会社", "city": "名張市", "founded": 1868, "facts": [{"text": "赤目四十八滝の伏流水を仕込み水に使う", "url": "https://takijiman.jp/"}, {"text": "伊賀産の三重山田錦や伊賀米を使う", "url": "https://takijiman.jp/"}, {"text": "平成4年、朝日酒造から瀧自慢酒造へ社名を変えた", "url": "https://takijiman.jp/?page_id=28"}], "spec": {"product": "辛口純米 滝水流（はやせ）", "grade": "純米", "abv": {"min": 15, "max": 15}, "smv": 10, "acidity": 1.4, "polish": 60, "rice": "国産米", "taste_official": "辛口", "spec_url": "https://www.takijiman.jp/?cat=4"}, "urls": ["https://takijiman.jp/", "https://takijiman.jp/?page_id=28", "https://takijiman.jp/?page_id=16", "https://japansake.or.jp/sakagura/jp/mie/takijiman-shuzou/"]},
+{"pref": "滋賀県", "brand": "七本鎗", "brand_kana": "しちほんやり", "brewery": "冨田酒造有限会社", "city": "長浜市", "facts": [{"text": "賤ヶ岳の戦いの「七本槍」にちなむ銘で、商標は「七本鎗」", "url": "https://7yari.co.jp/aboutus/"}, {"text": "蔵の井戸から汲み上げた水を仕込み水に使っている", "url": "https://7yari.co.jp/aboutus/"}, {"text": "生酛造りを復活させ、木桶での仕込みも再開した", "url": "https://7yari.co.jp/aboutus/"}], "urls": ["https://7yari.co.jp/aboutus/", "https://7yari.co.jp/en/"]},
+{"pref": "滋賀県", "brand": "喜楽長", "brand_kana": "きらくちょう", "brewery": "喜多酒造株式会社", "city": "東近江市", "founded": 1820, "facts": [{"text": "客の喜び・楽しさ・長寿を願って名付けられた銘柄", "url": "https://kirakucho.com/about"}, {"text": "1820年、初代喜多儀左ェ門が八日市で酒造りを始めた", "url": "https://kirakucho.com/about"}, {"text": "創業当初は「天満屋」という屋号だった", "url": "https://kirakucho.com/about"}], "spec": {"product": "喜楽長 辛口純米吟醸", "grade": "純米吟醸", "smv": {"min": 14, "max": 14}, "polish": 55, "rice": "山田錦", "taste_official": "辛口", "spec_url": "https://kirakucho.com/product/14"}, "urls": ["https://kirakucho.com/about"]},
+{"pref": "滋賀県", "brand": "不老泉", "brand_kana": "ふろうせん", "brewery": "上原酒造株式会社", "city": "高島市", "founded": 1862, "facts": [{"text": "山廃仕込みでは酵母を一切添加しない", "url": "https://furosen.com/?page_id=28"}, {"text": "搾りは全量、木槽の天秤しぼりで行う", "url": "https://furosen.com/"}, {"text": "木桶での仕込みも続けている", "url": "https://furosen.com/?page_id=28"}], "spec": {"product": "特別純米酒", "grade": "特別純米", "abv": {"min": 15, "max": 16}, "polish": 60, "rice": "山田錦", "spec_url": "https://furosen.com/?p=821"}, "urls": ["https://furosen.com/wp/", "https://furosen.com/?page_id=28", "https://japansake.or.jp/sakagura/jp/shiga/uehara-shuzou/"]},
+{"pref": "滋賀県", "brand": "萩乃露", "brand_kana": "はぎのつゆ", "brewery": "株式会社福井弥平商店", "city": "高島市", "facts": [{"text": "創業時の藩主が勝野の浜に咲く萩にちなんで命名", "url": "https://www.haginotsuyu.co.jp/about/"}, {"text": "比良山系の伏流水で仕込んでいる", "url": "https://www.haginotsuyu.co.jp/about/"}, {"text": "江戸時代の製法「十水仕込」の酒も造る", "url": "https://haginotsuyu.co.jp/"}], "spec": {"product": "純米大吟醸 黒ラベル", "grade": "純米大吟醸", "polish": 40, "rice": "山田錦（兵庫県特A地区東条天神地区産）", "spec_url": "https://www.haginotsuyu.co.jp/syuntoteiban/"}, "urls": ["https://haginotsuyu.co.jp/", "https://www.haginotsuyu.co.jp/about/", "https://japansake.or.jp/sakagura/jp/shiga/fukui-yahei-shouten/"]},
+{"pref": "京都府", "brand": "月桂冠", "brand_kana": "げっけいかん", "brewery": "月桂冠株式会社", "city": "京都市", "founded": 1637, "facts": [{"text": "1905年、11代目大倉恒吉が「月桂冠」と名付け商標登録", "url": "http://www.gekkeikan.co.jp/company/history/origin/"}, {"text": "1909年、業界で初めての酒造研究所を設けた", "url": "http://www.gekkeikan.co.jp/company/history/origin/"}, {"text": "大倉恒吉は1886年、13歳で家業の酒屋を継いだ", "url": "http://www.gekkeikan.co.jp/company/history/origin/"}], "urls": ["https://www.gekkeikan.co.jp/company/guide/overview/", "https://www.gekkeikan.co.jp/company/history/origin/", "http://www.gekkeikan.co.jp/company/history/origin/"]},
+{"pref": "京都府", "brand": "英勲", "brand_kana": "えいくん", "brewery": "齊藤酒造株式会社", "city": "京都市", "founded": 1895, "facts": [{"text": "大正天皇の御大典を記念して「英勲」と命名", "url": "https://www.eikun.com/company.htm"}, {"text": "京都府産の酒米「祝」などを使っている", "url": "https://www.eikun.com/"}], "urls": ["https://www.eikun.com/company.htm", "https://www.eikun.com/"]},
+{"pref": "京都府", "brand": "神聖", "brand_kana": "しんせい", "brewery": "株式会社山本本家", "city": "京都市", "founded": 1677, "facts": [{"text": "伏見の名水「白菊水」で仕込んでいる", "url": "https://yamamotohonke.jp/about/"}, {"text": "白菊水は鉄分の少ない伏見の天然の地下水", "url": "https://yamamotohonke.jp/craft/"}, {"text": "幕末の鳥羽・伏見の戦いを乗り越えてきた蔵", "url": "https://yamamotohonke.jp/about/"}], "spec": {"product": "神聖 祝 純米大吟醸三割五分", "grade": "純米大吟醸", "abv": {"min": 15, "max": 15}, "polish": 35, "rice": "京都府産 祝 100%", "spec_url": "https://yamamotohonke.jp/post_product/%e7%a5%9e%e8%81%96-%e7%a5%9d-%e7%b4%94%e7%b1%b3%e5%a4%a7%e5%90%9f%e9%86%b8%e4%b8%89%e5%89%b2%e4%ba%94%e5%88%86/"}, "urls": ["https://yamamotohonke.jp/", "https://yamamotohonke.jp/about/", "https://yamamotohonke.jp/craft/"]},
+{"pref": "京都府", "brand": "富翁", "brand_kana": "とみお", "brewery": "株式会社北川本家", "city": "京都市", "founded": 1657, "facts": [{"text": "十代目が四書五経の「富此翁」から名付けた", "url": "https://www.tomio-sake.co.jp/craft/"}, {"text": "桃山丘陵を通った伏見の地下水で仕込む", "url": "https://www.tomio-sake.co.jp/craft/"}], "spec": {"product": "富翁 山田錦 純米酒", "grade": "純米", "abv": {"min": 14, "max": 14}, "smv": 4.0, "acidity": 1.4, "polish": 68, "rice": "山田錦100%（米・米こうじ 国内産米100%使用）", "spec_url": "https://www.tomio-sake.co.jp/post_product/sake372/"}, "urls": ["https://www.tomio-sake.co.jp/", "https://www.tomio-sake.co.jp/about/", "https://www.tomio-sake.co.jp/craft/"]},
+{"pref": "大阪府", "brand": "天野酒", "brewery": "西條合資会社", "city": "河内長野市", "facts": [{"text": "1971年、天野山金剛寺の協力を得て古い酒銘「天野酒」を復活", "url": "https://www.amanosake.com/company"}, {"text": "創醸から明治末期までの銘柄は「三木正宗」だった", "url": "https://www.amanosake.com/company"}, {"text": "大正・昭和期は「波之鶴」の銘で酒を出していた", "url": "https://www.amanosake.com/company"}], "spec": {"product": "純米 天野酒 特別純米 720ml", "grade": "特別純米", "abv": {"min": 16.4, "max": 16.4}, "smv": {"min": 2.0, "max": 2.0}, "acidity": {"min": 1.6, "max": 1.6}, "polish": 60, "rice": "五百万石", "spec_url": "https://store.amanosake.com/products/detail/13"}, "urls": ["https://www.amanosake.com/company", "https://japansake.or.jp/sakagura/jp/osaka/saijou/"]},
+{"pref": "大阪府", "brand": "秋鹿", "brewery": "秋鹿酒造有限会社", "city": "能勢町", "founded": 1886, "facts": [{"text": "初代・奥鹿之助の名の一字と実りの「秋」から名付けた", "url": "https://www.pref.osaka.lg.jp/documents/117088/akishika_agurievent_chirashi.pdf"}, {"text": "能勢町の自社の田で山田錦を育てている", "url": "https://www.pref.osaka.lg.jp/documents/117088/akishika_agurievent_chirashi.pdf"}, {"text": "米と麹と水だけで造る純米酒のみを醸している", "url": "https://www.pref.osaka.lg.jp/documents/117088/akishika_agurievent_chirashi.pdf"}], "urls": ["https://japansake.or.jp/sakagura/jp/osaka/akishika-shuzou/", "https://www.pref.osaka.lg.jp/documents/117088/akishika_agurievent_chirashi.pdf"]},
+{"pref": "大阪府", "brand": "荘の郷", "brand_kana": "しょうのさと", "brewery": "有限会社北庄司酒造店", "city": "泉佐野市", "founded": 1921, "facts": [{"text": "和泉山系の清水で仕込んでいる", "url": "https://kitashouji.jp/about/"}, {"text": "酒米は山田錦と五百万石を使う", "url": "https://kitashouji.jp/about/"}, {"text": "蔵のある泉佐野には中世の荘園「日根荘」があった", "url": "https://kitashouji.jp/about/"}], "spec": {"product": "荘の郷 純米酒", "grade": "純米", "abv": {"min": 15.5, "max": 15.5}, "smv": 5.0, "acidity": 1.6, "polish": 65, "rice": "五百万石100%", "taste_official": "辛口", "spec_url": "https://kitashouji.jp/sake/cat01/118/"}, "urls": ["https://kitashouji.jp/", "https://kitashouji.jp/about/", "https://kitashouji.jp/company/", "https://japansake.or.jp/sakagura/jp/osaka/kitashouji-shuzouten/"]},
+{"pref": "大阪府", "brand": "片野桜", "brand_kana": "かたのさくら", "brewery": "山野酒造株式会社", "city": "交野市", "facts": [{"text": "生駒山系の伏流水で仕込んでいる", "url": "https://japansake.or.jp/sakagura/jp/osaka/yamano-shuzou/"}, {"text": "特定名称酒のうち4割を「原酒」のまま蔵出しする", "url": "https://www.katanosakura.com/"}], "urls": ["https://www.katanosakura.com/", "https://www.katanosakura.com/company.html", "https://japansake.or.jp/sakagura/jp/osaka/yamano-shuzou/"]},
+{"pref": "兵庫県", "brand": "白鶴", "brand_kana": "はくつる", "brewery": "白鶴酒造株式会社", "city": "神戸市", "founded": 1743, "facts": [{"text": "1747年に酒銘「白鶴」と命名（創業は4年前の1743年）", "url": "https://www.hakutsuru.co.jp/community/history/"}, {"text": "2007年、自社で開発した酒米「白鶴錦」が品種登録された", "url": "https://www.hakutsuru.co.jp/community/history/"}, {"text": "1934年に白鶴美術館を開いた", "url": "https://www.hakutsuru.co.jp/community/history/"}], "spec": {"product": "白鶴 特撰 特別純米酒 山田錦 720ml×6本", "grade": "特別純米", "abv": {"min": 14, "max": 15}, "smv": 3, "acidity": 1.5, "polish": 70, "rice": "山田錦", "taste_official": "やや辛口/中口", "spec_url": "https://www.e-hakutsuru.com/products/c0930"}, "urls": ["https://www.hakutsuru.co.jp/corporate/gaiyo.html", "https://www.hakutsuru.co.jp/community/history/"]},
+{"pref": "兵庫県", "brand": "菊正宗", "brand_kana": "きくまさむね", "brewery": "菊正宗酒造株式会社", "city": "神戸市", "founded": 1659, "facts": [{"text": "生酛造りを酒造りの原点と位置づけ、貫いている", "url": "https://www.kikumasamune.co.jp/kimoto/"}, {"text": "1988年、業界で初めて主力商品をすべて本醸造にした", "url": "https://www.kikumasamune.co.jp/about/"}, {"text": "2009年、本醸造シリーズをすべて生酛造りに切り替えた", "url": "https://www.kikumasamune.co.jp/about/"}], "spec": {"product": "純米樽酒 720mL瓶詰", "grade": "純米", "abv": {"min": 15, "max": 15}, "smv": 5, "rice": "米(国産)、米こうじ(国産米)", "taste_official": "辛口やや淡麗", "spec_url": "https://www.kikumasamune.co.jp/products/new/177_juntaru_720.html"}, "urls": ["https://www.kikumasamune.co.jp/profile/info.html", "https://www.kikumasamune.co.jp/kimoto/", "https://www.kikumasamune.co.jp/news_release/2025/0217/", "https://www.kikumasamune.co.jp/about/"]},
+{"pref": "兵庫県", "brand": "沢の鶴", "brand_kana": "さわのつる", "brewery": "沢の鶴株式会社", "city": "神戸市", "founded": 1717, "facts": [{"text": "米屋が副業として酒造りを始めたのが起こり", "url": "https://www.sawanotsuru.co.jp/site/company"}, {"text": "銘は伊雑宮の「鶴の穂落し」の言い伝えにちなむ", "url": "https://www.sawanotsuru.co.jp/f/about-sawanotsuru"}, {"text": "震災で全壊した資料館の蔵を1999年に復元した", "url": "https://www.sawanotsuru.co.jp/site/company/siryokan/"}], "spec": {"product": "米だけの酒 コクとうまみなのにすっきりパック 1.8L", "grade": "純米", "abv": {"min": 14.5, "max": 14.5}, "smv": 2.0, "acidity": 1.6, "taste_official": "醇酒（コクのあるタイプ）", "spec_url": "https://www.sawanotsuru.co.jp/c/nihonshu/junmai/gd89", "polish_note": "麹米65%・掛米75%"}, "urls": ["https://www.sawanotsuru.co.jp/site/company", "https://www.sawanotsuru.co.jp/f/about-sawanotsuru", "https://www.sawanotsuru.co.jp/site/company/siryokan/"]},
+{"pref": "兵庫県", "brand": "龍力", "brand_kana": "たつりき", "brewery": "株式会社本田商店", "city": "姫路市", "facts": [{"text": "山田錦は兵庫県特A地区産のものだけを使う", "url": "https://www.taturiki.com/"}, {"text": "1992年から原料米をすべて酒造好適米にした", "url": "https://www.taturiki.com/profile.html"}, {"text": "本田家は元禄時代から播州杜氏の総取締役を務めた", "url": "https://www.taturiki.com/profile.html"}], "spec": {"product": "大吟醸 米のささやきYK40-50", "grade": "大吟醸", "abv": {"min": 17, "max": 17}, "rice": "兵庫県特A地区産山田錦", "spec_url": "https://www.taturiki.com/komenosasayaki/", "polish_note": "40-50%"}, "urls": ["https://www.taturiki.com/", "https://www.taturiki.com/profile.html"]},
+{"pref": "奈良県", "brand": "風の森", "brand_kana": "かぜのもり", "brewery": "油長酒造株式会社", "city": "御所市", "founded": 1719, "facts": [{"text": "一年中心地よい風が吹く葛城古道の「風の森峠」が名の由来", "url": "https://www.yucho-sake.jp/"}, {"text": "風の森は御所市の「御所まち蔵」で造られている", "url": "https://yucho-sake.jp/company/"}], "spec": {"product": "風の森 秋津穂657", "polish": 65, "rice": "秋津穂", "spec_url": "https://yucho-sake.jp/product/kazenomori/"}, "urls": ["https://yucho-sake.jp/company/", "https://www.yucho-sake.jp/"]},
+{"pref": "奈良県", "brand": "春鹿", "brand_kana": "はるしか", "brewery": "株式会社今西清兵衛商店", "city": "奈良市", "facts": [{"text": "春日大社とその神獣の鹿から一字ずつ取って命名", "url": "https://www.harushika.com/profile/"}, {"text": "明治27年、明治天皇にあられ酒を買い上げられた", "url": "https://www.harushika.com/company/"}, {"text": "昭和38年に純米酒、昭和40年に吟醸酒の製造を始めた", "url": "https://www.harushika.com/company/"}], "spec": {"product": "春鹿　純米超辛口720ml", "grade": "純米", "abv": {"min": 15, "max": 15}, "smv": {"min": 12, "max": 12}, "polish": 60, "rice": "五百万石", "taste_official": "超辛口", "spec_url": "https://www.harushika.com/fs/harushika/gd13"}, "urls": ["https://www.harushika.com/company/", "https://www.harushika.com/profile/"]},
+{"pref": "奈良県", "brand": "花巴", "brand_kana": "はなともえ", "brewery": "美吉野醸造株式会社", "city": "吉野町", "founded": 1912, "facts": [{"text": "2017BYから全ての酒を酵母無添加で造っている", "url": "https://www.hanatomoe.com/"}, {"text": "2018BYから全ての酒を契約栽培米で造っている", "url": "https://www.hanatomoe.com/"}, {"text": "山廃・速醸に加え、水酛でも仕込む", "url": "https://www.hanatomoe.com/"}], "urls": ["https://www.hanatomoe.com/", "https://www.hanatomoe.com/company-profile/"]},
+{"pref": "和歌山県", "brand": "紀土", "brand_kana": "きっど", "brewery": "平和酒造株式会社", "city": "海南市", "founded": 1928, "facts": [{"text": "蔵のある溝ノ口は高野山伏流水の井戸水が豊富な土地", "url": "https://www.heiwashuzou.co.jp/endemic"}, {"text": "昭和3年、山本保が創業した", "url": "https://www.heiwashuzou.co.jp/history"}, {"text": "第二次世界大戦中は酒造りの休業を命じられた", "url": "https://www.heiwashuzou.co.jp/history"}], "urls": ["https://www.heiwashuzou.co.jp/", "https://www.heiwashuzou.co.jp/history", "https://www.heiwashuzou.co.jp/endemic"]},
+{"pref": "和歌山県", "brand": "黒牛", "brand_kana": "くろうし", "brewery": "株式会社名手酒造店", "city": "海南市", "founded": 1866, "facts": [{"text": "蔵の井戸は名水「万葉黒牛の水」と同じ水脈", "url": "https://kuroushi.co.jp/commitment/water"}, {"text": "敷地内の4本の井戸の水を仕込みに使っている", "url": "https://kuroushi.co.jp/commitment/water"}, {"text": "蔵のある黒江は万葉集に詠まれた地名", "url": "https://kuroushi.co.jp/commitment/water"}], "spec": {"product": "純米酒黒牛", "grade": "純米", "abv": {"min": 15.6, "max": 15.6}, "rice": "山田錦/酒造好適米", "taste_official": "旨口", "spec_url": "https://kuroushi.co.jp/products/kuroushi"}, "urls": ["https://kuroushi.co.jp/about/outline", "https://kuroushi.co.jp/commitment/water"]},
+{"pref": "和歌山県", "brand": "雑賀", "brand_kana": "さいか", "brewery": "株式会社九重雑賀", "city": "紀の川市", "founded": 1908, "facts": [{"text": "1908年、食酢「九重酢」の製造で創業した", "url": "https://www.pref.wakayama.lg.jp/prefg/061000/100nen/ichiran_d/fil/10_kokonoesaika.pdf"}, {"text": "1934年、酢の原料の酒粕から造ろうと酒造りを始めた", "url": "https://www.pref.wakayama.lg.jp/prefg/061000/100nen/ichiran_d/fil/10_kokonoesaika.pdf"}, {"text": "銘は雑賀衆を率いた祖先・雑賀孫市にちなむ", "url": "https://kokonoesaika.co.jp/"}], "urls": ["https://kokonoesaika.co.jp/", "https://www.pref.wakayama.lg.jp/prefg/061000/100nen/ichiran_d/fil/10_kokonoesaika.pdf", "https://japansake.or.jp/sakagura/jp/wakayama/kokonoe-saika/"]},
+{"pref": "鳥取県", "brand": "鷹勇", "brand_kana": "たかいさみ", "brewery": "大谷酒造株式会社", "city": "琴浦町", "founded": 1872, "facts": [{"text": "鳥を愛した初代当主が、空を舞う鷹の勇ましさから名付けた", "url": "https://www.takaisami.co.jp/"}, {"text": "大山のふもとの水で仕込んでいる", "url": "https://www.takaisami.co.jp/"}, {"text": "酒米は山田錦・玉栄、復活させた強力などを使う", "url": "https://www.takaisami.co.jp/"}], "spec": {"product": "純米 強力", "grade": "純米", "abv": {"min": 14, "max": 14}, "smv": {"min": 4.1, "max": 4.1}, "acidity": {"min": 1.5, "max": 1.5}, "polish": 80, "rice": "強力", "spec_url": "https://takaisami.co.jp/pages/116/detail=1/b_id=594/r_id=522/"}, "urls": ["https://takaisami.co.jp/pages/2/", "https://www.takaisami.co.jp/"]},
+{"pref": "鳥取県", "brand": "千代むすび", "brand_kana": "ちよむすび", "brewery": "千代むすび酒造株式会社", "city": "境港市", "founded": 1865, "facts": [{"text": "末永く人と人の縁を結ぶ願いを社名と銘柄に込めた", "url": "https://www.chiyomusubi.co.jp/"}, {"text": "1945年の玉栄丸爆発事故で全焼し、翌年再開した", "url": "https://www.chiyomusubi.co.jp/user_data/company"}, {"text": "1995年に海外への輸出を始めた", "url": "https://www.chiyomusubi.co.jp/user_data/company"}], "spec": {"product": "千代むすび純米大吟醸 強力30 720ml(桐箱入り)", "grade": "純米大吟醸", "abv": {"min": 16, "max": 16}, "polish": 30, "rice": "鳥取県産・強力米(ごうりきまい)", "spec_url": "https://www.chiyomusubi.co.jp/products/detail/28"}, "urls": ["https://www.chiyomusubi.co.jp/user_data/company", "https://www.chiyomusubi.co.jp/"]},
+{"pref": "鳥取県", "brand": "日置桜", "brand_kana": "ひおきざくら", "brewery": "有限会社山根酒造場", "city": "鳥取市", "facts": [{"text": "三代目の祖父の教え「食の邪魔をする酒だけは造ってくれるな」を守る", "url": "https://hiokizakura.jp/brewing"}, {"text": "醪の糖分を酵母に食べきらせる完全発酵の酒を造る", "url": "https://hiokizakura.jp/brewing"}, {"text": "蔵の信条は「醸は農なり」", "url": "https://hiokizakura.jp/"}], "spec": {"product": "生酛純米酒「本懐の盃」", "grade": "純米", "smv": 10.9, "acidity": 2.4, "polish": 70, "rice": "玉栄（無農薬自然栽培米）", "spec_url": "https://hiokizakura.jp/sake/honkainosakazuki"}, "urls": ["https://hiokizakura.jp/", "https://hiokizakura.jp/aboutus", "https://hiokizakura.jp/brewing", "https://japansake.or.jp/sakagura/jp/tottori/yamane-shuzoujou/"]},
+{"pref": "島根県", "brand": "李白", "brand_kana": "りはく", "brewery": "李白酒造有限会社", "city": "松江市", "founded": 1882, "facts": [{"text": "酒名「李白」は元首相・若槻礼次郎から授かったもの", "url": "https://rihaku.co.jp/aboutus/"}, {"text": "ラベルの「李白」の書は若槻礼次郎の揮毫", "url": "https://rihaku.co.jp/aboutus/"}, {"text": "若槻はロンドン軍縮会議に李白の菰樽を携えた", "url": "https://rihaku.co.jp/aboutus/"}], "spec": {"product": "李白 特別純米酒", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "smv": 3, "acidity": 1.5, "polish": 58, "rice": "酒造好適米", "spec_url": "https://rihaku.co.jp/product/%e6%9d%8e%e7%99%bd-%e7%89%b9%e5%88%a5%e7%b4%94%e7%b1%b3%e9%85%92"}, "urls": ["https://rihaku.co.jp/aboutus/"]},
+{"pref": "島根県", "brand": "豊の秋", "brand_kana": "とよのあき", "brewery": "米田酒造株式会社", "city": "松江市", "founded": 1896, "facts": [{"text": "五穀豊穣と地域の豊かさへの願いを込めた銘柄名", "url": "https://www.toyonoaki.com/about/"}, {"text": "酒蔵は本社とは別の松江市南田町にある", "url": "https://www.toyonoaki.com/about/"}, {"text": "1991年から14年間、大吟醸がJAL国際線で出された", "url": "https://www.toyonoaki.com/about/"}], "urls": ["https://www.toyonoaki.com/about/"]},
+{"pref": "島根県", "brand": "七冠馬", "brewery": "簸上清酒合名会社", "city": "奥出雲町", "facts": [{"text": "1962年、蔵の醪から泡の出ない「泡無酵母」が見出された", "url": "https://sake-hikami.co.jp/awanashikobo"}, {"text": "1712年から奥出雲町横田に蔵を構えている", "url": "https://sake-hikami.co.jp/"}, {"text": "斐伊川の水で仕込んでいる", "url": "https://japansake.or.jp/sakagura/jp/shimane/hikami-seishu/"}], "spec": {"product": "七冠馬純米", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 65, "rice": "五百万石（地元産）", "spec_url": "https://sake-hikami.co.jp/products"}, "urls": ["https://sake-hikami.co.jp/", "https://sake-hikami.co.jp/awanashikobo", "https://japansake.or.jp/sakagura/jp/shimane/hikami-seishu/"]},
+{"pref": "岡山県", "brand": "酒一筋", "brand_kana": "さけひとすじ", "brewery": "利守酒造株式会社", "city": "赤磐市", "founded": 1868, "facts": [{"text": "一度途絶えかけた酒米「雄町」を地元で復活させた蔵", "url": "https://www.sakehitosuji.co.jp/"}, {"text": "蔵のある赤磐市軽部は「軽部産雄町」発祥の地", "url": "https://www.sakehitosuji.co.jp/summary/"}], "urls": ["https://www.sakehitosuji.co.jp/", "https://www.sakehitosuji.co.jp/summary/", "https://www.nta.go.jp/about/organization/hiroshima/release/r04/seishu/01.htm"]},
+{"pref": "岡山県", "brand": "燦然", "brand_kana": "さんぜん", "brewery": "菊池酒造株式会社", "city": "倉敷市", "founded": 1878, "facts": [{"text": "高梁川流域の水で仕込む倉敷・玉島の蔵", "url": "https://kikuchishuzo.co.jp/intro"}, {"text": "数ある酒の中で輝く酒を目指して「燦然」と名付けた", "url": "https://kikuchishuzo.co.jp/intro"}, {"text": "酒米は山田錦・雄町・朝日・アケボノを使う", "url": "https://kikuchishuzo.co.jp/intro"}], "spec": {"product": "燦然 大吟醸 45磨", "grade": "大吟醸", "abv": {"min": 16, "max": 16}, "polish": 45, "rice": "山田錦", "spec_url": "https://kikuchishuzo.co.jp/product/sanzen_daiginjo_junmai"}, "urls": ["https://www.kikuchishuzo.co.jp/", "https://kikuchishuzo.co.jp/intro"]},
+{"pref": "岡山県", "brand": "櫻室町", "brand_kana": "さくらむろまち", "brewery": "室町酒造株式会社", "city": "赤磐市", "facts": [{"text": "名水百選「雄町の冷泉」を仕込み水に使う", "url": "https://www.sakuramuromachi.co.jp/"}, {"text": "雄町の冷泉は旧岡山藩池田家の御用水だった", "url": "https://www.sakuramuromachi.co.jp/"}, {"text": "1951年、花房本家酒造から室町酒造に移行した", "url": "https://sakuramuromachi.co.jp/company"}], "spec": {"product": "純米吟醸 備前幻", "grade": "純米吟醸", "abv": {"min": 15.3, "max": 15.3}, "smv": 2, "polish": 60, "rice": "雄町米", "spec_url": "https://sakuramuromachi.co.jp/product/%e7%b4%94%e7%b1%b3%e5%90%9f%e9%86%b8-%e5%82%99%e5%89%8d%e5%b9%bb-3/"}, "urls": ["https://www.sakuramuromachi.co.jp/", "https://sakuramuromachi.co.jp/company"]},
+{"pref": "広島県", "brand": "賀茂鶴", "brand_kana": "かもつる", "brewery": "賀茂鶴酒造株式会社", "city": "東広島市", "facts": [{"text": "軟水寄りのやわらかな中硬水で醸す西条の酒", "url": "https://www.kamotsuru.jp/company/outline/"}, {"text": "1898年に動力精米機を導入し、軟水醸造法を開発した", "url": "https://www.kamotsuru.jp/company/history/"}, {"text": "1900年のパリ万国博覧会で名誉大賞を受けた", "url": "https://www.kamotsuru.jp/company/history/"}], "urls": ["https://www.kamotsuru.jp/", "https://www.kamotsuru.jp/company/outline/", "https://www.kamotsuru.jp/company/history/"]},
+{"pref": "広島県", "brand": "雨後の月", "brand_kana": "うごのつき", "brewery": "相原酒造株式会社", "city": "呉市", "founded": 1875, "facts": [{"text": "二代目が徳冨蘆花の随筆中の題から名付けた銘柄", "url": "https://www.ugonotsuki.com/"}, {"text": "野呂山の伏流水で仕込んでいる", "url": "https://www.ugonotsuki.com/"}, {"text": "明治36年には広島県内で上位3位の生産量だった", "url": "https://www.ugonotsuki.com/"}], "urls": ["https://www.ugonotsuki.com/"]},
+{"pref": "広島県", "brand": "白牡丹", "brand_kana": "はくぼたん", "brewery": "白牡丹酒造株式会社", "city": "東広島市", "founded": 1675, "facts": [{"text": "1839年、鷹司家から「白牡丹」の銘を賜った", "url": "https://www.hakubotan.co.jp/about/"}, {"text": "1900年のパリ万国博覧会に出品した", "url": "https://www.hakubotan.co.jp/about/"}, {"text": "2024年、「西条酒造群」として国の史跡に指定", "url": "https://www.hakubotan.co.jp/about/"}], "urls": ["https://www.hakubotan.co.jp/", "https://www.hakubotan.co.jp/about/"]},
+{"pref": "山口県", "brand": "獺祭", "brand_kana": "だっさい", "brewery": "株式会社 獺祭", "city": "岩国市", "founded": 1948, "facts": [{"text": "蔵のある地名「獺越」から一字を取って命名", "url": "https://dassai.com/about/origin.html"}, {"text": "獺越の名は、老いた獺が子供を化かした伝説に由来", "url": "https://dassai.com/about/origin.html"}, {"text": "正岡子規の号「獺祭書屋主人」にも通じる名", "url": "https://dassai.com/about/origin.html"}], "spec": {"product": "獺祭 純米大吟醸 磨き二割三分", "grade": "純米大吟醸", "polish": 23, "rice": "山田錦", "spec_url": "https://dassai.com/product/main/23.html"}, "urls": ["https://dassai.com/", "https://dassai.com/corp/index.html", "https://dassai.com/about/origin.html"]},
+{"pref": "山口県", "brand": "東洋美人", "brand_kana": "とうようびじん", "brewery": "株式会社澄川酒造場", "city": "萩市", "founded": 1921, "facts": [{"text": "初代当主が亡くした妻を偲んで付けた銘柄名", "url": "https://www.toyobijin.jp/"}, {"text": "2013年の豪雨で蔵が浸水し、仲間の支援で復旧した", "url": "https://www.toyobijin.jp/"}, {"text": "2014年に新しい酒蔵を建てた", "url": "https://www.toyobijin.jp/"}], "urls": ["https://www.toyobijin.jp/", "https://www.toyobijin.jp/en/"]},
+{"pref": "山口県", "brand": "五橋", "brand_kana": "ごきょう", "brewery": "酒井酒造株式会社", "city": "岩国市", "founded": 1871, "facts": [{"text": "錦川に架かる五連の反り橋「錦帯橋」にちなむ名", "url": "https://gokyo-sake.co.jp/company/"}, {"text": "錦川の伏流水（軟水）で仕込んでいる", "url": "https://gokyo-sake.co.jp/company/"}, {"text": "原料米は全量、山口県産米を使う", "url": "https://gokyo-sake.co.jp/company/"}], "spec": {"product": "五橋 純米吟醸 1800ml（常温）", "grade": "純米吟醸", "abv": {"min": 15, "max": 15}, "polish": 55, "rice": "米（山口県産）・米こうじ（山口県産米）", "spec_url": "https://www.gokyo.shop/view/item/000000000103"}, "urls": ["https://www.gokyo-sake.co.jp/", "https://gokyo-sake.co.jp/company/", "https://japansake.or.jp/sakagura/jp/yamaguchi/sakai-shuzou/"]},
+{"pref": "徳島県", "brand": "鳴門鯛", "brand_kana": "なるとたい", "brewery": "株式会社本家松浦酒造場", "city": "鳴門市", "founded": 1804, "facts": [{"text": "激流で身が締まる鳴門海峡の鯛にあやかった名", "url": "https://narutotai.jp/about/profile/"}, {"text": "「鳴門鯛」の銘は明治19年に付けられた", "url": "https://narutotai.jp/about/profile/"}], "spec": {"product": "鳴門鯛 純米 巴（ともえ）", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 65, "rice": "米（国産）、米麹（国産米）", "spec_url": "https://narutotai.jp/product/junmai/tomoejm/"}, "urls": ["https://narutotai.jp/", "https://narutotai.jp/about/profile/"]},
+{"pref": "徳島県", "brand": "司菊", "brand_kana": "つかさぎく", "brewery": "司菊酒造株式会社", "city": "美馬市", "founded": 1896, "facts": [{"text": "菊花のふくよかで上品な香りを理想として命名", "url": "https://www.tsukasagiku.co.jp/"}, {"text": "創業時の銘柄は「鬼龍」、1955年に「司菊」で再出発", "url": "https://www.tsukasagiku.co.jp/about/"}, {"text": "2016年に「純米酒蔵」を宣言した", "url": "https://www.tsukasagiku.co.jp/about/"}], "urls": ["https://www.tsukasagiku.co.jp/", "https://www.tsukasagiku.co.jp/about/"]},
+{"pref": "徳島県", "brand": "芳水", "brand_kana": "ほうすい", "brewery": "芳水酒造有限会社", "city": "三好市", "founded": 1913, "facts": [{"text": "吉野川を「芳水」と称えた先人にちなんで命名", "url": "https://housui.com/about/"}, {"text": "吉野川の伏流水で仕込んでいる", "url": "https://housui.com/about/"}, {"text": "大正2年、初代馬場儀太郎が創業した", "url": "https://housui.com/about/"}], "spec": {"product": "山廃仕込特別純米酒", "grade": "特別純米", "abv": {"min": 15.2, "max": 15.2}, "smv": 6.4, "acidity": 1.8, "polish": 60, "rice": "滋賀玉栄", "spec_url": "https://housui.com/products"}, "urls": ["https://www.housui.com/", "https://housui.com/about/", "https://japansake.or.jp/sakagura/jp/tokushima/housui-shuzou/"]},
+{"pref": "香川県", "brand": "金陵", "brand_kana": "きんりょう", "brewery": "西野金陵株式会社", "city": "琴平町", "founded": 1789, "facts": [{"text": "金刀比羅宮（こんぴらさん）の御神酒を造る蔵", "url": "https://www.nishino-kinryo.co.jp/"}, {"text": "仕込み水は葛原八幡神社の神域に湧く「八幡の恩湧」", "url": "https://www.nishino-kinryo.co.jp/warehouse_overseer/water_rice.html"}, {"text": "1789年、8代目西野嘉右衛門が琴平の酒蔵を買い受けて誕生", "url": "https://www.nishino-kinryo.co.jp/museum/"}], "spec": {"product": "金陵 濃醇純米", "grade": "純米", "abv": {"min": 15, "max": 16, "raw": "15度以上16度未満"}, "polish": 70, "taste_official": "旨口", "spec_url": "https://www.nishino-kinryo.co.jp/store/products/details/13"}, "urls": ["https://www.nishino-kinryo.co.jp/", "https://www.nishino-kinryo.co.jp/company/", "https://www.nishino-kinryo.co.jp/warehouse_overseer/water_rice.html", "https://www.nishino-kinryo.co.jp/museum/"]},
+{"pref": "香川県", "brand": "川鶴", "brand_kana": "かわつる", "brewery": "川鶴酒造株式会社", "city": "観音寺市", "founded": 1891, "facts": [{"text": "初代が財田川に舞い降りる鶴を夢に見て名付けた", "url": "https://kawatsuru.com/"}, {"text": "1999年から自家栽培・契約栽培の山田錦に取り組む", "url": "https://kawatsuru.com/company/"}, {"text": "1963年、通年で仕込める四季醸造蔵の第一期工事を終えた", "url": "https://kawatsuru.com/company/"}], "spec": {"product": "川鶴 純米オオセト", "grade": "純米", "abv": {"min": 15, "max": 15, "raw": "15%"}, "polish": 65, "rice": "オオセト", "spec_url": "https://kawatsuru.com/product/product02/"}, "urls": ["https://kawatsuru.com/", "https://kawatsuru.com/company/"]},
+{"pref": "香川県", "brand": "凱陣", "brand_kana": "がいじん", "brewery": "有限会社丸尾本店", "city": "琴平町", "facts": [], "urls": ["https://japansake.or.jp/sakagura/jp/kagawa/maruo-honten/", "https://www.nta.go.jp/about/organization/takamatsu/sake/pdf/jpnMap.pdf", "https://WWW.NTA.GO.JP/about/organization/takamatsu/sake/pdf/engMap.pdf"]},
+{"pref": "愛媛県", "brand": "石鎚", "brand_kana": "いしづち", "brewery": "石鎚酒造株式会社", "city": "西条市", "founded": 1920, "facts": [{"text": "蔵内の井戸から湧く超軟水で仕込む", "url": "https://www.ishizuchi.co.jp/"}, {"text": "平成11年に杜氏制をやめ、蔵元家族中心の造りに移った", "url": "https://www.ishizuchi.co.jp/"}, {"text": "平成13年に酒槽（ふね）による搾りを復活させた", "url": "https://www.ishizuchi.co.jp/"}], "urls": ["https://www.ishizuchi.co.jp/"]},
+{"pref": "愛媛県", "brand": "伊予賀儀屋", "brand_kana": "いよかぎや", "brewery": "成龍酒造株式会社", "city": "西条市", "facts": [{"text": "名は江戸期に庄屋の米蔵の鍵を預かった屋号「鍵屋」から", "url": "https://www.seiryosyuzo.com/brands/iyokagiya"}, {"text": "仕込み水は名水百選「うちぬき」の湧水", "url": "https://www.seiryosyuzo.com/about"}, {"text": "松山三井・しずく媛など愛媛県産米を主に使う", "url": "https://www.seiryosyuzo.com/about"}], "spec": {"product": "無濾過 純米 赤ラベル", "grade": "純米", "abv": {"min": 14.5, "max": 14.5}, "polish": 60, "rice": "愛媛県産松山三井", "spec_url": "https://www.seiryosyuzo.com/brands/iyokagiya"}, "urls": ["https://www.seiryosyuzo.com/", "https://www.seiryosyuzo.com/about", "https://www.seiryosyuzo.com/brands", "https://www.seiryosyuzo.com/brands/iyokagiya"]},
+{"pref": "愛媛県", "brand": "山丹正宗", "brand_kana": "やまたんまさむね", "brewery": "株式会社八木酒造部", "city": "今治市", "founded": 1831, "facts": [{"text": "1831年（天保二年）に今治で創業した蔵", "url": "https://www.yamatan.jp/?mode=f2"}], "urls": ["https://www.yamatan.jp/", "https://www.yamatan.jp/?mode=f2", "https://www.ehime-syuzou.com/tourism/english/p1.html"]},
+{"pref": "愛媛県", "brand": "雪雀", "brand_kana": "ゆきすずめ", "brewery": "雪雀酒造株式会社", "city": "松山市", "founded": 1915, "facts": [{"text": "創業時の商標は昔話にちなむ「雀正宗」だった", "url": "https://yukisuzume.com/company"}, {"text": "1931年、犬養毅の命名で「雪雀」に改めた", "url": "https://yukisuzume.com/company"}, {"text": "1998年に杜氏が「現代の名工」に選ばれた", "url": "https://yukisuzume.com/company"}], "spec": {"product": "純米大吟醸 精米歩合三割 雪雀伝説", "grade": "純米大吟醸", "abv": {"min": 16, "max": 16}, "polish": 30, "rice": "兵庫県産山田錦", "spec_url": "https://yukisuzume.com/product"}, "urls": ["https://yukisuzume.com/", "https://yukisuzume.com/company"]},
+{"pref": "高知県", "brand": "土佐鶴", "brand_kana": "とさつる", "brewery": "土佐鶴酒造株式会社", "city": "安田町", "founded": 1773, "facts": [{"text": "清流・安田川の伏流水を仕込みに用いる蔵", "url": "https://www.tosatsuru.co.jp/"}, {"text": "名は紀貫之が和歌に詠んだ吉兆の鶴にちなむ", "url": "https://tosatsuru.co.jp/company/traditional_sake_brewing.html"}, {"text": "自社で育種した「土佐鶴淡麗酵母」も使い分ける", "url": "https://tosatsuru.co.jp/company/traditional_sake_brewing.html"}], "spec": {"product": "土佐鶴 特別純米酒", "grade": "特別純米", "abv": {"min": 14, "max": 14, "raw": "14度"}, "smv": {"min": 2, "max": 2}, "acidity": {"min": 1.5, "max": 1.5}, "polish": 60, "rice": "あけぼの・松山三井他", "spec_url": "https://www.tosatsuru.jp/i/NH-502"}, "urls": ["https://www.tosatsuru.co.jp/", "https://tosatsuru.co.jp/company/outline.html", "https://tosatsuru.co.jp/company/traditional_sake_brewing.html"]},
+{"pref": "高知県", "brand": "亀泉", "brand_kana": "かめいずみ", "brewery": "亀泉酒造株式会社", "city": "土佐市", "founded": 1897, "facts": [{"text": "CEL-24・CEL-19など複数の酵母を酒ごとに使い分ける", "url": "https://www.kameizumi.co.jp/product/"}, {"text": "山田錦・吟の夢・土佐錦など多様な酒米で醸す", "url": "https://www.kameizumi.co.jp/product/"}], "spec": {"product": "亀泉 特別純米", "grade": "特別純米", "polish": 60, "rice": "土佐錦", "spec_url": "https://www.kameizumi.co.jp/product/"}, "urls": ["https://www.kameizumi.co.jp/", "https://www.kameizumi.co.jp/product/"]},
+{"pref": "高知県", "brand": "桂月", "brand_kana": "けいげつ", "brewery": "土佐酒造株式会社", "city": "土佐町", "founded": 1877, "facts": [{"text": "1924年、文人・大町桂月が新酒「桂月」に寄せる歌を作った", "url": "https://www.keigetsu.co.jp/profile/the-origin-of-keigetsu"}, {"text": "地元の棚田で育った酒米を使い、生酛・山廃にも取り組む", "url": "https://www.keigetsu.co.jp/profile"}], "spec": {"product": "桂月 超辛口 特別純米酒 60", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "smv": 11, "acidity": 1.7, "polish": 60, "rice": "国産米100%", "taste_official": "超辛口", "spec_url": "https://www.keigetsu.co.jp/products/p_karakuchi60"}, "urls": ["https://www.keigetsu.co.jp/", "https://www.keigetsu.co.jp/profile", "https://www.keigetsu.co.jp/profile/the-origin-of-keigetsu", "https://www.nta.go.jp/about/organization/takamatsu/sake/pdf/jpnMap.pdf"]},
+{"pref": "福岡県", "brand": "繁桝", "brand_kana": "しげます", "brewery": "株式会社 高橋商店", "city": "八女市", "founded": 1717, "facts": [{"text": "十代目が「桝々繁昌」の願いを込めて命名", "url": "https://shigemasu.co.jp/company/"}, {"text": "仕込み水は矢部川の伏流水", "url": "https://shigemasu.co.jp/making/"}, {"text": "八女の気候で育つ酒米「吟のさと」も使う", "url": "https://shigemasu.co.jp/making/"}], "spec": {"product": "繁桝 純米大吟醸50", "grade": "純米大吟醸", "abv": {"min": 16, "max": 16}, "smv": {"min": 1, "max": 2}, "polish": 50, "rice": "山田錦100%", "spec_url": "https://shigemasu.co.jp/product/junmaidaiginjo50/"}, "urls": ["https://www.shigemasu.co.jp/", "https://shigemasu.co.jp/company/", "https://shigemasu.co.jp/making/"]},
+{"pref": "福岡県", "brand": "庭のうぐいす", "brand_kana": "にわのうぐいす", "brewery": "株式会社 山口酒造場", "city": "久留米市", "founded": 1832, "facts": [{"text": "筑後川の良水と筑後平野の米に恵まれた地の蔵", "url": "https://niwanouguisu.com/"}, {"text": "1832年に有馬藩から酒造業の許可を得た", "url": "https://niwanouguisu.com/history/"}, {"text": "1975年から純米酒中心の特定名称酒に切り替えた", "url": "https://niwanouguisu.com/history/"}], "spec": {"product": "庭のうぐいす 特別純米", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "polish": 60, "spec_url": "https://niwanouguisu.com/products/"}, "urls": ["https://niwanouguisu.com/", "https://niwanouguisu.com/company/", "https://niwanouguisu.com/history/"]},
+{"pref": "福岡県", "brand": "喜多屋", "brand_kana": "きたや", "brewery": "株式会社 喜多屋", "city": "八女市", "founded": 1820, "facts": [{"text": "2013年のIWCで最高賞「チャンピオン・サケ」を受けた", "url": "https://www.kitaya.co.jp/company"}, {"text": "仕込み水は釈迦岳・御前岳を源とする矢部川の伏流水", "url": "https://www.kitaya.co.jp/company"}, {"text": "1820年、長男の家祖が元家を弟に譲り、別に酒造業を始めた", "url": "https://www.kitaya.co.jp/company"}], "spec": {"product": "特別純米酒 喜多屋 夢一献 1800ml", "grade": "特別純米", "abv": {"min": 15, "max": 16}, "polish": 60, "rice": "夢一献100%", "taste_official": "やや辛口", "spec_url": "https://kitaya.biz/shop/products/12621"}, "urls": ["https://www.kitaya.co.jp/", "https://www.kitaya.co.jp/company"]},
+{"pref": "佐賀県", "brand": "鍋島", "brand_kana": "なべしま", "brewery": "富久千代酒造有限会社", "city": "鹿島市", "founded": 1923, "facts": [{"text": "佐賀藩主鍋島家にちなみ、公募で決まった名", "url": "https://nabeshima.biz/brewery.html"}, {"text": "「鍋島」ブランドは1998年に誕生した", "url": "https://nabeshima.biz/brewery.html"}, {"text": "約100年前の精米所を2014年にギャラリーへ改装", "url": "https://nabeshima.biz/overview.html"}], "urls": ["https://nabeshima.biz/overview.html", "https://nabeshima.biz/brewery.html"]},
+{"pref": "佐賀県", "brand": "天山", "brand_kana": "てんざん", "brewery": "天山酒造株式会社", "city": "小城市", "facts": [{"text": "製粉・製麺業の七田夫妻が廃業する蔵を継いで始めた", "url": "https://www.tenzan.co.jp/company/"}, {"text": "1875年の酒造業継承から2025年で150年を迎えた", "url": "https://www.tenzan.co.jp/company/"}], "spec": {"product": "天山 特別純米酒", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "polish": 60, "rice": "佐賀県産 佐賀の華", "spec_url": "https://tenzan.co.jp/product/tenzan-tokubetujyunmaisyu/"}, "urls": ["https://www.tenzan.co.jp/", "https://www.tenzan.co.jp/company/", "https://www.chusho.meti.go.jp/keiei/sapoin/monozukuri300sha/2018/juyou113_tenzansyuzo.pdf"]},
+{"pref": "佐賀県", "brand": "天吹", "brand_kana": "あまぶき", "brewery": "天吹酒造合資会社", "city": "みやき町", "facts": [{"text": "名は蔵の北東にそびえる天吹山の姿にちなむ", "url": "https://www.amabuki.co.jp/brewery/"}, {"text": "仕込み水は脊振山系の伏流水", "url": "https://www.amabuki.co.jp/brewery/"}, {"text": "新しい酵母として「花酵母」を使う", "url": "https://www.amabuki.co.jp/brewery/"}], "spec": {"product": "天吹 特別純米 60", "grade": "特別純米", "polish": 60, "rice": "佐賀県産 佐賀の華", "spec_url": "https://www.amabuki.co.jp/sake/000601.php"}, "urls": ["https://www.amabuki.co.jp/", "https://www.amabuki.co.jp/brewery/"]},
+{"pref": "長崎県", "brand": "六十餘洲", "brand_kana": "ろくじゅうよしゅう", "brewery": "今里酒造株式会社", "city": "波佐見町", "founded": 1772, "facts": [{"text": "旧国六十余州＝日本全国を指す古語で、全国での愛飲を願った", "url": "https://rokujuyoshu.com/company/"}, {"text": "蔵の建物6棟が2006年に国の登録有形文化財になった", "url": "https://rokujuyoshu.com/company/"}], "spec": {"product": "六十餘洲 特別純米酒", "grade": "特別純米", "abv": {"min": 15, "max": 15}, "polish": 60, "rice": "山田錦", "spec_url": "https://rokujuyoshu.com/product/"}, "urls": ["https://rokujuyoshu.com/company/", "https://rokujuyoshu.com/kodawari/"]},
+{"pref": "長崎県", "brand": "長崎美人", "brand_kana": "ながさきびじん", "brewery": "福田酒造株式会社", "city": "平戸市", "founded": 1688, "facts": [{"text": "元禄元年、平戸藩主の命を受けて酒造りを始めた蔵", "url": "https://fukuda-shuzo.com/"}, {"text": "平戸市志々伎町、志々伎湾を望む地にある蔵", "url": "https://fukuda-shuzo.com/"}, {"text": "芋焼酎「じゃがたらお春」も造っている", "url": "https://fukuda-shuzo.com/"}], "urls": ["https://fukuda-shuzo.com/"]},
+{"pref": "長崎県", "brand": "飛鸞", "brand_kana": "ひらん", "brewery": "有限会社森酒造場", "city": "平戸市", "founded": 1895, "facts": [{"text": "平戸の古い呼び名「飛鸞島」にちなむ銘柄名", "url": "https://mori-shuzou.jp/company"}, {"text": "最教寺のふもとに湧く名水で酒を造る", "url": "https://mori-shuzou.jp/company"}, {"text": "主力銘柄は菊の露→豊年→飛鸞と移り変わった", "url": "https://mori-shuzou.jp/company"}], "urls": ["https://mori-shuzou.jp/", "https://mori-shuzou.jp/company", "https://japansake.or.jp/sakagura/jp/nagasaki/mori-shuzoujou/"]},
+{"pref": "長崎県", "brand": "萬勝", "brewery": "合資会社吉田屋", "city": "南島原市", "founded": 1917, "facts": [{"text": "仕込み水は雲仙の伏流水が湧く自家井戸の水", "url": "https://www.bansho.info/corporate.html"}, {"text": "1922年に銘柄を「萬勝」と変えて商標登録した", "url": "https://www.bansho.info/corporate.html"}, {"text": "数少ない伝統製法「はねぎ搾り」で搾る", "url": "https://www.bansho.info/"}], "spec": {"product": "純米酒 はね木搾り 萬勝", "grade": "純米", "abv": {"min": 15, "max": 15}, "taste_official": "スッキリ辛口タイプ", "spec_url": "https://www.bansho.info/product.html"}, "urls": ["https://www.bansho.info/", "https://www.bansho.info/corporate.html", "https://japansake.or.jp/sakagura/jp/nagasaki/yoshidaya/"]},
+{"pref": "熊本県", "brand": "香露", "brand_kana": "こうろ", "brewery": "株式会社熊本県酒造研究所", "city": "熊本市", "founded": 1909, "facts": [{"text": "協会9号酵母の元となった熊本酵母が生まれた蔵", "url": "https://www.kumamoto-sake.com/intro/kuramoto01.html"}, {"text": "仕込み水は阿蘇の伏流水", "url": "https://www.kumamoto-sake.com/intro/kuramoto01.html"}, {"text": "熊本県初の独自酒米「華錦」などを主に使う", "url": "https://www.kumamoto-sake.com/intro/kuramoto01.html"}], "urls": ["https://www.kumamoto-sake.com/intro/kuramoto01.html"]},
+{"pref": "熊本県", "brand": "瑞鷹", "brand_kana": "ずいよう", "brewery": "瑞鷹株式会社", "city": "熊本市", "founded": 1867, "facts": [{"text": "清酒に加え熊本伝統の「東肥赤酒」も造る蔵", "url": "https://www.zuiyo.co.jp/"}, {"text": "1909年、熊本県酒造研究所が瑞鷹の蔵の中で誕生した", "url": "https://www.zuiyo.co.jp/about-us/history/"}, {"text": "明治20年に丹波杜氏を招き、指導を受けた", "url": "https://www.zuiyo.co.jp/about-us/history/"}], "spec": {"product": "純米酒 菜々(さいさい)", "grade": "純米", "abv": {"min": 17, "max": 17}, "smv": 8, "polish": 65, "rice": "吟のさと", "spec_url": "https://www.zuiyo.co.jp/products/nihonshu/287/"}, "urls": ["https://www.zuiyo.co.jp/", "https://www.zuiyo.co.jp/about-us/company/", "https://www.nta.go.jp/about/organization/kumamoto/sake/kanpyo/r08/pdf/02.pdf", "https://www.zuiyo.co.jp/about-us/history/"]},
+{"pref": "熊本県", "brand": "花の香", "brand_kana": "はなのか", "brewery": "花の香酒造株式会社", "city": "和水町", "founded": 1902, "facts": [{"text": "蔵の周りに漂った梅の香りにちなみ蔵名がついたと伝わる", "url": "https://www.hananoka.co.jp/company/"}, {"text": "初代が妙見神社の神田を譲り受け、湧く磐清水と米で酒造りを始めた", "url": "https://www.hananoka.co.jp/company/"}, {"text": "2021年に「産土（うぶすな）」を酒造りの哲学に定めた", "url": "https://www.hananoka.co.jp/company/"}], "spec": {"product": "花の香｜桜花 HANANOKA OUKA", "grade": "純米大吟醸", "polish": 50, "rice": "山田錦", "spec_url": "https://www.hananoka.co.jp/products/"}, "urls": ["https://www.hananoka.co.jp/", "https://www.hananoka.co.jp/company/"]},
+{"pref": "大分県", "brand": "西の関", "brand_kana": "にしのせき", "brewery": "萱島酒造有限会社", "city": "国東市", "founded": 1873, "facts": [{"text": "西日本の横綱のような代表酒を目指して付けた名", "url": "https://www.nishinoseki.com/company/"}, {"text": "明治40年の第1回全国品評会で一等に入った", "url": "https://www.nishinoseki.com/company/"}, {"text": "大正3年建造の八角形煙突は国の登録有形文化財", "url": "https://www.nishinoseki.com/company/"}], "spec": {"product": "手造り純米酒", "grade": "純米", "abv": {"min": 15, "max": 15}, "smv": -1.5, "acidity": 1.4, "rice": "八反錦・ヒノヒカリ", "spec_url": "https://www.nishinoseki.com/product/tezukurijunmai/", "polish_note": "60%・63％"}, "urls": ["https://www.nishinoseki.com/", "https://www.nishinoseki.com/company/"]},
+{"pref": "大分県", "brand": "八鹿", "brand_kana": "やつしか", "brewery": "八鹿酒造株式会社", "city": "九重町", "founded": 1864, "facts": [{"text": "九重連山の恵みから生まれる清酒", "url": "https://www.yatsushika.com/"}, {"text": "大分麦焼酎「銀座のすずめ」も造る蔵", "url": "https://www.yatsushika.com/"}, {"text": "社是は「正直・親切・平和」", "url": "https://yatsushika.com/company/"}], "spec": {"product": "八鹿本醸造辛口（青）", "grade": "本醸造", "abv": {"min": 15, "max": 15}, "smv": 12, "acidity": 1.2, "polish": 70, "rice": "大分県産日本晴", "taste_official": "辛口", "spec_url": "https://yatsushika.com/catalog/sake/"}, "urls": ["https://www.yatsushika.com/", "https://yatsushika.com/company/", "https://www.nta.go.jp/about/organization/kumamoto/sake/kanpyo/r08/pdf/02.pdf"]},
+{"pref": "大分県", "brand": "ちえびじん", "brand_kana": "ちえびじん", "brewery": "有限会社 中野酒造", "city": "杵築市", "founded": 1874, "facts": [{"text": "酒粕を扱う蔵人の手がすべすべになることから酒粕化粧品も作る", "url": "https://www.chiebijin.com/"}], "spec": {"product": "ちえびじん 純米酒", "grade": "純米", "polish": 70, "rice": "地元杵築産のヒノヒカリ", "spec_url": "https://chiebijin.com/2024/12/10/chiebijin_jyunmai/"}, "urls": ["https://www.chiebijin.com/", "https://www.chiebijin.com/company/", "https://chiebijin.com/from-field-to-sake/"]},
+{"pref": "宮崎県", "brand": "千徳", "brewery": "千徳酒造株式会社", "city": "延岡市", "facts": [], "urls": ["https://www.nta.go.jp/about/organization/kumamoto/sake/kanpyo/r08/pdf/02.pdf", "https://www.nta.go.jp/about/organization/kumamoto/sake/sakagura/pdf/miyazaki/jp.pdf"]},
+{"pref": "宮崎県", "brand": "初御代", "brand_kana": "はつみよ", "brewery": "雲海酒造株式会社", "city": "綾町", "facts": [{"text": "焼酎で知られる雲海酒造が綾町の綾蔵で造る日本酒", "url": "https://www.unkai.co.jp/learn/facility"}, {"text": "仕込みには名水百選に選ばれた綾町の水を使う", "url": "https://www.unkai.co.jp/learn/facility"}], "spec": {"product": "初御代 純米吟醸", "grade": "純米吟醸", "abv": {"min": 15.5, "max": 15.5}, "rice": "米（国産）、米こうじ（国産米）", "spec_url": "https://www.unkai.co.jp/product/items/archives/30"}, "urls": ["https://www.unkai.co.jp/product/items/archives/category/sake", "https://www.unkai.co.jp/learn/facility", "https://www.unkai.co.jp/company/outline"]},
+{"pref": "鹿児島県", "brand": "薩州正宗", "brand_kana": "さっしゅうまさむね", "brewery": "濵田酒造株式会社", "city": "いちき串木野市", "founded": 1868, "facts": [{"text": "約40年途絶えた薩摩の清酒造りを金山蔵で復活", "url": "https://www.hamadasyuzou.co.jp/kinzan/"}, {"text": "金山蔵は串木野金山の坑洞を使う蔵", "url": "https://www.hamadasyuzou.co.jp/kinzan/"}], "spec": {"product": "清酒 薩州正宗 純米酒", "grade": "純米", "abv": {"min": 15, "max": 15}, "rice": "米（国産米）/米麹（国産米）", "taste_official": "濃厚旨口タイプ", "spec_url": "https://www.hamadasyuzou.co.jp/kinzan/products/sasshu_masamune.html"}, "urls": ["https://www.hamadasyuzou.co.jp/business", "https://www.hamadasyuzou.co.jp/kinzan/", "https://www.hamadasyuzou.co.jp/kinzan/products"]},
+{"pref": "鹿児島県", "brand": "天賦", "brand_kana": "てんぶ", "brewery": "西酒造株式会社", "city": "日置市", "founded": 1845, "facts": [{"text": "焼酎蔵の西酒造が吹上町の専用蔵で醸す日本酒", "url": "https://www.nishi-shuzo.co.jp/tenbu/"}], "spec": {"product": "天賦 純米酒", "grade": "純米", "abv": {"min": 15, "max": 15}, "polish": 60, "rice": "国産米100%使用", "spec_url": "https://www.nishi-shuzo.co.jp/tenbu/products/"}, "urls": ["https://www.nishi-shuzo.co.jp/nishisyuzo/", "https://www.nishi-shuzo.co.jp/tenbu/"]}
+]
+</script>
+
+<script type="application/json" id="basics-data">
+[
+{"id": "basic-001", "topic": "特定名称酒", "question": "特定名称酒は全部で何種類？", "answer": "8種類", "wrong": ["5種類", "6種類", "10種類"], "explain": "吟醸・大吟醸・純米・純米吟醸・純米大吟醸・特別純米・本醸造・特別本醸造の8つ。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"特定名称酒": "とくていめいしょうしゅ"}},
+{"id": "basic-002", "topic": "特定名称酒", "question": "大吟醸酒の精米歩合の条件は？", "answer": "50%以下", "wrong": ["70%以下", "80%以下", "90%以下"], "explain": "大吟醸酒と純米大吟醸酒は精米歩合50%以下。吟醸造りで、香味・色沢が特に良好なもの。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"大吟醸酒": "だいぎんじょうしゅ", "精米歩合": "せいまいぶあい"}},
+{"id": "basic-003", "topic": "特定名称酒", "question": "吟醸酒の精米歩合の条件は？", "answer": "60%以下", "wrong": ["80%以下", "90%以下", "条件なし"], "explain": "吟醸酒・純米吟醸酒は精米歩合60%以下で、吟醸造りによる固有の香味が求められる。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"精米歩合": "せいまいぶあい", "吟醸酒": "ぎんじょうしゅ"}},
+{"id": "basic-004", "topic": "特定名称酒", "question": "本醸造酒の精米歩合の条件は？", "answer": "70%以下", "wrong": ["80%以下", "90%以下", "条件なし"], "explain": "本醸造酒は精米歩合70%以下。米・米こうじに醸造アルコールを加えて造る。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"本醸造酒": "ほんじょうぞうしゅ", "精米歩合": "せいまいぶあい"}},
+{"id": "basic-005", "topic": "特定名称酒", "question": "純米酒の精米歩合の条件は？", "answer": "定められていない", "wrong": ["40%以下", "50%以下", "60%以下"], "explain": "純米酒には精米歩合の要件がない。原料は米と米こうじだけで、こうじ米15%以上が条件。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"精米歩合": "せいまいぶあい", "純米酒": "じゅんまいしゅ"}},
+{"id": "basic-006", "topic": "特定名称酒", "question": "醸造アルコールを使わない特定名称酒はどれ？", "answer": "純米吟醸酒", "wrong": ["吟醸酒", "本醸造酒", "特別本醸造酒"], "explain": "「純米」が付く4種は原料が米と米こうじだけ。吟醸酒・本醸造酒などは醸造アルコールを使う。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"醸造アルコール": "じょうぞうアルコール", "特別本醸造酒": "とくべつほんじょうぞうしゅ", "特定名称酒": "とくていめいしょうしゅ", "純米吟醸酒": "じゅんまいぎんじょうしゅ"}},
+{"id": "basic-007", "topic": "特定名称酒", "question": "吟醸酒や本醸造酒に使える醸造アルコールの量の上限は？", "answer": "白米の重量の10%以下", "wrong": ["白米の重量の25%以下", "白米の重量の30%以下", "白米の重量の50%以下"], "explain": "特定名称酒で使える醸造アルコールは、使った白米の重さの1割までに制限されている。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"醸造アルコール": "じょうぞうアルコール", "本醸造酒": "ほんじょうぞうしゅ", "吟醸酒": "ぎんじょうしゅ", "白米": "はくまい"}},
+{"id": "basic-008", "topic": "特定名称酒", "question": "特定名称酒の「こうじ米使用割合」の条件は？", "answer": "15%以上", "wrong": ["1%以上", "3%以上", "5%以上"], "explain": "こうじ米は米こうじを造るのに使う白米。8種すべてで白米全体の15%以上が条件。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"特定名称酒": "とくていめいしょうしゅ"}},
+{"id": "basic-009", "topic": "特定名称酒", "question": "特定名称酒の原料に使える玄米の条件は？", "answer": "農産物検査で3等以上に格付けされたもの", "wrong": ["農産物検査で1等に格付けされたものだけ", "等級に関係なくどの玄米でもよい", "規格外に格付けされたもの"], "explain": "農産物検査で3等以上に格付けされた玄米か、それに相当する玄米を精米した白米を使う。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"特定名称酒": "とくていめいしょうしゅ", "玄米": "げんまい"}},
+{"id": "basic-010", "topic": "特定名称酒", "question": "特別純米酒の条件として正しいのは？", "answer": "精米歩合60%以下または特別な製造方法", "wrong": ["精米歩合80%以下", "醸造アルコールを白米重量の10%以下で加える", "アルコール分20度以上"], "explain": "特別純米酒は精米歩合60%以下か特別な製造方法で造り、香味・色沢が特に良好な純米酒。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"醸造アルコール": "じょうぞうアルコール", "アルコール分": "アルコールぶん", "特別純米酒": "とくべつじゅんまいしゅ", "精米歩合": "せいまいぶあい", "白米": "はくまい"}},
+{"id": "basic-011", "topic": "特定名称酒", "question": "「吟醸造り」が条件に入っている特定名称酒は？", "answer": "純米大吟醸酒", "wrong": ["純米酒", "本醸造酒", "特別本醸造酒"], "explain": "吟醸造りが条件なのは吟醸酒・大吟醸酒・純米吟醸酒・純米大吟醸酒の4種。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"純米大吟醸酒": "じゅんまいだいぎんじょうしゅ", "特別本醸造酒": "とくべつほんじょうぞうしゅ", "特定名称酒": "とくていめいしょうしゅ", "吟醸造り": "ぎんじょうづくり", "純米酒": "じゅんまいしゅ"}},
+{"id": "basic-012", "topic": "特定名称酒", "question": "特定名称酒のラベルで、原材料名の近くに必ず書くものは？", "answer": "精米歩合", "wrong": ["日本酒度", "酸度", "杜氏の名前"], "explain": "特定名称酒は原材料名の表示の近くに精米歩合を併せて表示する決まりがある。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"特定名称酒": "とくていめいしょうしゅ", "精米歩合": "せいまいぶあい", "日本酒度": "にほんしゅど", "杜氏": "とうじ", "酸度": "さんど"}},
+{"id": "basic-013", "topic": "特定名称酒", "question": "ラベルに原料米の品種名を書けるのは、その品種をどれだけ使ったとき？", "answer": "使用割合が50%を超えるとき", "wrong": ["1粒でも使っていれば", "使用割合が10%以上のとき", "使用割合が30%を超えるとき"], "explain": "原料米の品種名は、その品種の使用割合が5割を超える場合に表示できる。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"]},
+{"id": "basic-014", "topic": "特定名称酒", "question": "「貯蔵年数」は何年以上貯蔵した清酒から表示できる？", "answer": "1年以上", "wrong": ["3年以上", "5年以上", "10年以上"], "explain": "1年以上貯蔵した清酒は貯蔵年数を表示でき、1年未満の端数は切り捨てる。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"貯蔵年数": "ちょぞうねんすう", "清酒": "せいしゅ", "端数": "はすう"}},
+{"id": "basic-015", "topic": "用語", "question": "表示基準での「生一本」の意味は？", "answer": "単一の製造場だけで醸造した純米酒", "wrong": ["水を加えずに出荷した酒", "一度も火入れしていない酒", "木の樽で貯蔵した酒"], "explain": "生一本は一つの製造場のみで醸造した純米酒に使える表示。加水や火入れとは別の話。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"純米酒": "じゅんまいしゅ", "火入れ": "ひいれ", "生一本": "きいっぽん", "醸造": "じょうぞう"}},
+{"id": "basic-016", "topic": "用語", "question": "表示基準での「樽酒」の意味は？", "answer": "木製の樽で貯蔵し、木の香りが付いた清酒", "wrong": ["樽で発酵させた後すぐ瓶詰めした生酒", "一斗樽単位で売られる清酒", "樽から直接汲み出した原酒"], "explain": "樽酒は木の樽で貯蔵し、木の香りが移った清酒。樽で売るかどうかは関係ない。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"生酒": "なまざけ", "原酒": "げんしゅ", "樽酒": "たるざけ", "清酒": "せいしゅ"}},
+{"id": "basic-017", "topic": "特定名称酒", "question": "清酒の表示で使ってはいけない言葉は？", "answer": "「最高」", "wrong": ["「原酒」", "「生酒」", "「樽酒」"], "explain": "「最高」「第一」「代表」など最上級を意味する言葉は表示禁止。原酒・生酒・樽酒は条件付きで表示可。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"生酒": "なまざけ", "原酒": "げんしゅ", "樽酒": "たるざけ", "清酒": "せいしゅ"}},
+{"id": "basic-018", "topic": "用語", "question": "酒税法で「清酒」とされるアルコール分は？", "answer": "22度未満", "wrong": ["15度未満", "30度未満", "40度未満"], "explain": "酒税法上の清酒は、米・米こうじ・水などを発酵させてこしたもので、アルコール分22度未満。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/qa/01/01.pdf"], "ruby": {"アルコール分": "アルコールぶん", "清酒": "せいしゅ"}},
+{"id": "basic-019", "topic": "用語", "question": "酒税法の清酒の定義「米、米こうじ及び水を原料として発酵させて＿＿もの」。空欄は？", "answer": "こした", "wrong": ["蒸留した", "煮詰めた", "凍らせた"], "explain": "清酒は発酵させた後に「こした」ものと定義される。蒸留すると焼酎など別の品目になる。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/qa/01/01.pdf"], "ruby": {"清酒": "せいしゅ", "蒸留": "じょうりゅう"}},
+{"id": "basic-020", "topic": "用語", "question": "「精米歩合」とは何の割合？", "answer": "玄米の重量に対する白米の重量の割合", "wrong": ["白米の重量に対する削った糠の割合", "米の重量に対する水の割合", "玄米の粒数に対する割れた粒の割合"], "explain": "精米歩合は玄米に対して白米が何%残ったかを重さで示す数字。小さいほどよく磨いている。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"精米歩合": "せいまいぶあい", "玄米": "げんまい", "白米": "はくまい", "糠": "ぬか"}},
+{"id": "basic-021", "topic": "用語", "question": "精米歩合60%の白米は、玄米の何%を削ったもの？", "answer": "40%", "wrong": ["60%", "6%", "16%"], "explain": "精米歩合は残った白米の割合。60%なら残りが6割で、削ったのは4割になる。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"], "ruby": {"精米歩合": "せいまいぶあい", "玄米": "げんまい", "白米": "はくまい"}},
+{"id": "basic-022", "topic": "用語", "question": "日本酒度が（＋）に大きくなるほど、どうなる？", "answer": "糖分が少ない", "wrong": ["糖分が多い", "精米歩合が低い", "酸の量が多い"], "explain": "日本酒度は比重を示す指標。＋ほど糖分が少なく辛口、－ほど糖分が多く甘口の目安。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"精米歩合": "せいまいぶあい", "日本酒度": "にほんしゅど", "比重": "ひじゅう"}},
+{"id": "basic-023", "topic": "用語", "question": "「酸度」は何の量を示す指標？", "answer": "酸", "wrong": ["糖", "アルコール", "米の粒の大きさ"], "explain": "酸度は酒に含まれる酸の量の指標。アミノ酸の量は別に「アミノ酸度」で示す。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"酸度": "さんど"}},
+{"id": "basic-024", "topic": "用語", "question": "酒母（しゅぼ）の別名は？", "answer": "酛（もと）", "wrong": ["醪（もろみ）", "槽（ふね）", "麹（こうじ）"], "explain": "酒母は酵母を大量に増やしたもので「酛」とも呼ぶ。生酛・速醸酛などはその造り方の名前。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"酒母": "しゅぼ", "麹": "こうじ", "醪": "もろみ", "酛": "もと", "槽": "ふね", "生酛": "きもと", "速醸酛": "そくじょうもと", "酵母": "こうぼ"}},
+{"id": "basic-025", "topic": "用語", "question": "生酛（きもと）の特徴は？", "answer": "酒母の中で増えた乳酸菌が出す乳酸で雑菌を抑える", "wrong": ["最初から乳酸を加えて短期間で造る", "醸造アルコールを加えて雑菌を抑える", "火入れをして雑菌を抑える"], "explain": "生酛は伝統的な酒母造り。乳酸菌を自然に増やし、その乳酸で有害な菌を抑えて酵母を育てる。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"], "ruby": {"醸造アルコール": "じょうぞうアルコール", "火入れ": "ひいれ", "酒母": "しゅぼ", "生酛": "きもと", "乳酸菌": "にゅうさんきん", "酵母": "こうぼ"}},
+{"id": "basic-026", "topic": "用語", "question": "「山廃」は何の略？", "answer": "山卸廃止", "wrong": ["山田錦廃止", "山廃仕込場", "山間廃屋"], "explain": "明治時代に生まれた生酛の変法。手間のかかる「山卸」の作業をやめたので山卸廃止＝山廃。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/sakefaq02.html"], "ruby": {"山卸廃止": "やまおろしはいし", "山田錦": "やまだにしき", "山廃": "やまはい", "山卸": "やまおろし", "生酛": "きもと"}},
+{"id": "basic-027", "topic": "用語", "question": "速醸酛（そくじょうもと）の特徴は？", "answer": "仕込むときに乳酸を加える", "wrong": ["乳酸菌を自然に増やす", "山卸という作業をする", "酵母を使わない"], "explain": "速醸酛は最も普及した酒母造り。最初に乳酸を加えるので短期間で酒母ができる。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"], "ruby": {"速醸酛": "そくじょうもと", "酵母": "こうぼ", "山卸": "やまおろし"}},
+{"id": "basic-028", "topic": "用語", "question": "生酛（山廃）系の酒母造りにかかる期間は速醸系の約何倍？", "answer": "約2倍", "wrong": ["約半分", "約10分の1", "約10倍"], "explain": "生酛系は乳酸菌が乳酸を作るのを待つため、速醸系の約2倍の期間がかかる。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/sakefaq02.html"], "ruby": {"酒母": "しゅぼ", "生酛": "きもと", "山廃": "やまはい", "速醸": "そくじょう", "乳酸菌": "にゅうさんきん"}},
+{"id": "basic-029", "topic": "用語", "question": "「生酒」とは？", "answer": "製成後に一切加熱処理をしない清酒", "wrong": ["貯蔵前だけ加熱処理した清酒", "出荷のときだけ加熱処理した清酒", "水を加えていない清酒"], "explain": "生酒は搾った後、貯蔵前も出荷時も一度も火入れ（加熱処理）をしない酒。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"生酒": "なまざけ", "清酒": "せいしゅ"}},
+{"id": "basic-030", "topic": "用語", "question": "「生貯蔵酒」とは？", "answer": "加熱せずに貯蔵し、出荷時に加熱処理した清酒", "wrong": ["一切加熱処理をしない清酒", "貯蔵前に加熱処理し、出荷時は加熱しない清酒", "貯蔵前と出荷時の2回加熱処理した清酒"], "explain": "生貯蔵酒は生のまま貯蔵し、瓶詰め（出荷）のときだけ火入れした酒。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"生貯蔵酒": "なまちょぞうしゅ", "清酒": "せいしゅ"}},
+{"id": "basic-031", "topic": "用語", "question": "「生詰酒」とは？", "answer": "貯蔵前だけ火入れした酒", "wrong": ["一度も火入れしない酒", "瓶詰め時だけ火入れした酒", "水を加えずに瓶に詰めた酒"], "explain": "生詰酒は貯蔵前に火入れし、瓶詰め時は火入れしない酒。生貯蔵酒とは火入れの時期が逆。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"火入れ": "ひいれ", "生詰酒": "なまづめしゅ"}},
+{"id": "basic-032", "topic": "用語", "question": "「原酒」とは？", "answer": "製成後に水を加えてアルコール分などを調整していない清酒", "wrong": ["一度も火入れしていない清酒", "醸造アルコールを使っていない清酒", "1年以上貯蔵した清酒"], "explain": "原酒は搾った後に加水調整していない酒。アルコール分1%未満の範囲の加水調整は認められている。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"醸造アルコール": "じょうぞうアルコール", "アルコール分": "アルコールぶん", "火入れ": "ひいれ", "原酒": "げんしゅ", "清酒": "せいしゅ"}},
+{"id": "basic-033", "topic": "用語", "question": "清酒の「火入れ」はおよそ何℃で行う？", "answer": "約65℃", "wrong": ["約15℃", "約100℃", "約120℃"], "explain": "火入れは約65℃の加熱処理。再発酵や乳酸菌による変質を防ぎ、酵素の働きを止める。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"火入れ": "ひいれ", "清酒": "せいしゅ"}},
+{"id": "basic-034", "topic": "用語", "question": "麹（こうじ）の酵素は、米のデンプンを何に変える？", "answer": "ブドウ糖", "wrong": ["アルコール", "乳酸", "酢酸"], "explain": "麹は米に麹菌を生やしたもの。その酵素がデンプンをブドウ糖に変え、酵母が使えるようにする。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"], "ruby": {"麹": "こうじ", "麹菌": "こうじきん", "酵母": "こうぼ"}},
+{"id": "basic-035", "topic": "用語", "question": "2006年に日本醸造学会が「国菌」に認定したのは？", "answer": "こうじ菌", "wrong": ["乳酸菌", "納豆菌", "酢酸菌"], "explain": "日本醸造学会は、古くから日本で使われてきたこうじ菌を2006年に「国菌」と認定した。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"], "ruby": {"こうじ菌": "こうじきん", "国菌": "こっきん", "醸造": "じょうぞう"}},
+{"id": "basic-036", "topic": "用語", "question": "三段仕込みの3回の仕込みの呼び名は？", "answer": "添・仲・留", "wrong": ["初・中・後", "朝・昼・夜", "表・中・裏"], "explain": "もろみは添・仲・留の3回に分けて仕込み、酵母を増やしながら量を段々増やしていく。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"], "ruby": {"三段仕込み": "さんだんじこみ", "添": "そえ", "仲": "なか", "留": "とめ", "酵母": "こうぼ"}},
+{"id": "basic-037", "topic": "用語", "question": "三段仕込みで、添仕込みの翌日に仕込みを1日休むことを何という？", "answer": "踊り", "wrong": ["寝かせ", "中休み", "眠り"], "explain": "添の翌日は酵母が増えるのを待つため仕込みを休む。これを「踊り」と呼ぶ。", "pref": null, "urls": ["https://japansake.or.jp/sake/about-sake/glossary-of-sake/"], "ruby": {"三段仕込み": "さんだんじこみ", "寝かせ": "ねかせ", "踊り": "おどり", "添": "そえ"}},
+{"id": "basic-038", "topic": "用語", "question": "「南部杜氏」の地域とされる県は？", "answer": "岩手県", "wrong": ["兵庫県", "広島県", "福岡県"], "explain": "杜氏集団は各地で生まれた。南部杜氏は岩手県全域の杜氏集団として紹介されている。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"], "ruby": {"南部杜氏": "なんぶとうじ"}},
+{"id": "basic-039", "topic": "用語", "question": "「越後杜氏」の地域とされる県は？", "answer": "新潟県", "wrong": ["岩手県", "秋田県", "兵庫県"], "explain": "越後杜氏は新潟県全域の杜氏集団。山内杜氏（秋田）、南部杜氏（岩手）なども知られる。", "pref": null, "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"], "ruby": {"越後杜氏": "えちごとうじ"}},
+{"id": "basic-040", "topic": "用語", "question": "「伝統的酒造り」がユネスコ無形文化遺産に登録されたのは何年？", "answer": "2024年", "wrong": ["2013年", "2018年", "2020年"], "explain": "杜氏・蔵人らがこうじ菌を用いて築いた酒造り技術が、2024年12月に登録された。", "pref": null, "urls": ["https://www.nta.go.jp/traditional_sake_making/index.htm"], "ruby": {"伝統的酒造り": "でんとうてきさけづくり"}},
+{"id": "basic-041", "topic": "酒米", "question": "酒米「山田錦」が育成された県は？", "answer": "兵庫県", "wrong": ["新潟県", "長野県", "秋田県"], "explain": "山田錦は兵庫県立農事試験場で大正12年に交配され、昭和11年に命名された。", "pref": "兵庫県", "urls": ["https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html", "https://www.maff.go.jp/j/pr/aff/1812/pdf/1812_04.pdf"], "ruby": {"山田錦": "やまだにしき", "酒米": "さかまい"}},
+{"id": "basic-042", "topic": "酒米", "question": "山田錦の出荷量が全国一の県は？", "answer": "兵庫県", "wrong": ["岡山県", "新潟県", "山形県"], "explain": "兵庫県の山田錦出荷量は全国の約6割（令和4年産で57%）を占める。", "pref": "兵庫県", "urls": ["https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html", "https://www.maff.go.jp/j/pr/aff/1812/pdf/1812_04.pdf"], "ruby": {"山田錦": "やまだにしき"}},
+{"id": "basic-043", "topic": "酒米", "question": "山田錦の交配親の組み合わせは？", "answer": "山田穂と短稈渡船", "wrong": ["雄町と五百万石", "美山錦と亀の尾", "たかね錦と山田穂"], "explain": "山田錦は「山田穂」を母、「短稈渡船」を父として交配・選抜された品種。", "pref": "兵庫県", "urls": ["https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html", "https://www.maff.go.jp/j/pr/aff/1812/pdf/1812_04.pdf"], "ruby": {"五百万石": "ごひゃくまんごく", "短稈渡船": "たんかんわたりぶね", "たかね錦": "たかねにしき", "山田錦": "やまだにしき", "美山錦": "みやまにしき", "山田穂": "やまだほ", "亀の尾": "かめのお", "雄町": "おまち"}},
+{"id": "basic-044", "topic": "酒米", "question": "酒米「五百万石」が育成された県は？", "answer": "新潟県", "wrong": ["兵庫県", "岡山県", "長野県"], "explain": "五百万石は新潟県農業試験場で育成され、1957年に命名された。", "pref": "新潟県", "urls": ["https://www.pref.okayama.jp/uploaded/attachment/374892.pdf", "https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html"], "ruby": {"五百万石": "ごひゃくまんごく", "酒米": "さかまい"}},
+{"id": "basic-045", "topic": "酒米", "question": "新潟県が育成した酒米「越淡麗」の両親は？", "answer": "山田錦と五百万石", "wrong": ["雄町と美山錦", "山田錦と雄町", "五百万石と美山錦"], "explain": "越淡麗は山田錦と五百万石を掛け合わせた新潟県育成の酒米。大吟醸酒向けに開発された。", "pref": "新潟県", "urls": ["https://www.pref.niigata.lg.jp/sec/nosanengei/1250021054134.html"], "ruby": {"五百万石": "ごひゃくまんごく", "山田錦": "やまだにしき", "美山錦": "みやまにしき", "越淡麗": "こしたんれい", "雄町": "おまち", "酒米": "さかまい"}},
+{"id": "basic-046", "topic": "酒米", "question": "酒米「雄町」の発祥の県は？", "answer": "岡山県", "wrong": ["兵庫県", "新潟県", "秋田県"], "explain": "雄町は備前国雄町村（現在の岡山市中区）の岸本甚造が見つけた穂から選抜したとされる。", "pref": "岡山県", "urls": ["https://www.pref.okayama.jp/page/detail-16018.html", "https://www.pref.okayama.jp/uploaded/attachment/374892.pdf"], "ruby": {"雄町": "おまち", "酒米": "さかまい", "岸本甚造": "きしもとじんぞう", "備前国": "びぜんのくに"}},
+{"id": "basic-047", "topic": "酒米", "question": "酒米「雄町」の名前の由来は？", "answer": "見いだされ育った土地（雄町村）の名前", "wrong": ["選抜した人の名前", "最初に醸した酒蔵の名前", "収穫された月の名前"], "explain": "はじめは別の名で呼ばれたが、酒米として評判が高まり、土地の名にちなんで雄町と呼ばれた。", "pref": "岡山県", "urls": ["https://www.pref.okayama.jp/page/detail-16018.html"], "ruby": {"雄町": "おまち", "酒米": "さかまい"}},
+{"id": "basic-048", "topic": "酒米", "question": "山田錦や五百万石の先祖とされる酒米は？", "answer": "雄町", "wrong": ["美山錦", "出羽燦々", "吟風"], "explain": "岡山県の資料では、雄町は山田錦や五百万石など優良な酒米の先祖とされている。", "pref": "岡山県", "urls": ["https://www.pref.okayama.jp/page/detail-16018.html", "https://www.pref.okayama.jp/uploaded/attachment/374892.pdf"], "ruby": {"五百万石": "ごひゃくまんごく", "出羽燦々": "でわさんさん", "山田錦": "やまだにしき", "美山錦": "みやまにしき", "雄町": "おまち", "吟風": "ぎんぷう", "酒米": "さかまい"}},
+{"id": "basic-049", "topic": "酒米", "question": "酒米「美山錦」が育成された県は？", "answer": "長野県", "wrong": ["兵庫県", "岡山県", "北海道"], "explain": "美山錦は長野県農事試験場で「たかね錦」の突然変異から育成され、昭和53年に採用された。", "pref": "長野県", "urls": ["https://www.pref.nagano.lg.jp/nogi/kensei/soshiki/soshiki/kencho/nogyogijutsu/documents/r7syoureihinnsyu.pdf"], "ruby": {"美山錦": "みやまにしき", "酒米": "さかまい", "たかね錦": "たかねにしき"}},
+{"id": "basic-050", "topic": "酒米", "question": "美山錦はどの品種から生まれた？", "answer": "たかね錦（の突然変異）", "wrong": ["山田錦（の突然変異）", "雄町と五百万石の交配", "コシヒカリと山田錦の交配"], "explain": "美山錦は長野県で、たかね錦の突然変異をもとに育成された酒米。", "pref": "長野県", "urls": ["https://www.pref.nagano.lg.jp/nogi/kensei/soshiki/soshiki/kencho/nogyogijutsu/documents/r7syoureihinnsyu.pdf"], "ruby": {"五百万石": "ごひゃくまんごく", "たかね錦": "たかねにしき", "山田錦": "やまだにしき", "美山錦": "みやまにしき", "雄町": "おまち"}},
+{"id": "basic-051", "topic": "酒米", "question": "酒米「ひとごこち」が育成された県は？", "answer": "長野県", "wrong": ["広島県", "山形県", "新潟県"], "explain": "ひとごこちは長野県農事試験場の育成で、平成10年に県の奨励品種等に採用された。", "pref": "長野県", "urls": ["https://www.pref.nagano.lg.jp/nogi/kensei/soshiki/soshiki/kencho/nogyogijutsu/documents/r7syoureihinnsyu.pdf"], "ruby": {"酒米": "さかまい"}},
+{"id": "basic-052", "topic": "酒米", "question": "酒米「出羽燦々」が育成された県は？", "answer": "山形県", "wrong": ["秋田県", "岩手県", "新潟県"], "explain": "出羽燦々は山形県が育成した酒米で、平成9年に品種登録された。", "pref": "山形県", "urls": ["https://www.pref.yamagata.jp/documents/3639/h.30hinnsyu_sakumotu"], "ruby": {"出羽燦々": "でわさんさん", "酒米": "さかまい"}},
+{"id": "basic-053", "topic": "酒米", "question": "酒米「秋田酒こまち」が育成された県は？", "answer": "秋田県", "wrong": ["山形県", "兵庫県", "長野県"], "explain": "秋田酒こまちは秋田県農業試験場が育成した酒米。平成16年に品種登録された。", "pref": "秋田県", "urls": ["https://www.pref.akita.lg.jp/pages/archive/5780"], "ruby": {"秋田酒こまち": "あきたさけこまち", "酒米": "さかまい"}},
+{"id": "basic-054", "topic": "酒米", "question": "酒米「吟風」が育成されたのは？", "answer": "北海道", "wrong": ["新潟県", "広島県", "岡山県"], "explain": "吟風は北海道立中央農業試験場で1990年に交配して育成された酒米。", "pref": "北海道", "urls": ["https://www.hro.or.jp/agricultural/center/publication/syuhou/2k/82-1.html"], "ruby": {"吟風": "ぎんぷう", "酒米": "さかまい"}},
+{"id": "basic-055", "topic": "酒米", "question": "酒米「千本錦」と「八反錦」を育成した県は？", "answer": "広島県", "wrong": ["兵庫県", "長野県", "秋田県"], "explain": "千本錦や八反錦（1号・2号）は広島県の育成品種として登録されている。", "pref": "広島県", "urls": ["https://www.pref.hiroshima.lg.jp/soshiki/30/ikusei.html"], "ruby": {"八反錦": "はったんにしき", "千本錦": "せんぼんにしき", "酒米": "さかまい"}},
+{"id": "basic-056", "topic": "酒米", "question": "酒造好適米の多くに見られる、米粒中央の白い部分を何という？", "answer": "心白", "wrong": ["胚芽", "糠層", "白濁"], "explain": "醸造用米は大粒でたんぱく質が少なく、米粒の中央に「心白」を持つのが特徴。", "pref": null, "urls": ["https://www.nrib.go.jp/sake/sakefaq02.html"], "ruby": {"酒造好適米": "しゅぞうこうてきまい", "心白": "しんぱく", "糠層": "ぬかそう", "胚芽": "はいが"}}
+]
+</script>
+
+<script type="application/json" id="terms-data">
+[
+{"term": "特定名称酒", "kana": "とくていめいしょうしゅ", "category": "特定名称酒", "short": "条件を満たした8種類の清酒", "body": "原料・精米歩合・こうじ米の割合などの条件を満たし、表示基準で決められた8つの名前を名乗れる清酒。それ以外は普通酒と呼ばれる。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://japansake.or.jp/sake/about-sake/classification-of-sake/"]},
+{"term": "普通酒", "kana": "ふつうしゅ", "category": "特定名称酒", "short": "特定名称酒以外の日本酒", "body": "特定名称酒の8区分のどれにも当てはまらない日本酒の呼び名。英語ではstandard sakeなどと訳される。", "urls": ["https://japansake.or.jp/sake/about-sake/classification-of-sake/", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "吟醸酒", "kana": "ぎんじょうしゅ", "category": "特定名称酒", "short": "精米歩合60%以下の吟醸造り", "body": "米・米こうじ・醸造アルコールが原料。精米歩合60%以下の白米を使い、吟醸造りで固有の香りと味を引き出した清酒。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "大吟醸酒", "kana": "だいぎんじょうしゅ", "category": "特定名称酒", "short": "精米歩合50%以下の吟醸酒", "body": "吟醸酒のうち精米歩合50%以下の白米で造り、香味・色沢が特に良いもの。醸造アルコールを使う。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "純米酒", "kana": "じゅんまいしゅ", "category": "特定名称酒", "short": "米と米こうじだけで造る酒", "body": "原料は米・米こうじ（と水）だけで醸造アルコールを使わない。精米歩合の条件はなく、こうじ米15%以上が条件。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "純米吟醸酒", "kana": "じゅんまいぎんじょうしゅ", "category": "特定名称酒", "short": "アルコール無添加の吟醸酒", "body": "米と米こうじだけで、精米歩合60%以下の白米を吟醸造りで仕込んだ清酒。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"]},
+{"term": "純米大吟醸酒", "kana": "じゅんまいだいぎんじょうしゅ", "category": "特定名称酒", "short": "精米歩合50%以下の純米吟醸", "body": "米と米こうじだけで、精米歩合50%以下の白米を吟醸造りで仕込み、香味・色沢が特に良い清酒。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"]},
+{"term": "特別純米酒", "kana": "とくべつじゅんまいしゅ", "category": "特定名称酒", "short": "60%以下か特別な製法の純米酒", "body": "純米酒のうち、精米歩合60%以下または特別な製造方法で造り、香味・色沢が特に良いもの。特別な製造方法はラベルでの説明表示が必要。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"]},
+{"term": "本醸造酒", "kana": "ほんじょうぞうしゅ", "category": "特定名称酒", "short": "精米歩合70%以下＋醸造アルコール", "body": "米・米こうじに醸造アルコールを加えて造る。精米歩合70%以下で、醸造アルコールは白米重量の10%以下。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "特別本醸造酒", "kana": "とくべつほんじょうぞうしゅ", "category": "特定名称酒", "short": "60%以下か特別な製法の本醸造", "body": "本醸造酒のうち、精米歩合60%以下または特別な製造方法で造り、香味・色沢が特に良いもの。特別な製造方法はラベルでの説明表示が必要。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"]},
+{"term": "精米歩合", "kana": "せいまいぶあい", "category": "造り", "short": "玄米に対する白米の重さの割合", "body": "玄米を磨いて残った白米が元の何%かを示す数字。60%なら外側の4割を削ったことになる。小さいほどよく磨いている。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "吟醸造り", "kana": "ぎんじょうづくり", "category": "造り", "short": "よく磨いた米を低温で発酵", "body": "明確な定義はないが、精米歩合の低い白米を使い、低温で発酵させて「吟醸香」という独特の香りを引き出す造り方を指す。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "醸造アルコール", "kana": "じょうぞうアルコール", "category": "造り", "short": "香味の調整に加えるアルコール", "body": "サトウキビの糖蜜や穀類を発酵・蒸留して造るアルコール。吟醸酒・本醸造酒に使える量は白米重量の10%以下。純米酒には使えない。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"]},
+{"term": "こうじ米", "kana": "こうじまい", "category": "造り", "short": "米こうじにする白米", "body": "米こうじを造るのに使う白米のこと。特定名称酒では白米全体に対して15%以上使うことが条件。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"]},
+{"term": "麹", "kana": "こうじ", "category": "造り", "short": "米に麹菌を生やしたもの", "body": "米に麹菌を生やしたもの。麹菌がつくる酵素が米のデンプンをブドウ糖に変え、酵母が使えるようにする。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://japansake.or.jp/sake/about-sake/glossary-of-sake/", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "酒母", "kana": "しゅぼ／もと", "category": "造り", "short": "酵母を大量に増やした種", "body": "蒸米・米こうじ・水で酵母を大量に増やしたもの。「酛（もと）」とも呼ぶ。酸を多く含みとても酸っぱい。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "生酛", "kana": "きもと", "category": "造り", "short": "乳酸菌を自然に育てる伝統の酒母", "body": "伝統的な酒母造りの完成形。酒母の中で増えた乳酸菌の乳酸で雑菌を抑え、酵母を育てる。手間と時間がかかる。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "山廃酛", "kana": "やまはいもと", "category": "造り", "short": "山卸を省いた生酛系の酒母", "body": "生酛から派生した酒母造り。米がよく磨かれ溶けやすくなったため、生酛で最も手間のかかる「山卸」の作業を廃止した。名前はこの山卸廃止から。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "速醸酛", "kana": "そくじょうもと", "category": "造り", "short": "乳酸を加えて早く造る酒母", "body": "最も広く使われる酒母造り。明治時代に醸造試験所が考案。最初に乳酸を加えるので短期間で酒母ができ、生酛系はこの約2倍の期間がかかる。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "醪", "kana": "もろみ", "category": "造り", "short": "酒母に麹・蒸米・水を加えたもの", "body": "できた酒母に米こうじ・蒸米・水を加えたもの。糖化とアルコール発酵が同時に進み、20日ほどで搾ると清酒と酒粕に分かれる。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf", "https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"]},
+{"term": "三段仕込み", "kana": "さんだんじこみ", "category": "造り", "short": "醪を3回に分けて仕込む方法", "body": "醪を造るとき、こうじ・蒸米・水を一度に加えず、添・仲・留の3回に分けて4日かけて加え、酵母を増やしながら徐々に量を増やす方法。", "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "踊り", "kana": "おどり", "category": "造り", "short": "添の翌日に仕込みを休むこと", "body": "三段仕込みで添仕込みの翌日は酵母が増えるのを待つため、仕込みを1日休む。この休みを踊りという。", "urls": ["https://japansake.or.jp/sake/about-sake/glossary-of-sake/", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "上槽", "kana": "じょうそう", "category": "造り", "short": "醪を搾って酒と粕に分ける", "body": "発酵を終えた醪を搾り、清酒と酒粕に分ける工程。「しぼり」とも呼ばれる。", "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "火入れ", "kana": "ひいれ", "category": "造り", "short": "約65℃で加熱して品質を保つ", "body": "酒を65℃前後に加熱し、酵母による再発酵を防ぎ、酒を傷める乳酸菌を殺菌し、酵素の働きを止める処理。一般に貯蔵前と瓶詰め時の2回行う。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "杜氏", "kana": "とうじ", "category": "造り", "short": "酒造りの技を持つ職人の長", "body": "酒蔵で酒造りを指揮する職人の長。南部杜氏（岩手）や越後杜氏（新潟）など、地域ごとに独自の流儀を持つ杜氏集団が生まれた。", "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf", "https://www.nta.go.jp/traditional_sake_making/index.htm", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "蔵人", "kana": "くらびと", "category": "造り", "short": "酒蔵で酒造りをする人たち", "body": "杜氏とともに酒蔵で酒造りに携わる人たち。杜氏・蔵人の技術は「伝統的酒造り」として無形文化遺産になった。", "urls": ["https://www.nta.go.jp/traditional_sake_making/index.htm", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "あらばしり", "kana": "あらばしり", "category": "造り", "short": "搾るとき最初に出てくる酒", "body": "醪を搾るとき最初に出てくる酒（荒走り）。続いて中垂れ、最後に圧をかけて出るのが責め。その年の新米で造った酒（新走り）を指すこともある。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://japansake.or.jp/sake/about-sake/glossary-of-sake/"]},
+{"term": "酒粕", "kana": "さけかす", "category": "造り", "short": "醪を搾った後に残るもの", "body": "醪から清酒を搾り取った後に残るしぼり粕。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"]},
+{"term": "寒造り", "kana": "かんづくり", "category": "造り", "short": "冬に集中して造る酒造り", "body": "江戸幕府は1667年に秋の彼岸ごろからの新酒造りを禁じ、その後も何度も禁令を出した。こうして冬の寒い時期に酒造りが集中していった。", "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"]},
+{"term": "生酒", "kana": "なまざけ", "category": "表示", "short": "一度も火入れしない酒", "body": "搾った後に一切加熱処理（火入れ）をしない清酒。冷暗所で保存し、開封後はなるべく早く飲むのがよいとされる。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "生貯蔵酒", "kana": "なまちょぞうしゅ", "category": "表示", "short": "出荷時だけ火入れした酒", "body": "火入れせずに生のまま貯蔵し、出荷（瓶詰め）のときだけ加熱処理した清酒。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "生詰酒", "kana": "なまづめしゅ", "category": "表示", "short": "貯蔵前だけ火入れした酒", "body": "貯蔵前に一度火入れし、瓶詰めのときは火入れしない清酒。生貯蔵酒とは火入れのタイミングが逆。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "原酒", "kana": "げんしゅ", "category": "表示", "short": "加水調整していない酒", "body": "搾った後に水を加えてアルコール分などを調整していない清酒。加水しないためアルコール分が高く味の濃いものが多い。1%未満の加水調整は認められる。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "生一本", "kana": "きいっぽん", "category": "表示", "short": "一つの蔵だけで造った純米酒", "body": "ひとつの製造場だけで醸造した純米酒に使える表示。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"]},
+{"term": "樽酒", "kana": "たるざけ", "category": "表示", "short": "木の樽で貯蔵し木香が付いた酒", "body": "木製の樽で貯蔵して、木の香りが付いた清酒に使える表示。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm", "https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf"]},
+{"term": "にごり酒", "kana": "にごりざけ", "category": "表示", "short": "目の粗い布で軽くこした酒", "body": "醪を目の粗い布などで軽くこしただけの、白く濁った清酒。生のものは酵母が生きていて発酵が進むことがあり、扱いに注意がいる。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://japansake.or.jp/sake/about-sake/classification-of-sake/"]},
+{"term": "貯蔵年数", "kana": "ちょぞうねんすう", "category": "表示", "short": "1年以上貯蔵した酒に表示可", "body": "1年以上貯蔵した清酒はその年数を表示でき、1年未満の端数は切り捨てる。", "urls": ["https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm"]},
+{"term": "清酒", "kana": "せいしゅ", "category": "その他", "short": "酒税法上の日本酒", "body": "米・米こうじ・水などを原料に発酵させてこしたもので、アルコール分22度未満のもの。酒税法でこう定義される。", "urls": ["https://www.nta.go.jp/taxes/sake/qa/01/01.pdf"]},
+{"term": "日本酒度", "kana": "にほんしゅど", "category": "味と数値", "short": "比重の指標、甘辛の目安", "body": "清酒の比重から換算した値。＋が大きいほど糖分が少なく辛口、－が大きいほど糖分が多く甘口の目安とされる。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "酸度", "kana": "さんど", "category": "味と数値", "short": "有機酸の量を示す指標", "body": "乳酸・コハク酸・リンゴ酸などの有機酸の量を示す。酸度が高いと一般に味が辛く、濃く感じられやすい。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "アミノ酸度", "kana": "アミノさんど", "category": "味と数値", "short": "アミノ酸の量を示す指標", "body": "グルタミン酸などのアミノ酸の量を示す。多いと味のしっかりしたタイプ、少ないと淡いタイプになりやすい。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "アルコール分", "kana": "アルコールぶん", "category": "味と数値", "short": "酒100ml中のアルコールのml数", "body": "酒100mlに含まれるアルコールのml数で、度または%で表す。清酒は酒税法で22度未満。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/qa/01/01.pdf"]},
+{"term": "甘辛度", "kana": "あまからど", "category": "味と数値", "short": "日本酒度と酸度から出す甘辛", "body": "国税庁の市販酒調査で使われる指標。日本酒度と酸度から計算し、数値が高いほど甘口、低いほど辛口。", "urls": ["https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf"]},
+{"term": "濃淡度", "kana": "のうたんど", "category": "味と数値", "short": "日本酒度と酸度から出す濃淡", "body": "国税庁の市販酒調査で使われる指標。日本酒度と酸度から計算し、数値が高いほど濃醇、低いほど淡麗。", "urls": ["https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf"]},
+{"term": "酵母", "kana": "こうぼ", "category": "酵母", "short": "糖からアルコールを造る微生物", "body": "糖からアルコールを造るサッカロマイセス・セレビシエとその仲間の菌類。大きさは5〜10μmほどで、清酒もろみでは高濃度のアルコールを造る。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nrib.go.jp/sake/nrib/pdf/NRIBNo35.pdf"]},
+{"term": "きょうかい酵母", "kana": "きょうかいこうぼ", "category": "酵母", "short": "日本醸造協会が頒布する酵母", "body": "日本醸造協会が頒布する、醸造特性の良い清酒酵母。2019年時点で、7号は分離から70年以上、6号は90年近くたっても広く使われている。", "urls": ["https://www.nrib.go.jp/sake/nrib/pdf/NRIBNo35.pdf"]},
+{"term": "こうじ菌", "kana": "こうじきん", "category": "酵母", "short": "麹を造るカビの仲間", "body": "米などに生やして麹を造るカビ。清酒には黄こうじ菌（Aspergillus oryzae）が使われる。", "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"]},
+{"term": "国菌", "kana": "こっきん", "category": "酵母", "short": "日本を代表する菌＝こうじ菌", "body": "2006年に日本醸造学会が、古くから日本で大切に使われてきたこうじ菌を「国菌」に認定した。", "urls": ["https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf"]},
+{"term": "酒造好適米", "kana": "しゅぞうこうてきまい", "category": "酒米", "short": "酒造りに向く米、酒米", "body": "酒造りに向く米。大粒で精米しやすく、たんぱく質が少なく、米粒の中心に心白を持つものが多い。", "urls": ["https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "心白", "kana": "しんぱく", "category": "酒米", "short": "米粒の中心の白い部分", "body": "酒造好適米の米粒中央にある白く不透明な部分。組織が粗く、麹菌が中まで入り込みやすい。", "urls": ["https://www.nrib.go.jp/sake/sakefaq02.html", "https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf"]},
+{"term": "山田錦", "kana": "やまだにしき", "category": "酒米", "short": "兵庫県育成の代表的酒米", "body": "1923年に兵庫県立農事試験場で山田穂と短稈渡船を交配し、1936年に命名。兵庫県の出荷量は全国の57%（令和4年産）。", "urls": ["https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html", "https://www.maff.go.jp/j/pr/aff/1812/pdf/1812_04.pdf"]},
+{"term": "五百万石", "kana": "ごひゃくまんごく", "category": "酒米", "short": "新潟県育成の酒米", "body": "新潟県農業試験場で育成され、1957年に命名された酒米。菊水と新200号の交配。", "urls": ["https://www.pref.okayama.jp/uploaded/attachment/374892.pdf", "https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html"]},
+{"term": "雄町", "kana": "おまち", "category": "酒米", "short": "岡山県発祥の古い酒米", "body": "備前国雄町村の岸本甚造が見つけた穂から選抜したとされる。山田錦や五百万石の先祖にあたる。", "urls": ["https://www.pref.okayama.jp/page/detail-16018.html", "https://www.pref.okayama.jp/uploaded/attachment/374892.pdf"]},
+{"term": "美山錦", "kana": "みやまにしき", "category": "酒米", "short": "長野県育成の酒米", "body": "長野県農事試験場で、たかね錦の突然変異をもとに育成。1978年（昭和53年）に長野県の奨励品種に採用された。", "urls": ["https://www.pref.nagano.lg.jp/nogi/kensei/soshiki/soshiki/kencho/nogyogijutsu/documents/r7syoureihinnsyu.pdf"]},
+{"term": "越淡麗", "kana": "こしたんれい", "category": "酒米", "short": "新潟県育成の大吟醸向け酒米", "body": "新潟県が山田錦と五百万石を掛け合わせて育成した酒米。高度な精米に耐え、主に大吟醸酒に使われる。", "urls": ["https://www.pref.niigata.lg.jp/sec/nosanengei/1250021054134.html"]},
+{"term": "出羽燦々", "kana": "でわさんさん", "category": "酒米", "short": "山形県育成の酒米", "body": "山形県が美山錦と華吹雪を掛け合わせて育成した大粒で心白のある酒米。1997年（平成9年）に品種登録された。", "urls": ["https://www.pref.yamagata.jp/documents/3639/h.30hinnsyu_sakumotu"]},
+{"term": "秋田酒こまち", "kana": "あきたさけこまち", "category": "酒米", "short": "秋田県育成の酒米", "body": "秋田県農業試験場が育成した酒米。2004年（平成16年）に品種登録された。", "urls": ["https://www.pref.akita.lg.jp/pages/archive/5780"]},
+{"term": "吟風", "kana": "ぎんぷう", "category": "酒米", "short": "北海道育成の酒米", "body": "北海道立中央農業試験場で1990年に交配して育成された酒米。親に八反錦2号やきらら397を持つ。", "urls": ["https://www.hro.or.jp/agricultural/center/publication/syuhou/2k/82-1.html"]},
+{"term": "八反錦", "kana": "はったんにしき", "category": "酒米", "short": "広島県育成の酒米", "body": "広島県が育成した酒米。八反錦1号・2号が1984年に品種登録されている。", "urls": ["https://www.pref.hiroshima.lg.jp/soshiki/30/ikusei.html"]},
+{"term": "千本錦", "kana": "せんぼんにしき", "category": "酒米", "short": "広島県育成の酒米", "body": "広島県が育成した酒米で、2002年に品種登録された。", "urls": ["https://www.pref.hiroshima.lg.jp/soshiki/30/ikusei.html"]},
+{"term": "伝統的酒造り", "kana": "でんとうてきさけづくり", "category": "その他", "short": "2024年の無形文化遺産", "body": "杜氏・蔵人らがこうじ菌を使い、経験を積み重ねて築いた酒造り技術。2024年12月にユネスコ無形文化遺産に登録。", "urls": ["https://www.nta.go.jp/traditional_sake_making/index.htm"]}
+]
+</script>
+
+<script type="application/json" id="taste-data">
+{"note": "日本酒度は＋が大きいほど辛口、−が大きいほど甘口の目安（酒類総合研究所・国税庁）。代表酒のスペックは蔵元の商品ページの値。甘辛度・濃淡度は国税庁「全国市販酒類調査」と同じ式で、日本酒度と酸度から計算した目安。実際の感じ方は香りや温度でも変わる。", "urls": ["https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf", "https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf"]}
+</script>
+
+<script id="quiz-core">
+// 問題生成。DOMに触らない。tools/check.js からも読む。
+var SakeCore = (function () {
+  // [名前, 地方, 列, 行]
+  var PREFS = [
+    ["北海道", "北海道・東北", 12, 0],
+    ["青森県", "北海道・東北", 12, 1],
+    ["岩手県", "北海道・東北", 12, 2],
+    ["宮城県", "北海道・東北", 12, 3],
+    ["秋田県", "北海道・東北", 11, 2],
+    ["山形県", "北海道・東北", 11, 3],
+    ["福島県", "北海道・東北", 12, 4],
+    ["茨城県", "関東", 11, 5],
+    ["栃木県", "関東", 11, 4],
+    ["群馬県", "関東", 10, 4],
+    ["埼玉県", "関東", 10, 5],
+    ["千葉県", "関東", 11, 6],
+    ["東京都", "関東", 10, 6],
+    ["神奈川県", "関東", 9, 6],
+    ["新潟県", "中部", 10, 3],
+    ["富山県", "中部", 9, 3],
+    ["石川県", "中部", 8, 3],
+    ["福井県", "中部", 7, 4],
+    ["山梨県", "中部", 9, 5],
+    ["長野県", "中部", 9, 4],
+    ["岐阜県", "中部", 8, 4],
+    ["静岡県", "中部", 8, 6],
+    ["愛知県", "中部", 8, 5],
+    ["三重県", "近畿", 7, 6],
+    ["滋賀県", "近畿", 7, 5],
+    ["京都府", "近畿", 6, 5],
+    ["大阪府", "近畿", 5, 6],
+    ["兵庫県", "近畿", 5, 5],
+    ["奈良県", "近畿", 6, 6],
+    ["和歌山県", "近畿", 6, 7],
+    ["鳥取県", "中国・四国", 4, 5],
+    ["島根県", "中国・四国", 3, 5],
+    ["岡山県", "中国・四国", 4, 6],
+    ["広島県", "中国・四国", 3, 6],
+    ["山口県", "中国・四国", 2, 6],
+    ["徳島県", "中国・四国", 5, 8],
+    ["香川県", "中国・四国", 5, 7],
+    ["愛媛県", "中国・四国", 4, 7],
+    ["高知県", "中国・四国", 4, 8],
+    ["福岡県", "九州・沖縄", 1, 7],
+    ["佐賀県", "九州・沖縄", 0, 7],
+    ["長崎県", "九州・沖縄", 0, 8],
+    ["熊本県", "九州・沖縄", 1, 8],
+    ["大分県", "九州・沖縄", 2, 7],
+    ["宮崎県", "九州・沖縄", 2, 8],
+    ["鹿児島県", "九州・沖縄", 1, 9],
+    ["沖縄県", "九州・沖縄", 0, 10]
+  ];
+  // 裏取りの結果、載せられなかった県と理由
+  var EXCLUDED = {
+    "沖縄県": "県内唯一の清酒蔵は2024年3月末から休業し、石垣島へ移して再開する計画と公式に発表されている。再開後の清酒が一次情報で確かめられたら載せる。"
+  };
+  var REGIONS = ["北海道・東北", "関東", "中部", "近畿", "中国・四国", "九州・沖縄"];
+  var regionOf = {};
+  PREFS.forEach(function (p) { regionOf[p[0]] = p[1]; });
+
+  var TYPES = ["pref", "brand", "brewery", "city", "older", "drier"];
+  var TYPE_LABEL = { pref: "産地", brand: "県の酒", brewery: "蔵元", city: "蔵の町", older: "古さ", drier: "日本酒度" };
+  function smvOf(d) {
+    var v = d.spec && d.spec.smv;
+    if (v == null) return null;
+    return typeof v === "number" ? v : (v.min + v.max) / 2;
+  }
+
+  function shortPref(name) {
+    return name === "北海道" ? "北海道" : name.replace(/[都府県]$/, "");
+  }
+
+  function makeRng(seed) {
+    var s = (seed >>> 0) || 1;
+    return function () {
+      s ^= s << 13; s >>>= 0;
+      s ^= s >>> 17;
+      s ^= s << 5; s >>>= 0;
+      return s / 4294967296;
+    };
+  }
+  function shuffle(a, rng) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function pickDistinct(cands, n, used, rng) {
+    var out = [];
+    shuffle(cands, rng).forEach(function (c) {
+      if (out.length < n && !used[c.label]) { used[c.label] = true; out.push(c); }
+    });
+    return out;
+  }
+  function finish(q, correct, wrongs, rng) {
+    if (wrongs.length < q.need - 1) return null;
+    var choices = shuffle([correct].concat(wrongs.slice(0, q.need - 1)), rng);
+    q.choices = choices;
+    q.answer = choices.indexOf(correct);
+    delete q.need;
+    return q;
+  }
+
+  // 1問作る。作れないときは null
+  function make(type, item, data, rng) {
+    var q = { type: type, kind: TYPE_LABEL[type], item: item, need: 4 };
+    var used = {}, correct, cands;
+
+    if (type === "pref") {
+      // 銘柄名に県名が入っていると答えが見えてしまう
+      if (item.brand.indexOf(shortPref(item.pref)) >= 0) return null;
+      q.text = "この銘柄の産地は？";
+      q.big = item.brand;
+      correct = { label: item.pref };
+      used[item.pref] = true;
+      var reg = regionOf[item.pref];
+      var near = PREFS.filter(function (p) { return p[1] === reg && p[0] !== item.pref; })
+        .map(function (p) { return { label: p[0] }; });
+      var far = PREFS.filter(function (p) { return p[1] !== reg; })
+        .map(function (p) { return { label: p[0] }; });
+      var w = pickDistinct(near, 2, used, rng);
+      w = w.concat(pickDistinct(far, 3 - w.length, used, rng));
+      return finish(q, correct, w, rng);
+    }
+
+    if (type === "brand") {
+      q.text = "この県の酒はどれ？";
+      q.big = item.pref;
+      correct = { label: item.brand };
+      used[item.brand] = true;
+      // 同じ県の銘柄は誤答にしない。同じ名前の銘柄も避ける
+      cands = data.filter(function (d) { return d.pref !== item.pref; })
+        .map(function (d) { return { label: d.brand }; });
+      return finish(q, correct, pickDistinct(cands, 3, used, rng), rng);
+    }
+
+    if (type === "brewery") {
+      // 蔵元名に銘柄名が入っていると答えが見えてしまう
+      if (item.brewery.indexOf(item.brand) >= 0) return null;
+      q.text = "この銘柄を造る蔵は？";
+      q.big = item.brand;
+      q.sub = item.pref;
+      correct = { label: item.brewery };
+      used[item.brewery] = true;
+      cands = data.filter(function (d) { return d.brand !== item.brand; })
+        .map(function (d) { return { label: d.brewery }; });
+      return finish(q, correct, pickDistinct(cands, 3, used, rng), rng);
+    }
+
+    if (type === "city") {
+      if (!item.city) return null;
+      if (item.brewery.indexOf(shortPref(item.pref)) >= 0) q.subHidden = true;
+      q.text = "この蔵があるのは？";
+      q.big = item.brand;
+      q.sub = q.subHidden ? null : item.brewery;
+      delete q.subHidden;
+      var lab = function (d) { return d.pref + " " + d.city; };
+      correct = { label: lab(item) };
+      used[correct.label] = true;
+      var withCity = data.filter(function (d) { return d.city && !(d.pref === item.pref && d.city === item.city); });
+      var same = withCity.filter(function (d) { return d.pref === item.pref; }).map(function (d) { return { label: lab(d) }; });
+      var reg2 = withCity.filter(function (d) { return d.pref !== item.pref && regionOf[d.pref] === regionOf[item.pref]; }).map(function (d) { return { label: lab(d) }; });
+      var rest = withCity.filter(function (d) { return regionOf[d.pref] !== regionOf[item.pref]; }).map(function (d) { return { label: lab(d) }; });
+      var w2 = pickDistinct(same, 3, used, rng);
+      w2 = w2.concat(pickDistinct(reg2, 3 - w2.length, used, rng));
+      w2 = w2.concat(pickDistinct(rest, 3 - w2.length, used, rng));
+      return finish(q, correct, w2, rng);
+    }
+
+    if (type === "older") {
+      if (!item.founded) return null;
+      var others = shuffle(data.filter(function (d) {
+        return d.founded && d.brand !== item.brand && Math.abs(d.founded - item.founded) >= 10;
+      }), rng);
+      if (!others.length) return null;
+      var other = others[0];
+      q.need = 2;
+      q.text = "創業が古いのはどっち？";
+      q.big = null;
+      q.pair = [item, other];
+      var a = { label: item.brand, sub: item.pref + "・" + item.brewery, ref: item };
+      var b = { label: other.brand, sub: other.pref + "・" + other.brewery, ref: other };
+      var old = item.founded < other.founded ? a : b;
+      q.item = old.ref;
+      return finish(q, old, [old === a ? b : a], rng);
+    }
+    if (type === "drier") {
+      var mine = smvOf(item);
+      if (mine == null) return null;
+      var rivals = shuffle(data.filter(function (d) {
+        var v = smvOf(d);
+        return v != null && d.brand !== item.brand && Math.abs(v - mine) >= 5;
+      }), rng);
+      if (!rivals.length) return null;
+      var rival = rivals[0];
+      q.need = 2;
+      q.text = "代表酒の日本酒度が高い（辛口寄り）のはどっち？";
+      q.big = null;
+      q.pair = [item, rival];
+      var ca = { label: item.brand, sub: item.spec.product, ref: item };
+      var cb = { label: rival.brand, sub: rival.spec.product, ref: rival };
+      var dry = mine > smvOf(rival) ? ca : cb;
+      q.item = dry.ref;
+      return finish(q, dry, [dry === ca ? cb : ca], rng);
+    }
+    return null;
+  }
+
+  // 1回分の問題。pool から最大 n 問。なるべく県を散らす
+  function round(data, pool, n, rng) {
+    var byPref = {};
+    pool.forEach(function (d) { (byPref[d.pref] = byPref[d.pref] || []).push(d); });
+    var prefs = shuffle(Object.keys(byPref), rng);
+    var picks = [];
+    var i = 0;
+    while (picks.length < n && prefs.length) {
+      var p = prefs[i % prefs.length];
+      var list = byPref[p];
+      picks.push(list[Math.floor(rng() * list.length)]);
+      i++;
+      if (i >= prefs.length * 2) break;
+    }
+    var qs = [];
+    picks.forEach(function (item) {
+      var types = shuffle(TYPES, rng);
+      for (var t = 0; t < types.length; t++) {
+        var q = make(types[t], item, data, rng);
+        if (q) { qs.push(q); break; }
+      }
+    });
+    return qs;
+  }
+
+  // 酒の基本。選択肢はデータに書いた正解1つと誤答3つ
+  function makeBasic(b, rng) {
+    var correct = { label: b.answer };
+    var choices = shuffle([correct].concat(b.wrong.map(function (w) { return { label: w }; })), rng);
+    return {
+      type: "basic", kind: "酒の基本・" + b.topic, text: b.question, big: null, basic: b,
+      item: b.pref ? { pref: b.pref } : null,
+      choices: choices, answer: choices.indexOf(correct)
+    };
+  }
+
+  // 銘柄の問題と基本の問題を混ぜて1回分にする
+  function compose(data, pool, basicPool, n, nBasic, rng) {
+    nBasic = Math.min(nBasic, basicPool.length);
+    var qs = pool.length ? round(data, pool, n - nBasic, rng) : [];
+    nBasic = Math.min(basicPool.length, n - qs.length);
+    var bs = shuffle(basicPool, rng).slice(0, nBasic).map(function (b) { return makeBasic(b, rng); });
+    return shuffle(qs.concat(bs), rng);
+  }
+
+  return {
+    PREFS: PREFS, EXCLUDED: EXCLUDED, REGIONS: REGIONS, regionOf: regionOf, TYPES: TYPES,
+    shortPref: shortPref, smvOf: smvOf, makeRng: makeRng, shuffle: shuffle, make: make, round: round,
+    makeBasic: makeBasic, compose: compose
+  };
+})();
+if (typeof module !== "undefined") module.exports = SakeCore;
+</script>
+
+<script id="quiz-ui">
+(function () {
+  var DATA = JSON.parse(document.getElementById("sake-data").textContent);
+  var BASICS = JSON.parse(document.getElementById("basics-data").textContent);
+  var TERMS = JSON.parse(document.getElementById("terms-data").textContent);
+  var TASTE = JSON.parse(document.getElementById("taste-data").textContent);
+  var BY_BRAND = {};
+  DATA.forEach(function (d) { BY_BRAND[d.brand] = d; });
+
+  // 用語の読み。辞書の読みと、問題ごとの読みをまとめる
+  var RUBY = {};
+  TERMS.forEach(function (t) { if (t.kana && t.kana !== t.term && /[\u4e00-\u9fff]/.test(t.term)) RUBY[t.term] = t.kana; });
+  BASICS.forEach(function (b) { if (b.ruby) Object.keys(b.ruby).forEach(function (k) { RUBY[k] = b.ruby[k]; }); });
+  var RUBY_RE = null;
+  (function () {
+    var keys = Object.keys(RUBY).sort(function (a, b) { return b.length - a.length; });
+    if (keys.length) RUBY_RE = new RegExp(keys.map(function (k) { return k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|"), "g");
+  })();
+  // 文中の用語に読みを付ける。同じ語は最初の1回だけ
+  function rb(text) {
+    var t = esc(text);
+    if (!RUBY_RE) return t;
+    var done = {};
+    return t.replace(RUBY_RE, function (m) {
+      if (done[m]) return m;
+      done[m] = true;
+      return '<ruby>' + m + '<rt>' + esc(RUBY[m]) + '</rt></ruby>';
+    });
+  }
+  function nameRuby(name, kana) {
+    return kana ? '<ruby>' + esc(name) + '<rt>' + esc(kana) + '</rt></ruby>' : esc(name);
+  }
+  var C = SakeCore;
+  var app = document.getElementById("app");
+  var KEY = "sake-techo-v1";
+  var ROUND = 10;
+
+  // ---- 保存 ----
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (raw) {
+        var s = JSON.parse(raw);
+        if (s && typeof s === "object") {
+          return { stamps: s.stamps || {}, best: s.best || 0, plays: s.plays || 0, wish: s.wish || {}, miss: s.miss || {} };
+        }
+      }
+    } catch (e) { /* 保存できない環境 */ }
+    return { stamps: {}, best: 0, plays: 0, wish: {}, miss: {} };
+  }
+  function save() {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 何もしない */ }
+  }
+  var state = load();
+
+  var rng = C.makeRng(Date.now() ^ Math.floor(Math.random() * 1e9));
+  var prefsWithData = {};
+  DATA.forEach(function (d) { prefsWithData[d.pref] = true; });
+  var TOTAL = Object.keys(prefsWithData).length;
+
+  function qKey(q) { return q.basic ? "q:" + q.basic.id : "b:" + q.item.brand; }
+  function missPool() {
+    return DATA.filter(function (d) { return state.miss["b:" + d.brand]; });
+  }
+  function missBasics() {
+    return BASICS.filter(function (b) { return state.miss["q:" + b.id]; });
+  }
+  function regionBasics(r) {
+    return BASICS.filter(function (b) { return b.pref && C.regionOf[b.pref] === r; });
+  }
+  // 1回分の中身 [銘柄の候補, 基本問題の候補, 基本問題の数]。もう1回でも同じ作り方にする
+  var MODES = {
+    "全国": function () { return [DATA, BASICS, 2]; },
+    "まだの県": function () { return [DATA.filter(function (d) { return !state.stamps[d.pref]; }), [], 0]; },
+    "酒の基本": function () { return [[], BASICS, ROUND]; },
+    "復習": function () {
+      var m = missPool(), mb = missBasics();
+      return [m, mb, Math.max(ROUND - m.length, Math.round(ROUND * mb.length / Math.max(1, m.length + mb.length)))];
+    }
+  };
+  C.REGIONS.forEach(function (r) {
+    MODES[r] = function () { return [DATA.filter(function (d) { return C.regionOf[d.pref] === r; }), regionBasics(r), 2]; };
+  });
+
+  function stampCount() {
+    return Object.keys(state.stamps).filter(function (p) { return prefsWithData[p]; }).length;
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function host(u) {
+    try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return u; }
+  }
+  function h(html) { app.innerHTML = html; window.scrollTo(0, 0); }
+
+  function header() {
+    return '<header class="top"><h1>酒どころ手帖</h1>' +
+      '<span class="count">手帖 ' + stampCount() + ' / ' + TOTAL + '</span></header>';
+  }
+
+  // ---- タイトル ----
+  var keyHandler = null;
+  function setKeys(fn) { keyHandler = fn; }
+  document.addEventListener("keydown", function (e) {
+    if (keyHandler && !e.ctrlKey && !e.metaKey && !e.altKey) keyHandler(e);
+  });
+
+  function title(showRegions) {
+    setKeys(null);
+    var left = DATA.filter(function (d) { return !state.stamps[d.pref]; }).length;
+    var missCount = missPool().length + missBasics().length;
+    var html = header() +
+      '<p class="lead">全国の酒蔵を4択でめぐる。正解した県に印が付き、手帖が埋まっていく。1回10問。</p>' +
+      '<div class="modes">' +
+      '<button class="mode" data-act="all"><b>全国</b><span>収録している' + TOTAL + '都道府県からランダムに出題</span><i>10問</i></button>' +
+      '<button class="mode" data-act="region"><b>地方をえらぶ</b><span>6つの地方から1つ選ぶ</span><i>10問</i></button>' +
+      (showRegions ? '<div class="regions">' + C.REGIONS.map(function (r) {
+        return '<button data-region="' + esc(r) + '">' + esc(r) + '</button>';
+      }).join("") + '</div>' : '') +
+      '<button class="mode" data-act="basic"><b>酒の基本</b><span>特定名称酒・造り方・酒米など</span><i>' + Math.min(ROUND, BASICS.length) + '問</i></button>' +
+      '<button class="mode" data-act="left"' + (left ? '' : ' disabled') + '><b>まだの県</b><span>' +
+      (left ? '印が付いていない県だけから出題' : '全県に印が付いた') + '</span><i>' + Math.min(ROUND, left) + '問</i></button>' +
+      '<button class="mode" data-act="miss"' + (missCount ? '' : ' disabled') + '><b>復習</b><span>' +
+      (missCount ? '前に間違えた問題だけを出題' : '間違えた問題はまだない') + '</span><i>' + Math.min(ROUND, missCount) + '問</i></button>' +
+      '<button class="mode" data-act="dict"><b>辞書</b><span>銘柄と用語をカードで引く</span><i>' + (DATA.length + TERMS.length) + '枚</i></button>' +
+      '<button class="mode" data-act="book"><b>手帖をひらく</b><span>集めた県と銘柄を見る</span><i>' + stampCount() + '県</i></button>' +
+      '</div>' +
+      (state.plays ? '<p class="note">これまで ' + state.plays + ' 回、最高 ' + state.best + ' / ' + ROUND + '</p>' : '') +
+      '<p class="note">収録 ' + DATA.length + ' 銘柄。銘柄・蔵元・所在地は蔵元の公式サイトなどで確認したもの（確認日は sources.md）。</p>';
+    h(html);
+    app.querySelectorAll("[data-act]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var a = b.getAttribute("data-act");
+        if (a === "all") start("全国");
+        else if (a === "region") title(!showRegions);
+        else if (a === "left") start("まだの県");
+        else if (a === "basic") start("酒の基本");
+        else if (a === "miss") start("復習");
+        else if (a === "book") book(null);
+        else if (a === "dict") dict({ tab: "brand" });
+      });
+    });
+    app.querySelectorAll("[data-region]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        start(b.getAttribute("data-region"));
+      });
+    });
+  }
+
+  // ---- 出題 ----
+  var run = null;
+  function start(label) {
+    var m = MODES[label]();
+    if (!m[0].length && !m[1].length) { title(false); return; }
+    var qs = C.compose(DATA, m[0], m[1], ROUND, m[2], rng);
+    run = { qs: qs, i: 0, marks: [], label: label, newStamps: [] };
+    ask();
+  }
+
+  function pips() {
+    return '<div class="pips">' + run.qs.map(function (_, i) {
+      var c = i < run.marks.length ? (run.marks[i] ? "ok" : "ng") : (i === run.i ? "now" : "");
+      return '<span class="pip ' + c + '"></span>';
+    }).join("") + '</div>';
+  }
+
+  function choiceHtml(c, i) {
+    return '<button class="choice" data-i="' + i + '"><span class="k">' + (i + 1) + '</span>' +
+      '<span class="t">' + (c.ruby ? rb(c.label) : esc(c.label)) + (c.sub ? '<small>' + esc(c.sub) + '</small>' : '') + '</span></button>';
+  }
+
+  function ask() {
+    var q = run.qs[run.i];
+    var html = header() +
+      '<div class="qhead"><span>' + esc(run.label) + '　' + (run.i + 1) + ' / ' + run.qs.length + '</span>' + pips() + '</div>' +
+      '<div class="qcard">' +
+      '<div class="qkind">' + esc(q.kind) + '</div>' +
+      '<p class="qtext">' + (q.basic ? rb(q.text) : esc(q.text)) + '</p>' +
+      (q.big ? '<div class="qbig mincho">' + esc(q.big) + '</div>' : '') +
+      (q.sub ? '<p class="qsub">' + esc(q.sub) + '</p>' : '') +
+      '<div class="choices">' + q.choices.map(function (c, i) {
+        return choiceHtml(q.basic ? { label: c.label, ruby: true } : c, i);
+      }).join("") + '</div>' +
+      '<div id="after"></div>' +
+      '</div>' +
+      '<p class="hint">キーボードの 1〜' + q.choices.length + ' でも答えられる</p>';
+    h(html);
+    app.querySelectorAll(".choice").forEach(function (b) {
+      b.addEventListener("click", function () { answer(+b.getAttribute("data-i")); });
+    });
+    setKeys(function (e) {
+      var n = parseInt(e.key, 10);
+      if (n >= 1 && n <= q.choices.length) answer(n - 1);
+    });
+  }
+
+  // 代表酒のスペック。公式に書かれた値だけを出す
+  function rangeText(v, unit, sign) {
+    if (v == null) return null;
+    var f = function (x) { return (sign && x > 0 ? "+" : "") + x; };
+    if (typeof v === "number") return f(v) + (unit || "");
+    if (v.min === v.max) return f(v.min) + (unit || "");
+    return f(v.min) + "〜" + f(v.max) + (unit || "");
+  }
+  function mid(v) { return v == null ? null : typeof v === "number" ? v : (v.min + v.max) / 2; }
+  function smvBar(smv) {
+    var m = mid(smv);
+    if (m == null) return "";
+    var lo = -10, hi = 15;
+    var pos = Math.max(0, Math.min(100, (m - lo) / (hi - lo) * 100));
+    return '<div class="smv" aria-label="日本酒度 ' + esc(rangeText(smv, "", true)) + '">' +
+      '<div class="smv-track"><span class="smv-zero" style="left:' + ((0 - lo) / (hi - lo) * 100) + '%"></span>' +
+      '<span class="smv-dot" style="left:' + pos + '%"></span></div>' +
+      '<div class="smv-ends"><span>甘口寄り</span><span>日本酒度</span><span>辛口寄り</span></div></div>';
+  }
+  // 国税庁の全国市販酒類調査で使う甘辛度・濃淡度。日本酒度と酸度の両方が公式にあるときだけ
+  function tasteMap(p) {
+    var smv = mid(p.smv), ac = mid(p.acidity);
+    if (smv == null || ac == null || !TASTE) return "";
+    var sweet = 193593 / (1443 + smv) - 1.16 * ac - 132.57;
+    var rich = 94545 / (1443 + smv) + 1.88 * ac - 68.54;
+    var clamp = function (v) { return Math.max(0, Math.min(100, (v + 2) / 4 * 100)); };
+    // 横は左が甘口、縦は上が濃醇
+    var x = 100 - clamp(sweet), y = 100 - clamp(rich);
+    return '<div class="tmap"><div class="tmap-box" aria-label="甘辛度 ' + sweet.toFixed(2) + '、濃淡度 ' + rich.toFixed(2) + '">' +
+      '<span class="tmap-h"></span><span class="tmap-v"></span>' +
+      '<span class="tmap-dot" style="left:' + x + '%;top:' + y + '%"></span>' +
+      '<i class="t-top">濃醇</i><i class="t-bottom">淡麗</i><i class="t-left">甘</i><i class="t-right">辛</i></div>' +
+      '<p class="tmap-note">甘辛度 ' + sweet.toFixed(2) + '（高いほど甘口）・濃淡度 ' + rich.toFixed(2) + '（高いほど濃醇）。' +
+      '日本酒度と酸度から国税庁の調査と同じ式で計算した目安。</p></div>';
+  }
+  function specHtml(d, compact) {
+    var p = d.spec;
+    if (!p) return "";
+    var chips = [
+      p.grade ? ["特定名称", p.grade] : null,
+      p.abv != null ? ["度数", rangeText(p.abv, "度")] : null,
+      p.smv != null ? ["日本酒度", rangeText(p.smv, "", true)] : null,
+      p.acidity != null ? ["酸度", rangeText(p.acidity, "")] : null,
+      p.polish != null ? ["精米歩合", rangeText(p.polish, "%")] : p.polish_note ? ["精米歩合", p.polish_note] : null,
+      p.rice ? ["酒米", p.rice] : null
+    ].filter(Boolean);
+    if (compact) chips = chips.slice(0, 3);
+    return '<div class="spec">' +
+      (compact ? '' : '<div class="spec-title">代表酒：' + esc(p.product) + '</div>') +
+      '<div class="chips">' + chips.map(function (c) {
+        return '<span class="chip"><small>' + esc(c[0]) + '</small>' + esc(c[1]) + '</span>';
+      }).join("") + '</div>' +
+      (p.taste_official ? '<div class="taste">蔵元の表記：<b>' + esc(p.taste_official) + '</b></div>' : '') +
+      (compact ? '' : smvBar(p.smv) + tasteMap(p)) +
+      '</div>';
+  }
+
+  function factRows(d) {
+    var list = d.facts && d.facts.length ? d.facts.map(function (f) { return f.text; }) : (d.feature ? [d.feature] : []);
+    return list.map(function (t, i) {
+      return '<dt>' + (i ? '' : 'メモ') + '</dt><dd>' + esc(t) + '</dd>';
+    }).join("");
+  }
+  function linkList(urls) {
+    var seen = {};
+    return urls.filter(function (u) {
+      if (!u) return false;
+      var k = host(u);
+      if (seen[k]) return false;
+      seen[k] = true;
+      return true;
+    }).map(function (u) {
+      return '<a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">' + esc(host(u)) + '</a>';
+    }).join("、");
+  }
+  function wishBtn(name) {
+    var on = !!state.wish[name];
+    return '<button class="wish' + (on ? ' on' : '') + '" data-wish="' + esc(name) + '" aria-pressed="' + on + '">' +
+      (on ? '飲んでみたい 済' : '飲んでみたい') + '</button>';
+  }
+  function basicHtml(b) {
+    var src = linkList(b.urls || []);
+    return '<div class="info"><div class="qkind">' + esc(b.topic) + '</div>' +
+      '<h3 class="mincho">' + rb(b.answer) + '</h3>' +
+      '<p class="explain">' + rb(b.explain) + '</p>' +
+      (b.pref ? '<p class="qsub">ゆかりの県：' + esc(b.pref) + '</p>' : '') +
+      (src ? '<p class="src">出典：' + src + '</p>' : '') + '</div>';
+  }
+
+  // 「飲んでみたい」はどの画面でも押せる
+  app.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".wish") : null;
+    if (!b) return;
+    var name = b.getAttribute("data-wish");
+    if (state.wish[name]) delete state.wish[name]; else state.wish[name] = 1;
+    save();
+    app.querySelectorAll(".wish").forEach(function (x) {
+      if (x.getAttribute("data-wish") === name) x.outerHTML = wishBtn(name);
+    });
+  });
+
+  function infoHtml(d, noHead) {
+    var rows = '<dt>蔵元</dt><dd>' + esc(d.brewery) + '</dd>' +
+      '<dt>所在地</dt><dd>' + esc(d.pref) + (d.city ? ' ' + esc(d.city) : '') + '</dd>' +
+      (d.founded ? '<dt>創業</dt><dd>' + esc(d.founded) + '年' + (d.founded_note ? '（' + esc(d.founded_note) + '）' : '') + '</dd>' : '') +
+      factRows(d);
+    var src = linkList((d.urls || []).concat((d.facts || []).map(function (f) { return f.url; }), d.spec ? [d.spec.spec_url] : []));
+    var wished = !!state.wish[d.brand];
+    return '<div class="info' + (noHead ? ' card-body' : '') + '">' +
+      (noHead ? '' : '<div class="info-head"><div><h3 class="mincho">' + nameRuby(d.brand, d.brand_kana) + '</h3></div>' + wishBtn(d.brand) + '</div>') +
+      '<dl>' + rows + '</dl>' + specHtml(d) +
+      (src ? '<p class="src">出典：' + src + '</p>' : '') + '</div>';
+  }
+
+  function answer(i) {
+    var q = run.qs[run.i];
+    if (run.marks.length > run.i) return;
+    var ok = i === q.answer;
+    run.marks.push(ok);
+    var stamped = ok && q.item && q.item.pref && prefsWithData[q.item.pref];
+    if (stamped && !state.stamps[q.item.pref]) {
+      state.stamps[q.item.pref] = true;
+      run.newStamps.push(q.item.pref);
+    }
+    if (ok) delete state.miss[qKey(q)]; else state.miss[qKey(q)] = 1;
+    save();
+    app.querySelectorAll(".choice").forEach(function (b, j) {
+      b.disabled = true;
+      if (j === q.answer) b.classList.add("correct");
+      else if (j === i) {
+        b.classList.add("wrong");
+        b.querySelector(".t").insertAdjacentHTML("beforeend", '<small class="yours">あなたの答え</small>');
+      }
+      else b.classList.add("dim");
+    });
+    var items = q.basic ? [] : q.pair ? q.pair : [q.item];
+    var last = run.i === run.qs.length - 1;
+    document.getElementById("after").innerHTML =
+      '<div class="verdict">' +
+      (ok ? '<div class="stamp">正解</div><p>' + (stamped ? esc(C.shortPref(q.item.pref)) + 'に印。' : '') + '</p>'
+          : '<div class="stamp miss">はずれ</div><p>正解は ' + esc(q.choices[q.answer].label) + '。</p>') +
+      '</div>' +
+      (q.basic ? basicHtml(q.basic) : '') +
+      items.map(infoHtml).join("") +
+      '<div class="actions"><button class="btn" id="next">' + (last ? '結果を見る' : '次へ') + '</button></div>' +
+      '<p class="hint">Enter で次へ</p>';
+    var next = document.getElementById("next");
+    next.addEventListener("click", advance);
+    next.focus({ preventScroll: true });
+    setKeys(function (e) { if (e.key === "Enter") { e.preventDefault(); advance(); } });
+  }
+
+  function advance() {
+    run.i++;
+    if (run.i < run.qs.length) ask(); else result();
+  }
+
+  // 今回の問題に出てきた銘柄。気になったものをその場で「飲んでみたい」に入れられる
+  function metHtml() {
+    var seen = {}, list = [];
+    run.qs.forEach(function (q) {
+      (q.basic ? [] : q.pair ? q.pair : [q.item]).forEach(function (d) {
+        if (d && d.brand && !seen[d.brand]) { seen[d.brand] = 1; list.push(d); }
+      });
+    });
+    if (!list.length) return "";
+    return '<div class="section-label">今回出会った銘柄</div><ul class="wishlist">' + list.map(function (d) {
+      return '<li><span class="mincho">' + nameRuby(d.brand, d.brand_kana) + '</span><small>' + esc(d.pref) + '・' + esc(d.brewery) + '</small>' + wishBtn(d.brand) + '</li>';
+    }).join("") + '</ul>';
+  }
+
+  function result() {
+    setKeys(null);
+    var score = run.marks.filter(Boolean).length;
+    state.plays++;
+    if (score > state.best) state.best = score;
+    save();
+    var html = header() +
+      '<div class="qcard">' +
+      '<div class="qkind">' + esc(run.label) + ' の結果</div>' +
+      '<div class="score mincho">' + score + ' <small>/ ' + run.qs.length + '</small></div>' +
+      (run.newStamps.length
+        ? '<p class="qsub">新しく印が付いた県</p><div class="newstamps">' + run.newStamps.map(function (p) {
+            return '<span>' + esc(p) + '</span>';
+          }).join("") + '</div>'
+        : '<p class="qsub">今回は新しい印なし。</p>') +
+      '<p class="qsub" style="margin-top:12px">手帖 ' + stampCount() + ' / ' + TOTAL + '</p>' +
+      metHtml() +
+      '<div class="actions"><button class="btn" id="again">もう1回</button>' +
+      '<button class="btn ghost" id="tobook">手帖</button>' +
+      '<button class="btn ghost" id="totop">はじめに戻る</button></div>' +
+      '</div>';
+    h(html);
+    var label = run.label;
+    var again = document.getElementById("again");
+    var m = MODES[label]();
+    if (!m[0].length && !m[1].length) again.disabled = true;
+    again.addEventListener("click", function () { start(label); });
+    document.getElementById("tobook").addEventListener("click", function () { book(null); });
+    document.getElementById("totop").addEventListener("click", function () { title(false); });
+  }
+
+  // ---- 手帖 ----
+  function book(sel) {
+    setKeys(null);
+    var maxRow = 0, maxCol = 0;
+    C.PREFS.forEach(function (p) {
+      if (p[3] > maxRow) maxRow = p[3];
+      if (p[2] > maxCol) maxCol = p[2];
+    });
+    var tiles = C.PREFS.map(function (p) {
+      var on = state.stamps[p[0]] && prefsWithData[p[0]];
+      return '<button class="tile' + (on ? ' on' : '') + (sel === p[0] ? ' sel' : '') + '" data-pref="' + esc(p[0]) +
+        '" style="grid-column:' + (p[2] + 1) + ';grid-row:' + (p[3] + 1) + '" aria-label="' + esc(p[0]) + (on ? ' 印あり' : '') + '">' +
+        esc(C.shortPref(p[0])) + '</button>';
+    }).join("");
+    var card = "";
+    if (sel) {
+      var list = DATA.filter(function (d) { return d.pref === sel; });
+      card = '<div class="prefcard"><h2>' + esc(sel) + '</h2>' +
+        (state.stamps[sel] ? BASICS.filter(function (b) { return b.pref === sel && b.topic === "酒米"; }).map(basicHtml).join("") : '') +
+        (!list.length ? '<p class="none">この県は収録なし。' + esc(C.EXCLUDED[sel] || "") + '</p>'
+          : state.stamps[sel] ? list.map(infoHtml).join("")
+          : '<p class="none">まだ印がない。この県の問題に正解すると、ここに銘柄が載る（収録 ' + list.length + ' 銘柄）。</p>') +
+        '</div>';
+    }
+    var html = header() +
+      '<div class="map" style="grid-template-columns:repeat(' + (maxCol + 1) + ',1fr);grid-template-rows:repeat(' + (maxRow + 1) + ',auto)">' + tiles + '</div>' +
+      '<div class="legend"><span class="l-on">印あり</span><span>まだ</span></div>' +
+      (card || '<p class="lead" style="margin-top:16px;text-align:center">県をえらぶと、集めた銘柄が見られる。</p>') +
+      wishHtml() +
+      '<div class="actions"><button class="btn" id="totop">はじめに戻る</button>' +
+      '<button class="btn ghost" id="reset">手帖を白紙に戻す</button></div>';
+    h(html);
+    app.querySelectorAll(".tile").forEach(function (b) {
+      b.addEventListener("click", function () {
+        book(b.getAttribute("data-pref"));
+        var c = app.querySelector(".prefcard");
+        if (c) c.scrollIntoView({ block: "nearest" });
+      });
+    });
+    document.getElementById("totop").addEventListener("click", function () { title(false); });
+    document.getElementById("reset").addEventListener("click", confirmReset);
+  }
+
+  function wishHtml() {
+    var list = DATA.filter(function (d) { return state.wish[d.brand]; });
+    return '<div class="section-label">飲んでみたい（' + list.length + '）</div>' +
+      (list.length ? '<ul class="wishlist">' + list.map(function (d) {
+        var top = linkList((d.urls || []).slice(0, 1));
+        return '<li><span class="mincho">' + esc(d.brand) + '</span><small>' + esc(d.pref) + '・' + esc(d.brewery) + '</small>' +
+          (top ? '<small>' + top + '</small>' : '') + wishBtn(d.brand) + '</li>';
+      }).join("") + '</ul>'
+        : '<p class="none">解説カードの「飲んでみたい」を押すと、ここに集まる。</p>');
+  }
+
+  // ---- 辞書 ----
+  var dictState = { tab: "brand", q: "", filter: "" , open: null };
+  function norm(x) { return String(x || "").toLowerCase(); }
+  function brandCard(d) {
+    var open = dictState.open === "b:" + d.brand;
+    return '<article class="card' + (open ? ' open' : '') + '" data-open="b:' + esc(d.brand) + '" tabindex="0">' +
+      '<div class="card-top"><span>' + esc(d.pref) + (d.city ? '・' + esc(d.city) : '') + '</span>' + wishBtn(d.brand) + '</div>' +
+      '<h3 class="mincho">' + nameRuby(d.brand, d.brand_kana) + '</h3>' +
+      '<p class="card-sub">' + esc(d.brewery) + '</p>' +
+      (open ? infoBody(d) : specHtml(d, true)) +
+      '</article>';
+  }
+  function infoBody(d) {
+    // 見出しと飲んでみたいボタンはカード側にある
+    return infoHtml(d, true);
+  }
+  function termCard(t) {
+    var open = dictState.open === "t:" + t.term;
+    var src = linkList(t.urls || []);
+    return '<article class="card term' + (open ? ' open' : '') + '" data-open="t:' + esc(t.term) + '" tabindex="0">' +
+      '<div class="card-top"><span>' + esc(t.category) + '</span></div>' +
+      '<h3 class="mincho">' + nameRuby(t.term, t.kana !== t.term ? t.kana : null) + '</h3>' +
+      '<p class="card-sub">' + rb(t.short) + '</p>' +
+      (open ? '<div class="card-body"><p class="explain">' + rb(t.body) + '</p>' + (src ? '<p class="src">出典：' + src + '</p>' : '') + '</div>' : '') +
+      '</article>';
+  }
+  function dict(opt) {
+    setKeys(null);
+    if (opt) Object.keys(opt).forEach(function (k) { dictState[k] = opt[k]; });
+    var st = dictState;
+    var q = norm(st.q);
+    var cards, filters;
+    if (st.tab === "brand") {
+      filters = ["", "飲んでみたい"].concat(C.REGIONS);
+      cards = DATA.filter(function (d) {
+        if (st.filter === "飲んでみたい" && !state.wish[d.brand]) return false;
+        if (st.filter && st.filter !== "飲んでみたい" && C.regionOf[d.pref] !== st.filter) return false;
+        if (!q) return true;
+        return [d.brand, d.brand_kana, d.brewery, d.pref, d.city, d.spec && d.spec.rice].some(function (x) { return norm(x).indexOf(q) >= 0; });
+      }).map(brandCard);
+    } else {
+      var cats = [];
+      TERMS.forEach(function (t) { if (cats.indexOf(t.category) < 0) cats.push(t.category); });
+      filters = [""].concat(cats);
+      cards = TERMS.filter(function (t) {
+        if (st.filter && t.category !== st.filter) return false;
+        if (!q) return true;
+        return [t.term, t.kana, t.short, t.body].some(function (x) { return norm(x).indexOf(q) >= 0; });
+      }).map(termCard);
+    }
+    var html = header() +
+      '<div class="tabs" role="tablist">' +
+      '<button role="tab" data-tab="brand" aria-selected="' + (st.tab === "brand") + '">銘柄 ' + DATA.length + '</button>' +
+      '<button role="tab" data-tab="term" aria-selected="' + (st.tab === "term") + '">用語 ' + TERMS.length + '</button></div>' +
+      '<input class="search" type="search" placeholder="' + (st.tab === "brand" ? "銘柄・蔵元・県・読みで探す" : "用語・読みで探す") + '" value="' + esc(st.q) + '">' +
+      '<div class="filters">' + filters.map(function (f) {
+        return '<button data-filter="' + esc(f) + '" aria-pressed="' + (st.filter === f) + '">' + (f || "すべて") + '</button>';
+      }).join("") + '</div>' +
+      '<p class="hint">' + cards.length + ' 枚。カードを押すと詳しく見られる。</p>' +
+      '<div class="cards">' + (cards.join("") || '<p class="none">見つからない。</p>') + '</div>' +
+      (st.tab === "brand" && TASTE ? '<p class="note">' + rb(TASTE.note) + (TASTE.urls ? ' 出典：' + linkList(TASTE.urls) : '') + '</p>' : '') +
+      '<div class="actions"><button class="btn" id="totop">はじめに戻る</button></div>';
+    var y = window.scrollY;
+    app.innerHTML = html;
+    window.scrollTo(0, opt && opt.keepScroll ? y : 0);
+    app.querySelectorAll("[data-tab]").forEach(function (b) {
+      b.addEventListener("click", function () { dict({ tab: b.getAttribute("data-tab"), filter: "", q: "", open: null, keepScroll: false }); });
+    });
+    app.querySelectorAll("[data-filter]").forEach(function (b) {
+      b.addEventListener("click", function () { dict({ filter: b.getAttribute("data-filter"), open: null, keepScroll: true }); });
+    });
+    var input = app.querySelector(".search");
+    input.addEventListener("input", function () {
+      var pos = input.selectionStart;
+      dict({ q: input.value, open: null, keepScroll: true });
+      var again = app.querySelector(".search");
+      again.focus();
+      try { again.setSelectionRange(pos, pos); } catch (e) { /* 何もしない */ }
+    });
+    app.querySelectorAll("[data-open]").forEach(function (c) {
+      var toggle = function (e) {
+        if (e.target.closest && (e.target.closest(".wish") || e.target.closest("a"))) return;
+        var k = c.getAttribute("data-open");
+        dict({ open: dictState.open === k ? null : k, keepScroll: true });
+      };
+      c.addEventListener("click", toggle);
+      c.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(e); } });
+    });
+    document.getElementById("totop").addEventListener("click", function () { title(false); });
+  }
+
+  function confirmReset() {
+    var back = document.createElement("div");
+    back.className = "modal-back";
+    back.innerHTML = '<div class="modal" role="dialog" aria-modal="true">' +
+      '<p><b>手帖を白紙に戻す？</b></p><p class="qsub">集めた印と記録が消える。元には戻せない。</p>' +
+      '<div class="actions"><button class="btn" id="doReset">白紙に戻す</button>' +
+      '<button class="btn ghost" id="noReset">やめる</button></div></div>';
+    document.body.appendChild(back);
+    var close = function () { back.remove(); setKeys(null); };
+    back.querySelector("#noReset").addEventListener("click", close);
+    back.addEventListener("click", function (e) { if (e.target === back) close(); });
+    back.querySelector("#doReset").addEventListener("click", function () {
+      state = { stamps: {}, best: 0, plays: 0, wish: {}, miss: {} };
+      save();
+      close();
+      book(null);
+    });
+    back.querySelector("#noReset").focus();
+    setKeys(function (e) { if (e.key === "Escape") close(); });
+  }
+
+  title(false);
+})();
+</script>
+</body>
+</html>
