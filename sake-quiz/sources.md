@@ -1363,6 +1363,7 @@ index.html に載せた事実の裏取りに使ったURL。
 
 ### 普通酒（ふつうしゅ）
 - https://japansake.or.jp/sake/about-sake/classification-of-sake/
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
 
 ### 吟醸酒（ぎんじょうしゅ）
 - https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
@@ -1436,6 +1437,7 @@ index.html に載せた事実の裏取りに使ったURL。
 ### 醪（もろみ）
 - https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
 - https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
 
 ### 三段仕込み（さんだんじこみ）
 - https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
