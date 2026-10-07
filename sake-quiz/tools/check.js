@@ -85,6 +85,23 @@ for (const b of BASICS) {
   for (const u of b.urls || []) if (!sources.includes(u)) fail(name + ": sources.md にURLがない " + u);
 }
 
+// 辞書の用語
+const TERMS = JSON.parse(block("terms-data"));
+const termSeen = new Set();
+for (const t of TERMS) {
+  const name = "用語 " + t.term;
+  if (termSeen.has(t.term)) fail(name + ": 重複");
+  termSeen.add(t.term);
+  if (!t.kana) fail(name + ": 読みがない");
+  if (!t.short || !t.body) fail(name + ": 説明がない");
+  if (t.body && t.body.length > 130) fail(name + ": 説明が長い");
+  if (!t.urls || !t.urls.length) fail(name + ": 出典URLがない");
+  for (const u of t.urls || []) if (!sources.includes(u)) fail(name + ": sources.md にURLがない " + u);
+}
+ok("辞書の用語 " + TERMS.length + " 語");
+const noKana = DATA.filter((d) => !d.brand_kana).map((d) => d.brand);
+if (noKana.length) console.log("要確認  読みがなが未確認の銘柄 " + noKana.length + " 件: " + noKana.join("、"));
+
 // 3. 47都道府県
 const covered = new Set(DATA.map((d) => d.pref));
 const missing = prefNames.filter((p) => !covered.has(p));

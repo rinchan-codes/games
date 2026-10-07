@@ -969,6 +969,250 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.nrib.go.jp/sake/sakefaq02.html
 - 確認した内容: 酒類総合研究所「清酒Q&A」食用米と醸造用米の違い
 
+## 辞書（用語）
+
+### 特定名称酒（とくていめいしょうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://japansake.or.jp/sake/about-sake/classification-of-sake/
+
+### 普通酒（ふつうしゅ）
+- https://japansake.or.jp/sake/about-sake/classification-of-sake/
+
+### 吟醸酒（ぎんじょうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 大吟醸酒（だいぎんじょうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 純米酒（じゅんまいしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 純米吟醸酒（じゅんまいぎんじょうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+
+### 純米大吟醸酒（じゅんまいだいぎんじょうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+
+### 特別純米酒（とくべつじゅんまいしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+
+### 本醸造酒（ほんじょうぞうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 特別本醸造酒（とくべつほんじょうぞうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+
+### 精米歩合（せいまいぶあい）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 吟醸造り（ぎんじょうづくり）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 醸造アルコール（じょうぞうアルコール）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+
+### こうじ米（こうじまい）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+
+### 麹（こうじ）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://japansake.or.jp/sake/about-sake/glossary-of-sake/
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 酒母（しゅぼ／もと）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 生酛（きもと）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/sakefaq02.html
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 山廃酛（やまはいもと）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/sakefaq02.html
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 速醸酛（そくじょうもと）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/sakefaq02.html
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 醪（もろみ）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 三段仕込み（さんだんじこみ）
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 踊り（おどり）
+- https://japansake.or.jp/sake/about-sake/glossary-of-sake/
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 上槽（じょうそう）
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 火入れ（ひいれ）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/sakefaq02.html
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 杜氏（とうじ）
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+- https://www.nta.go.jp/traditional_sake_making/index.htm
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 蔵人（くらびと）
+- https://www.nta.go.jp/traditional_sake_making/index.htm
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### あらばしり（あらばしり）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://japansake.or.jp/sake/about-sake/glossary-of-sake/
+
+### 酒粕（さけかす）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+
+### 寒造り（かんづくり）
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+
+### 生酒（なまざけ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/sakefaq02.html
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 生貯蔵酒（なまちょぞうしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 生詰酒（なまづめしゅ）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 原酒（げんしゅ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 生一本（きいっぽん）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+
+### 樽酒（たるざけ）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+
+### にごり酒（にごりざけ）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://japansake.or.jp/sake/about-sake/classification-of-sake/
+
+### 貯蔵年数（ちょぞうねんすう）
+- https://www.nta.go.jp/taxes/sake/hyoji/seishu/gaiyo/02.htm
+
+### 清酒（せいしゅ）
+- https://www.nta.go.jp/taxes/sake/qa/01/01.pdf
+
+### 日本酒度（にほんしゅど）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 酸度（さんど）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### アミノ酸度（アミノさんど）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### アルコール分（アルコールぶん）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nta.go.jp/taxes/sake/qa/01/01.pdf
+
+### 甘辛度（あまからど）
+- https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf
+
+### 濃淡度（のうたんど）
+- https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf
+
+### 酵母（こうぼ）
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nrib.go.jp/sake/nrib/pdf/NRIBNo35.pdf
+
+### きょうかい酵母（きょうかいこうぼ）
+- https://www.nrib.go.jp/sake/nrib/pdf/NRIBNo35.pdf
+
+### こうじ菌（こうじきん）
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+
+### 国菌（こっきん）
+- https://www.nta.go.jp/taxes/sake/koujikin/pdf/0021012-102_03.pdf
+
+### 酒造好適米（しゅぞうこうてきまい）
+- https://www.nrib.go.jp/sake/sakefaq02.html
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 心白（しんぱく）
+- https://www.nrib.go.jp/sake/sakefaq02.html
+- https://www.nrib.go.jp/sake/pdf/nrib_st_ver7.pdf
+
+### 山田錦（やまだにしき）
+- https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html
+- https://www.maff.go.jp/j/pr/aff/1812/pdf/1812_04.pdf
+
+### 五百万石（ごひゃくまんごく）
+- https://www.pref.okayama.jp/uploaded/attachment/374892.pdf
+- https://web.pref.hyogo.lg.jp/nk12/af11_000000025.html
+
+### 雄町（おまち）
+- https://www.pref.okayama.jp/page/detail-16018.html
+- https://www.pref.okayama.jp/uploaded/attachment/374892.pdf
+
+### 美山錦（みやまにしき）
+- https://www.pref.nagano.lg.jp/nogi/kensei/soshiki/soshiki/kencho/nogyogijutsu/documents/r7syoureihinnsyu.pdf
+
+### 越淡麗（こしたんれい）
+- https://www.pref.niigata.lg.jp/sec/nosanengei/1250021054134.html
+
+### 出羽燦々（でわさんさん）
+- https://www.pref.yamagata.jp/documents/3639/h.30hinnsyu_sakumotu
+
+### 秋田酒こまち（あきたさけこまち）
+- https://www.pref.akita.lg.jp/pages/archive/5780
+
+### 吟風（ぎんぷう）
+- https://www.hro.or.jp/agricultural/center/publication/syuhou/2k/82-1.html
+
+### 八反錦（はったんにしき）
+- https://www.pref.hiroshima.lg.jp/soshiki/30/ikusei.html
+
+### 千本錦（せんぼんにしき）
+- https://www.pref.hiroshima.lg.jp/soshiki/30/ikusei.html
+
+### 伝統的酒造り（でんとうてきさけづくり）
+- https://www.nta.go.jp/traditional_sake_making/index.htm
+
+## 甘口・辛口の目安
+
+- https://www.nrib.go.jp/sake/pdf/nlziten_j.pdf
+- https://www.nta.go.jp/taxes/sake/shiori-gaikyo/seibun/2024/pdf/001.pdf
+
 ## 載せなかったもの
 
 ### 沖縄県
