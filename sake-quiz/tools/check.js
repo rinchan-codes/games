@@ -121,7 +121,7 @@ function checkQ(q, where) {
   const labels = q.choices.map((c) => c.label);
   if (q.answer < 0 || q.answer >= labels.length) return fail(where + ": 正解が選択肢にない");
   if (new Set(labels).size !== labels.length) fail(where + ": 選択肢が重複 " + labels.join("/"));
-  const need = q.type === "older" ? 2 : 4;
+  const need = q.type === "older" || q.type === "drier" ? 2 : 4;
   if (labels.length !== need) fail(where + ": 選択肢の数 " + labels.length);
   const it = q.item;
   // 正解が1つだけか、種類ごとに事実から数え直す
@@ -141,6 +141,13 @@ function checkQ(q, where) {
     const older = a.founded < b.founded ? a : b;
     correct = labels.filter((l) => l === older.brand);
     if (labels[q.answer] !== older.brand) fail(where + ": 古さの正解が逆");
+  } else if (q.type === "drier") {
+    const [a, b] = q.pair;
+    const va = C.smvOf(a), vb = C.smvOf(b);
+    if (va == null || vb == null) return fail(where + ": 日本酒度 null で出題");
+    if (Math.abs(va - vb) < 5) fail(where + ": 日本酒度の差が5未満");
+    const dry = va > vb ? a : b;
+    correct = labels.filter((l) => l === dry.brand);
   }
   if (correct.length !== 1) fail(where + ": 正解に当たる選択肢が " + correct.length + " 個 " + labels.join("/"));
   if (labels[q.answer] !== correct[0]) fail(where + ": answer の位置が違う");
@@ -154,7 +161,7 @@ for (let rep = 0; rep < 30; rep++) {
     for (const t of C.TYPES) {
       const q = C.make(t, d, DATA, rng);
       if (q) { made++; typeCount[t] = (typeCount[t] || 0) + 1; checkQ(q, t + " / " + d.brand); }
-      else if (t !== "older" && t !== "brewery" && t !== "pref" && !(t === "city" && !d.city)) fail(t + " / " + d.brand + ": 問題が作れない");
+      else if (t !== "older" && t !== "drier" && t !== "brewery" && t !== "pref" && !(t === "city" && !d.city)) fail(t + " / " + d.brand + ": 問題が作れない");
     }
   }
 }

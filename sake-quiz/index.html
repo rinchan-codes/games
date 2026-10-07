@@ -636,8 +636,13 @@ var SakeCore = (function () {
   var regionOf = {};
   PREFS.forEach(function (p) { regionOf[p[0]] = p[1]; });
 
-  var TYPES = ["pref", "brand", "brewery", "city", "older"];
-  var TYPE_LABEL = { pref: "産地", brand: "県の酒", brewery: "蔵元", city: "蔵の町", older: "古さ" };
+  var TYPES = ["pref", "brand", "brewery", "city", "older", "drier"];
+  var TYPE_LABEL = { pref: "産地", brand: "県の酒", brewery: "蔵元", city: "蔵の町", older: "古さ", drier: "日本酒度" };
+  function smvOf(d) {
+    var v = d.spec && d.spec.smv;
+    if (v == null) return null;
+    return typeof v === "number" ? v : (v.min + v.max) / 2;
+  }
 
   function shortPref(name) {
     return name === "北海道" ? "北海道" : name.replace(/[都府県]$/, "");
@@ -759,6 +764,25 @@ var SakeCore = (function () {
       q.item = old.ref;
       return finish(q, old, [old === a ? b : a], rng);
     }
+    if (type === "drier") {
+      var mine = smvOf(item);
+      if (mine == null) return null;
+      var rivals = shuffle(data.filter(function (d) {
+        var v = smvOf(d);
+        return v != null && d.brand !== item.brand && Math.abs(v - mine) >= 5;
+      }), rng);
+      if (!rivals.length) return null;
+      var rival = rivals[0];
+      q.need = 2;
+      q.text = "代表酒の日本酒度が高い（辛口寄り）のはどっち？";
+      q.big = null;
+      q.pair = [item, rival];
+      var ca = { label: item.brand, sub: item.spec.product, ref: item };
+      var cb = { label: rival.brand, sub: rival.spec.product, ref: rival };
+      var dry = mine > smvOf(rival) ? ca : cb;
+      q.item = dry.ref;
+      return finish(q, dry, [dry === ca ? cb : ca], rng);
+    }
     return null;
   }
 
@@ -809,7 +833,7 @@ var SakeCore = (function () {
 
   return {
     PREFS: PREFS, EXCLUDED: EXCLUDED, REGIONS: REGIONS, regionOf: regionOf, TYPES: TYPES,
-    shortPref: shortPref, makeRng: makeRng, shuffle: shuffle, make: make, round: round,
+    shortPref: shortPref, smvOf: smvOf, makeRng: makeRng, shuffle: shuffle, make: make, round: round,
     makeBasic: makeBasic, compose: compose
   };
 })();
@@ -1065,7 +1089,7 @@ if (typeof module !== "undefined") module.exports = SakeCore;
     return '<div class="spec">' +
       (compact ? '' : '<div class="spec-title">代表酒：' + esc(p.product) + '</div>') +
       '<div class="chips">' + chips.map(function (c) {
-        return '<span class="chip"><small>' + rb(c[0]) + '</small>' + esc(c[1]) + '</span>';
+        return '<span class="chip"><small>' + esc(c[0]) + '</small>' + esc(c[1]) + '</span>';
       }).join("") + '</div>' +
       (p.taste_official ? '<div class="taste">蔵元の表記：<b>' + esc(p.taste_official) + '</b></div>' : '') +
       (compact ? '' : smvBar(p.smv) + tasteMap(p)) +
