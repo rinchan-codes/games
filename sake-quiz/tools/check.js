@@ -28,9 +28,12 @@ for (const id of ["quiz-core", "quiz-ui"]) {
   try { new vm.Script(block(id), { filename: id }); ok("構文 " + id); }
   catch (e) { fail("構文 " + id + ": " + e.message); }
 }
-let DATA;
+let DATA, BASICS;
 try { DATA = JSON.parse(block("sake-data")); ok("JSON sake-data（" + DATA.length + "銘柄）"); }
 catch (e) { fail("JSON sake-data: " + e.message); process.exit(1); }
+
+try { BASICS = JSON.parse(block("basics-data")); ok("JSON basics-data（" + BASICS.length + "問）"); }
+catch (e) { fail("JSON basics-data: " + e.message); process.exit(1); }
 
 const ctx = { module: { exports: {} } };
 vm.runInNewContext(block("quiz-core"), ctx);
@@ -48,6 +51,10 @@ for (const d of DATA) {
   if (!prefNames.includes(d.pref)) fail(name + ": 都道府県名が不正");
   for (const k of ["brand", "brewery"]) if (!d[k]) fail(name + ": " + k + " がない");
   if (!Array.isArray(d.urls) || !d.urls.length) fail(name + ": 出典URLがない");
+  for (const f of d.facts || []) {
+    if (!f.text || f.text.length > 40) fail(name + ": facts の長さ " + f.text);
+    if (!f.url || !sources.includes(f.url)) fail(name + ": facts の出典が sources.md にない " + f.url);
+  }
   for (const u of d.urls || []) {
     if (!/^https?:\/\//.test(u)) fail(name + ": URL形式 " + u);
     if (!sources.includes(u)) fail(name + ": sources.md にURLがない " + u);
@@ -60,6 +67,22 @@ const breweries = new Map();
 for (const d of DATA) {
   if (breweries.has(d.brewery) && breweries.get(d.brewery) !== d.pref) fail("同名の蔵元が別の県に: " + d.brewery);
   breweries.set(d.brewery, d.pref);
+}
+
+// 酒の基本
+const basicIds = new Set();
+for (const b of BASICS) {
+  const name = "基本 " + b.id;
+  if (basicIds.has(b.id)) fail(name + ": id が重複");
+  basicIds.add(b.id);
+  if (!b.question || !b.answer || !b.explain) fail(name + ": 問い・正解・解説のどれかがない");
+  if (!Array.isArray(b.wrong) || b.wrong.length !== 3) fail(name + ": 誤答が3つでない");
+  const all = [b.answer].concat(b.wrong || []);
+  if (new Set(all).size !== all.length) fail(name + ": 選択肢が重複 " + all.join("/"));
+  if (b.pref && !prefNames.includes(b.pref)) fail(name + ": 都道府県名が不正 " + b.pref);
+  if (b.explain && b.explain.length > 90) fail(name + ": 解説が長い");
+  if (!Array.isArray(b.urls) || !b.urls.length) fail(name + ": 出典URLがない");
+  for (const u of b.urls || []) if (!sources.includes(u)) fail(name + ": sources.md にURLがない " + u);
 }
 
 // 3. 47都道府県
@@ -139,6 +162,32 @@ for (const p of prefNames.filter((x) => covered.has(x))) {
   if (!qs.length) fail("まだの県（" + p + "のみ）: 問題が作れない");
   qs.forEach((q, i) => checkQ(q, "まだの県 " + p + " 第" + (i + 1) + "問"));
 }
+// 基本問題の出題と、銘柄との混ぜ方
+for (let rep = 0; rep < 50; rep++) {
+  for (const b of BASICS) {
+    const q = C.makeBasic(b, rng);
+    if (q.choices.length !== 4) fail("基本 " + b.id + ": 選択肢が4つでない");
+    if (q.choices[q.answer].label !== b.answer) fail("基本 " + b.id + ": answer の位置が違う");
+  }
+}
+const modes = [["全国", DATA, BASICS, 2], ["酒の基本", [], BASICS, 10]]
+  .concat(C.REGIONS.map((r) => [r, DATA.filter((d) => C.regionOf[d.pref] === r), BASICS.filter((b) => b.pref && C.regionOf[b.pref] === r), 2]));
+for (const [name, pool, bpool, nb] of modes) {
+  for (let rep = 0; rep < 200; rep++) {
+    const qs = C.compose(DATA, pool, bpool, 10, nb, rng);
+    const want = Math.min(10, (pool.length ? 10 : 0) + bpool.length);
+    if (qs.length !== want && !(pool.length && qs.length >= Math.min(10, pool.length))) fail(name + "（混合）: 問題数 " + qs.length);
+    qs.forEach((q, i) => {
+      if (q.type === "basic") { if (q.choices[q.answer].label !== q.basic.answer) fail(name + " 第" + (i + 1) + "問: 基本の正解位置"); }
+      else checkQ(q, name + "（混合）第" + (i + 1) + "問");
+    });
+    const ids = qs.filter((q) => q.basic).map((q) => q.basic.id);
+    if (new Set(ids).size !== ids.length) fail(name + ": 同じ基本問題が1回に2度出た");
+  }
+}
+// 復習：間違えた銘柄1つだけ・基本1つだけでも作れる
+if (BASICS.length && C.compose(DATA, [], [BASICS[0]], 10, 10, rng).length !== 1) fail("復習: 基本1問だけのとき");
+if (C.compose(DATA, [DATA[0]], [], 10, 0, rng).length < 1) fail("復習: 銘柄1つだけのとき");
 ok("1回分の出題を全モードで検査");
 
 console.log(fails ? "\n" + fails + " 件の問題あり" : "\nすべてOK");
