@@ -597,6 +597,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 半蔵（株式会社大田酒造・伊賀市）
 - https://www.hanzo-sake.com/
 - https://www.hanzo-sake.com/profile/index.html
+- https://www.hanzo-sake.com/migaki40/index.html — 代表酒のスペック: 半蔵 純米大吟醸 磨き40【サミット乾杯酒】
 - 確認した内容: 社名・住所・創業（創業1892年（明治25年））・名前の由来は会社概要、読みはトップの「HANZO Kirari」
 - 創業年メモ: 明治25年
 - 確認日: 2026-10-07
@@ -606,6 +607,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://takijiman.jp/?page_id=28
 - https://takijiman.jp/?page_id=16
 - https://japansake.or.jp/sakagura/jp/mie/takijiman-shuzou/
+- https://www.takijiman.jp/?cat=4 — 代表酒のスペック: 辛口純米 滝水流（はやせ）
 - 確認した内容: 社名・住所(名張市赤目町柏原)・創業(創業 明治初年（1868年）)・社名変更は会社概要、読み(たきじまん)・仕込み水・酒米はトップ。前回は公式サイトで外したが今回確認できた。WebSearchで廃業・譲渡の情報なし
 - 創業年メモ: 明治初年（1868年）
 - 確認日: 2026-10-07
@@ -632,6 +634,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://furosen.com/?page_id=28
 - https://japansake.or.jp/sakagura/jp/shiga/uehara-shuzou/
 - https://furosen.com/ — メモ: 搾りは全量、木槽の天秤しぼりで行う
+- https://furosen.com/?p=821 — 代表酒のスペック: 特別純米酒
 - 確認した内容: wp: 文久2年創業・読み(ふろうせん) / page_id=28: 正式社名・高島市新旭町太田の住所・山廃で酵母無添加・木槽天秤絞り・木桶 / 中央会: 住所と銘柄の照合
 - 創業年メモ: 文久2年。公式トップに「文久2年（1862）に創業」
 - 確認日: 2026-10-07
@@ -640,6 +643,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://haginotsuyu.co.jp/
 - https://www.haginotsuyu.co.jp/about/
 - https://japansake.or.jp/sakagura/jp/shiga/fukui-yahei-shouten/
+- https://www.haginotsuyu.co.jp/syuntoteiban/ — 代表酒のスペック: 純米大吟醸 黒ラベル
 - 確認した内容: トップ: 正式社名・高島市勝野の住所・十水仕込 / about: 寛延年間創業・銘の由来・比良山系伏流水 / 中央会: 住所照合
 - 創業年メモ: 公式は「寛延年間（1748～51）」創業。単一の年ではないためnull（中央会の設立年は1748）
 - 確認日: 2026-10-07
@@ -665,6 +669,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://yamamotohonke.jp/
 - https://yamamotohonke.jp/about/
 - https://yamamotohonke.jp/craft/
+- https://yamamotohonke.jp/post_product/%e7%a5%9e%e8%81%96-%e7%a5%9d-%e7%b4%94%e7%b1%b3%e5%a4%a7%e5%90%9f%e9%86%b8%e4%b8%89%e5%89%b2%e4%ba%94%e5%88%86/ — 代表酒のスペック: 神聖 祝 純米大吟醸三割五分
 - 確認した内容: トップ: 1677年創業・読み(しんせい/SHINSEI) / about: 正式社名・京都市伏見区上油掛町の住所・白菊水・鳥羽伏見の戦い / craft: 白菊水の性質
 - 創業年メモ: 延宝5年。公式トップに「延宝5年（1677年）京都・伏見にて創業」
 - 確認日: 2026-10-07
@@ -673,6 +678,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.tomio-sake.co.jp/
 - https://www.tomio-sake.co.jp/about/
 - https://www.tomio-sake.co.jp/craft/
+- https://www.tomio-sake.co.jp/post_product/sake372/ — 代表酒のスペック: 富翁 山田錦 純米酒
 - 確認した内容: トップ: 「富翁 TOMIO」のローマ字表記(読み) / about: 正式社名・京都市伏見区村上の住所・1657年創業 / craft: 名の由来・酒米・仕込み水
 - 創業年メモ: 明暦3年。公式に「明暦三年（1657年）京都・伏見に創業」
 - 確認日: 2026-10-07
@@ -699,6 +705,8 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://kitashouji.jp/about/
 - https://kitashouji.jp/company/
 - https://japansake.or.jp/sakagura/jp/osaka/kitashouji-shuzouten/
+- https://kitashouji.jp/sake/cat01/118/ — 代表酒のスペック: 荘の郷 純米酒
+- https://kitashouji.jp/sake/ — 読みがな
 - 確認した内容: company: 正式社名・泉佐野市日根野の住所・創業年 / about: 仕込み水・酒米・日根荘 / 中央会: 銘柄「荘の郷」・住所照合。読みは公式に記載なし
 - 創業年メモ: 大正10年。会社概要に「1921年（大正10年）10月1日」創業
 - 確認日: 2026-10-07
@@ -716,6 +724,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 白鶴（白鶴酒造株式会社・神戸市）
 - https://www.hakutsuru.co.jp/corporate/gaiyo.html
 - https://www.hakutsuru.co.jp/community/history/
+- https://www.e-hakutsuru.com/products/c0930 — 代表酒のスペック: 白鶴 特撰 特別純米酒 山田錦 720ml×6本
 - 確認した内容: 既存の確認内容を引き継ぎ / history: 2007年白鶴錦品種登録・1934年美術館
 - 創業年メモ: 寛保3年
 - 確認日: 2026-10-07
@@ -725,6 +734,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.kikumasamune.co.jp/kimoto/
 - https://www.kikumasamune.co.jp/news_release/2025/0217/
 - https://www.kikumasamune.co.jp/about/
+- https://www.kikumasamune.co.jp/products/new/177_juntaru_720.html — 代表酒のスペック: 純米樽酒 720mL瓶詰
 - 確認した内容: 既存の確認内容を引き継ぎ / about: 1988年全主力商品本醸造化・2009年本醸造シリーズ生酛化
 - 創業年メモ: 万治2年
 - 確認日: 2026-10-07
@@ -733,6 +743,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.sawanotsuru.co.jp/site/company
 - https://www.sawanotsuru.co.jp/f/about-sawanotsuru
 - https://www.sawanotsuru.co.jp/site/company/siryokan/
+- https://www.sawanotsuru.co.jp/c/nihonshu/junmai/gd89 — 代表酒のスペック: 米だけの酒 コクとうまみなのにすっきりパック 1.8L
 - 確認した内容: site/company: 正式社名・神戸市灘区新在家南町の住所・享保2年創業・米屋の副業 / about: 名の由来・山田錦・生酛 / siryokan: 1995年震災で全壊・1999年復元。読みはSAWANOTSURU表記から
 - 創業年メモ: 享保2年
 - 確認日: 2026-10-07
@@ -740,6 +751,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 龍力（株式会社本田商店・姫路市）
 - https://www.taturiki.com/
 - https://www.taturiki.com/profile.html
+- https://www.taturiki.com/komenosasayaki/ — 代表酒のスペック: 大吟醸 米のささやきYK40-50
 - 確認した内容: トップ: 読み(たつりき)・特A地区山田錦 / profile: 正式社名・姫路市網干区高田の住所・創業年・沿革
 - 創業年メモ: 公式会社概要（profile.html）は「1921年(大正10年) 本田新二(初代)が龍力の醸造開始」「大正10年に念願の酒造業を始めました」で、「創業」の語での年の明記なし。酒造り開始年のため null
 - 確認日: 2026-10-07
@@ -749,7 +761,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 風の森（油長酒造株式会社・御所市）
 - https://yucho-sake.jp/company/
 - https://www.yucho-sake.jp/
-- https://yucho-sake.jp/product/kazenomori/ — 読みがな
+- https://yucho-sake.jp/product/kazenomori/ — 代表酒のスペック: 風の森 秋津穂657
 - 確認した内容: 既存の確認内容を引き継ぎ
 - 創業年メモ: 享保4年
 - 確認日: 2026-10-07
@@ -809,6 +821,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 千代むすび（千代むすび酒造株式会社・境港市）
 - https://www.chiyomusubi.co.jp/user_data/company
 - https://www.chiyomusubi.co.jp/
+- https://www.chiyomusubi.co.jp/products/detail/28 — 代表酒のスペック: 千代むすび純米大吟醸 強力30 720ml(桐箱入り)
 - 確認した内容: 既存の確認内容を引き継ぎ / company: 1945年玉栄丸爆発で全焼・1995年輸出開始
 - 創業年メモ: 慶応元年
 - 確認日: 2026-10-07
@@ -818,6 +831,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://hiokizakura.jp/aboutus
 - https://hiokizakura.jp/brewing
 - https://japansake.or.jp/sakagura/jp/tottori/yamane-shuzoujou/
+- https://hiokizakura.jp/sake/honkainosakazuki — 代表酒のスペック: 生酛純米酒「本懐の盃」
 - 確認した内容: aboutus: 正式社名・鳥取市青谷町大坪の住所 / brewing: 三代目の言葉・完全発酵 / トップ: 醸は農なり / 中央会: 銘柄・住所照合
 - 創業年メモ: 公式に創業年の記載なし（中央会の設立年は1887）
 - 確認日: 2026-10-07
@@ -826,6 +840,7 @@ index.html に載せた事実の裏取りに使ったURL。
 
 #### 李白（李白酒造有限会社・松江市）
 - https://rihaku.co.jp/aboutus/
+- https://rihaku.co.jp/product/%e6%9d%8e%e7%99%bd-%e7%89%b9%e5%88%a5%e7%b4%94%e7%b1%b3%e9%85%92 — 代表酒のスペック: 李白 特別純米酒
 - 確認した内容: 既存の確認内容を引き継ぎ / aboutus: ラベル揮毫・ロンドン軍縮会議
 - 創業年メモ: 公式会社案内に創業明治15年（法人化は昭和25年）
 - 確認日: 2026-10-07
@@ -840,6 +855,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://sake-hikami.co.jp/
 - https://sake-hikami.co.jp/awanashikobo
 - https://japansake.or.jp/sakagura/jp/shimane/hikami-seishu/
+- https://sake-hikami.co.jp/products — 代表酒のスペック: 七冠馬純米
 - 確認した内容: トップ: 正式社名・仁多郡奥出雲町横田の住所・1712年より / awanashikobo: 1962年泡無酵母 / 中央会: 斐伊川の水。読み・名の由来は公式で確認できず
 - 創業年メモ: 公式は「1712年より蔵をかまえる」で「創業」の語なし（中央会の設立年は1712）
 - 確認日: 2026-10-07
@@ -857,6 +873,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 燦然（菊池酒造株式会社・倉敷市）
 - https://www.kikuchishuzo.co.jp/
 - https://kikuchishuzo.co.jp/intro
+- https://kikuchishuzo.co.jp/product/sanzen_daiginjo_junmai — 代表酒のスペック: 燦然 大吟醸 45磨
 - 確認した内容: トップ: 正式社名・住所 / intro: 明治11年創業・倉敷市玉島の住所・読みがな・高梁川流域の水
 - 創業年メモ: 明治11年に創業
 - 確認日: 2026-10-07
@@ -864,6 +881,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 櫻室町（室町酒造株式会社・赤磐市）
 - https://www.sakuramuromachi.co.jp/
 - https://sakuramuromachi.co.jp/company
+- https://sakuramuromachi.co.jp/product/%e7%b4%94%e7%b1%b3%e5%90%9f%e9%86%b8-%e5%82%99%e5%89%8d%e5%b9%bb-3/ — 代表酒のスペック: 純米吟醸 備前幻
 - 確認した内容: トップ: 正式社名・赤磐市西中の住所・読み・雄町の冷泉・雄町米 / company: 1951年に花房本家酒造から移行（社名変更扱いとして採用。譲渡の記述は見当たらず）
 - 創業年メモ: 公式トップは「1688年から続く」で、会社概要に「創業」の語なし。1951年に花房本家酒造から室町酒造へ移行
 - 確認日: 2026-10-07
@@ -897,6 +915,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://dassai.com/
 - https://dassai.com/corp/index.html
 - https://dassai.com/about/origin.html
+- https://dassai.com/product/main/23.html — 代表酒のスペック: 獺祭 純米大吟醸 磨き二割三分
 - 確認した内容: corp: 正式社名・岩国市周東町獺越の住所・創業1948年 / origin: 名前の由来・読みがな / origin: 獺越の伝説・正岡子規の号
 - 創業年メモ: 会社概要の「創業」欄に1948年1月23日。2025年に旭酒造から社名変更(経営主体は同一)
 - 確認日: 2026-10-07
@@ -912,6 +931,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.gokyo-sake.co.jp/
 - https://gokyo-sake.co.jp/company/
 - https://japansake.or.jp/sakagura/jp/yamaguchi/sakai-shuzou/
+- https://www.gokyo.shop/view/item/000000000103 — 代表酒のスペック: 五橋 純米吟醸 1800ml（常温）
 - 確認した内容: トップ: 正式社名・岩国市中津町の住所 / company: 創業年・名の由来・読み(ごきょう)・仕込み水・原料米 / 中央会: 住所照合
 - 創業年メモ: 明治4年。会社概要に「創業 1871年（明治4年）」
 - 確認日: 2026-10-07
@@ -921,6 +941,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 鳴門鯛（株式会社本家松浦酒造場・鳴門市）
 - https://narutotai.jp/
 - https://narutotai.jp/about/profile/
+- https://narutotai.jp/product/junmai/tomoejm/ — 代表酒のスペック: 鳴門鯛 純米 巴（ともえ）
 - 確認した内容: profile: 正式社名・鳴門市大麻町の住所・創業年・銘柄由来 / トップ: NARUTOTAIのローマ字表記(読み)
 - 創業年メモ: 文化元年(1804)
 - 確認日: 2026-10-07
@@ -936,6 +957,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.housui.com/
 - https://housui.com/about/
 - https://japansake.or.jp/sakagura/jp/tokushima/housui-shuzou/
+- https://housui.com/products — 代表酒のスペック: 山廃仕込特別純米酒
 - 確認した内容: about: 正式社名・三好市井川町辻の住所・創業・名の由来と読み(ほうすい)・仕込み水 / 中央会: 住所照合（中央会の銘柄欄は「淡遠」）
 - 創業年メモ: 大正2年。公式に「大正2年に初代馬場儀太郎が…創業」
 - 確認日: 2026-10-07
@@ -1000,6 +1022,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.keigetsu.co.jp/profile
 - https://www.keigetsu.co.jp/profile/the-origin-of-keigetsu
 - https://www.nta.go.jp/about/organization/takamatsu/sake/pdf/jpnMap.pdf
+- https://www.keigetsu.co.jp/products/p_karakuchi60 — 代表酒のスペック: 桂月 超辛口 特別純米酒 60
 - 確認した内容: profile/the-origin-of-keigetsu: 名の由来(桂浜)・大正13年大町桂月の推奨歌・正式社名・土佐郡土佐町田井の住所 / profile: 明治10年創業・早明浦湖畔・棚田米・生酛/山廃 / 高松国税局酒蔵マップで土佐酒造㈱=桂月を確認。読みの仮名表記は公式で確認できず null。WebSearchで廃業・譲渡・移転の情報は見当たらず
 - 創業年メモ: 公式の蔵紹介ページに明治10年（1877年）創業と記載
 - 確認日: 2026-10-07
@@ -1010,6 +1033,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.shigemasu.co.jp/
 - https://shigemasu.co.jp/company/
 - https://shigemasu.co.jp/making/
+- https://shigemasu.co.jp/product/junmaidaiginjo50/ — 代表酒のスペック: 繁桝 純米大吟醸50
 - 確認した内容: company: 正式社名・八女市本町の住所・創業年・銘柄由来 / トップ: 読み / making: 仕込み水(矢部川の伏流水)・酒米(山田錦/夢一献/雄町/吟のさと)・麹蓋による麹造り
 - 創業年メモ: 享保二年(1717年)
 - 確認日: 2026-10-07
@@ -1018,6 +1042,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://niwanouguisu.com/
 - https://niwanouguisu.com/company/
 - https://niwanouguisu.com/history/
+- https://niwanouguisu.com/products/ — 代表酒のスペック: 庭のうぐいす 特別純米
 - 確認した内容: company: 会社概要表の会社名「株式会社 山口酒造場」(資本金800万円)・創業1832年・久留米市北野町の住所 / トップ: 筑後川/筑後平野の記述・NIWANOUGUISU(メタ)。トップのメタ情報には旧表記「合名会社」が残る / history: 天保3年(1832)有馬藩より酒造業の許可・昭和50年に大規模設備をやめ純米酒中心へ
 - 創業年メモ: 1832年(天保3年)
 - 確認日: 2026-10-07
@@ -1025,6 +1050,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 喜多屋（株式会社 喜多屋・八女市）
 - https://www.kitaya.co.jp/
 - https://www.kitaya.co.jp/company
+- https://kitaya.biz/shop/products/12621 — 代表酒のスペック: 特別純米酒 喜多屋 夢一献 1800ml
 - 確認した内容: company: 正式社名・八女市本町の住所・文政3年創業・屋号の由来・矢部川伏流水・2013年IWCチャンピオン・サケ。読みの仮名表記は公式で確認できず null。WebSearchで廃業・譲渡・移転の情報は見当たらず（経産省九州局の事業再構築事例PDFあり、譲渡ではない）
 - 創業年メモ: 公式会社概要に「創業 江戸時代 文政3年(1820年)」
 - 確認日: 2026-10-07
@@ -1042,6 +1068,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.tenzan.co.jp/
 - https://www.tenzan.co.jp/company/
 - https://www.chusho.meti.go.jp/keiei/sapoin/monozukuri300sha/2018/juyou113_tenzansyuzo.pdf
+- https://tenzan.co.jp/product/tenzan-tokubetujyunmaisyu/ — 代表酒のスペック: 天山 特別純米酒
 - 確認した内容: company: 1875年継承・2025年150周年・小城市小城町岩蔵の住所。仕込み水等は公式で原文確認できず
 - 創業年メモ: 公式サイトは「1875年に酒造業を継承して以来…2025年で150周年」と記載し創業年の明示なし。経産省資料に「創業 1875年」／公式に「創業」の明記がないため null（統合時の判断）
 - 確認日: 2026-10-07
@@ -1049,6 +1076,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 天吹（天吹酒造合資会社・みやき町）
 - https://www.amabuki.co.jp/
 - https://www.amabuki.co.jp/brewery/
+- https://www.amabuki.co.jp/sake/000601.php — 代表酒のスペック: 天吹 特別純米 60
 - 確認した内容: トップ: 正式社名・三養基郡みやき町東尾の住所 / brewery: 創業元禄年間・天吹山由来・脊振山系伏流水・花酵母・佐賀平野の酒米。読みは公式で確認できず null。WebSearchで廃業・譲渡・移転の情報は見当たらず
 - 創業年メモ: 公式は「創業元禄年間（1688年～1704年）」と年の幅で記載し、単一の年が特定できないため null
 - 確認日: 2026-10-07
@@ -1058,6 +1086,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 六十餘洲（今里酒造株式会社・波佐見町）
 - https://rokujuyoshu.com/company/
 - https://rokujuyoshu.com/kodawari/
+- https://rokujuyoshu.com/product/ — 代表酒のスペック: 六十餘洲 特別純米酒
 - 確認した内容: company: 1772年創業・波佐見町宿郷の住所・6棟が平成18年に登録有形文化財
 - 創業年メモ: 公式に「江戸後期の1772年の創業」と記載（和暦表記なし）
 - 確認日: 2026-10-07
@@ -1081,6 +1110,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.zuiyo.co.jp/about-us/company/
 - https://www.nta.go.jp/about/organization/kumamoto/sake/kanpyo/r08/pdf/02.pdf
 - https://www.zuiyo.co.jp/about-us/history/
+- https://www.zuiyo.co.jp/products/nihonshu/287/ — 代表酒のスペック: 純米酒 菜々(さいさい)
 - 確認した内容: history: 慶應3年(1867)初代吉村太八が創業・明治20年丹波杜氏招聘・明治42年熊本県酒造研究所が瑞鷹の蔵に誕生・平成13年東肥醸造株式会社と合併（社名・銘柄・所在市は変わらず）
 - 創業年メモ: 公式表記「創業慶應三年」
 - 確認日: 2026-10-07
@@ -1088,6 +1118,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 花の香（花の香酒造株式会社・和水町）
 - https://www.hananoka.co.jp/
 - https://www.hananoka.co.jp/company/
+- https://www.hananoka.co.jp/products/ — 代表酒のスペック: 花の香｜桜花 HANANOKA OUKA
 - 確認した内容: company: 正式社名・玉名郡和水町西吉地の住所・明治35年創業・蔵名の由来・初代が妙見神社の神田を譲り受け磐清水と米で酒造り開始・1992年社名変更・2021年産土。読みはトップ要約に「はなのか」とあったが原文確認できず null。WebSearchで廃業・譲渡・移転の情報は見当たらず
 - 創業年メモ: 公式会社概要に「創業 1902年（明治35年）」
 - 確認日: 2026-10-07
@@ -1097,6 +1128,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 西の関（萱島酒造有限会社・国東市）
 - https://www.nishinoseki.com/
 - https://www.nishinoseki.com/company/
+- https://www.nishinoseki.com/product/tezukurijunmai/ — 代表酒のスペック: 手造り純米酒
 - 確認した内容: company: 銘柄由来・明治40年全国品評会一等・八角形煙突(大正3年建造、平成10年登録有形文化財)・昭和38年秘蔵酒発売
 - 創業年メモ: 公式トップに「明治6年創業」（会社ページは「明治6年（1873年）酒造りを始めました」）
 - 確認日: 2026-10-07
@@ -1105,6 +1137,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.yatsushika.com/
 - https://yatsushika.com/company/
 - https://www.nta.go.jp/about/organization/kumamoto/sake/kanpyo/r08/pdf/02.pdf
+- https://yatsushika.com/catalog/sake/ — 代表酒のスペック: 八鹿本醸造辛口（青）
 - 確認した内容: company: 九重町右田の住所・社是 / トップ: 元治元年創業・九重連山・銀座のすずめ
 - 創業年メモ: 公式表記「元治元年」
 - 確認日: 2026-10-07
@@ -1113,6 +1146,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.chiebijin.com/
 - https://www.chiebijin.com/company/
 - https://chiebijin.com/from-field-to-sake/
+- https://chiebijin.com/2024/12/10/chiebijin_jyunmai/ — 代表酒のスペック: ちえびじん 純米酒
 - 確認した内容: トップ/company: 正式社名・杵築市・明治7年創業・銘柄表記ちえびじん（仮名表記そのもの）。番地までの住所は今回の取得結果に出ず。仕込み水・酒米品種・名の由来は公式で確認できず。WebSearchで廃業・譲渡・移転の情報は見当たらず
 - 創業年メモ: 公式トップに「明治7年創業」
 - 確認日: 2026-10-07
@@ -1130,6 +1164,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.unkai.co.jp/product/items/archives/category/sake
 - https://www.unkai.co.jp/learn/facility
 - https://www.unkai.co.jp/company/outline
+- https://www.unkai.co.jp/product/items/archives/30 — 代表酒のスペック: 初御代 純米吟醸
 - 確認した内容: facility: 綾蔵で焼酎中心に日本酒・リキュールも製造、名水百選の綾町の水を仕込み水に
 - 創業年メモ: 会社概要の1967（昭和42）年11月6日は「創立」欄で「創業」ではないため null
 - 確認日: 2026-10-07
@@ -1140,6 +1175,7 @@ index.html に載せた事実の裏取りに使ったURL。
 - https://www.hamadasyuzou.co.jp/business
 - https://www.hamadasyuzou.co.jp/kinzan/
 - https://www.hamadasyuzou.co.jp/kinzan/products
+- https://www.hamadasyuzou.co.jp/kinzan/products/sasshu_masamune.html — 代表酒のスペック: 清酒 薩州正宗 純米酒
 - 確認した内容: kinzan: 薩摩で40年清酒が造られていなかった・串木野金山の坑洞を利用
 - 創業年メモ: 公式会社概要の「創業」欄に明治元年（法人改組は昭和26年）
 - 確認日: 2026-10-07
@@ -1147,6 +1183,7 @@ index.html に載せた事実の裏取りに使ったURL。
 #### 天賦（西酒造株式会社・日置市）
 - https://www.nishi-shuzo.co.jp/nishisyuzo/
 - https://www.nishi-shuzo.co.jp/tenbu/
+- https://www.nishi-shuzo.co.jp/tenbu/products/ — 代表酒のスペック: 天賦 純米酒
 - 確認した内容: tenbu: 日本酒蔵の住所(日置市吹上町与倉)。酒米・仕込み水の記述は見当たらず
 - 創業年メモ: 公式表記「弘化2年（1845年）」（会社の創業年。日本酒造りの開始年ではない）
 - 確認日: 2026-10-07
